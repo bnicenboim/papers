@@ -1,0 +1,473 @@
+% !Rnw root = NicenboimEtAl2015. Working memory differences- MAIN FILE.Rnw
+
+
+
+
+This experiment is a replication of experiment~1 using self-paced reading methodology. Even though eye-tracking experiments provide a more natural setting than self-paced reading, eye-tracking allows participants reading strategies that are absent in self-paced reading, such as skipping words and re-reading. Moreover, since it is possible to calculate many different eye-tracking measures, the chance of getting a false positive (a Type I error) goes up due to the multiple testing problem. Thus, one important motivation for the self-paced reading experiment was to determine whether the previous results were robust. A second motivation was to attempt a replication of the eye-tracking result using a different method. The absence of replication  has been recognized as a major problem in psychology and related areas \citep{AsendorpfEtAl2013}. 
+
+
+
+\subsection{Method}
+\subsubsection{Participants}
+Eighty subjects aged between 18--44 years  (mean age 25 years)  participated in a self-paced reading experiment in Argentina. The first 34 subjects participated in Buenos Aires and the rest in Mendoza. All participants reported to be native speakers of Spanish and were na\"{i}ve to the purpose of the study. Only one participant was excluded from the analysis, since s/he reported, after the experiment had been completed, that s/he suffered from a mental disorder related to memory.
+
+<<indiv-scors2,include=FALSE>>=
+minpcu <- format(round(min(indivSPR$pcu), 3), nsmall=3) 
+maxpcu <-format(round(max(indivSPR$pcu), 3), nsmall=3) 
+meanpcu <- format(round(mean(indivSPR$pcu), 3), nsmall=3) 
+sepcuET <- format(round(sd(indivSPR$pcu)/sqrt(N), 3), nsmall=3) 
+
+minrs <-format(round(min(50/indivSPR$ran) , 2), nsmall=2)    #each screen had 50 letters
+maxrs <- format(round(max(50/indivSPR$ran) , 2), nsmall=2) 
+meanrs <- format(round(mean(50/indivSPR$ran) , 2), nsmall=2) 
+sersET <- format(round(sd(50/indivSPR$ran)/sqrt(N) , 2), nsmall=2) 
+@
+
+Partial-credit unit scores for the operation span test measuring WMC of the remaining 79 participants ranged between \Sexpr{minpcu}--\Sexpr{maxpcu} with an average of \Sexpr{meanpcu} (\textit{SE}:~\Sexpr{sepcuET}). Average character speed for the rapid automatized naming task for measuring reading skills ranged between \Sexpr{minrs}--\Sexpr{maxrs} characters/second with an average of \Sexpr{meanrs} (\textit{SE}:~\Sexpr{sersET}) characters$/$second.
+
+
+\subsubsection{Stimuli}
+The stimuli for this experiment consisted of 36 items  similar to the items of experiment~1, but with an extended spillover region. This extra region was included in case the self-paced reading task may delay the effects seen in the eye-tracking experiment.
+  
+Similarly to experiment~1, each participant read the 36 items together with 176 unrelated sentences (120 were experimental items of three unrelated experiments and 56 sentences were filler sentences)  in an individually randomized order after six practice trials; and the stimuli were presented in a Latin square design. A true-or-false  comprehension task was presented after 65\%  of all trials in the experiment, including fillers. As in the previous experiment, the statements focused on various aspects of the stimuli, and the proportion of true and false statements was balanced.
+
+ 
+\subsubsection{Procedure}
+Subjects were tested individually using a PC. Participants completed the three tasks at their own pace: First, they performed a rapid automatized naming task, second,  an operation span task, and finally, a self-paced reading task \citep{JustEtAl1982}.
+
+Before the self-paced reading task  began, each participant was instructed to read for comprehension in a normal manner and had a practice session of six sentences.  All sentences were displayed on a single line and were presented in 18 pt Arial font using Linger software (\url{http://tedlab.mit.edu/~dr/Linger/}). In order to read each word of a sentence successively in a moving window display, participants had to press the space bar; then the word seen previously was masked and the next word was shown. At the end of some of the sentences, participants had to answer whether a certain statement related to the experimental item was true or false. No feedback was given as to whether the response was correct or not. Twice during the self-paced reading task, a screen announced the number of sentences read so far and invited the participants to take a break.
+
+
+
+\subsubsection{Data Analysis}
+<<rt-factor, include=FALSE>>=
+rtfactor <- 100000
+@
+The appropriate transformation of the dependent variable according to the Box-Cox method \citep{BoxCox1964} was the inverse transformation. We used ($-\Sexpr{rtfactor}/RT$) to improve the readability of the models  (a positive \textit{t}-value for $-\Sexpr{rtfactor}/RT$ corresponds to a positive \textit{t}-value of the untransformed measure RT). 
+
+
+\subsection{Results}
+
+\subsubsection{Comprehension Accuracy}
+<<accuracy-dataexpSPR,include=FALSE>>=
+dataexpSPR_verb <- dataexpSPR[dataexpSPR$region %in% "auxV" & !is.na(dataexpSPR$question.acc),]
+N <- length(unique(dataexpSPR$subj))
+
+allaccSPR <- dcast(data=dataSPR,formula=subj~., mean,value.var="question.acc",subset = .(wordn ==1 & !is.na(question.acc)) )
+
+allavSPR <- round(mean(allaccSPR[,2])*100,0)
+allseSPR <- round(sd(allaccSPR[,2])*100/sqrt(N),0)
+
+exp2acc <- dcast(data=dataexpSPR_verb,formula=subj~., mean,value.var="question.acc")
+exp2av<- round(mean(exp2acc[,2])*100,0)
+exp2se<- round(sd(exp2acc[,2])*100/sqrt(N),0)
+
+
+exp2min<- round(min(exp2acc[,2])*100,0)
+exp2max<- round(max(exp2acc[,2])*100,0)
+exp2quartiles <- round(quantile(exp2acc[,2])*100,0)
+
+dataexpSPR_verb$wmc <-  scale(dataexpSPR_verb$pcu)
+wmcSPR <- glmer(question.acc ~  wmc +(wmc|itemnumber)+(1|subj) ,dataexpSPR_verb,family=binomial ,
+control=glmerControl(optCtrl=list(maxfun=40000))
+      ) 
+
+wmcSPR <- latexcoef(wmcSPR, "wmc")
+
+
+@
+
+Participants answered correctly on average \Sexpr{allavSPR}\% (SE: \Sexpr{allseSPR}) comprehension probes of all trials, and \Sexpr{exp2av}\% (SE: \Sexpr{exp2se}) of the trials belonging to the experiment.  The comprehension accuracy for the experimental trials ranged between \Sexpr{exp2min}\%--\Sexpr{exp2max}\%, while the 25th, 50th, and 75th quartiles were \Sexpr{exp2quartiles[2]}\%, \Sexpr{exp2quartiles[3]}\%, and \Sexpr{exp2quartiles[4]}\% respectively. As in experiment~1, a GLMM showed that WMC was a significant predictor of accuracy, with higher capacity leading to greater accuracy; \Sexpr{wmcSPR}.
+
+  
+
+
+
+<<experiment1SPR-all-region,include=FALSE,eval=FALSE>>=
+#takes around 5 minutes
+#load("data/NicenboimEtAl2013.Rda")
+load("data/NicenboimEtAl2013SPR.Rda")
+
+dataexpSPR$wmc <- scale(dataexpSPR$pcu)
+dataexpSPR$rs <- scale(1/dataexpSPR$ran)
+
+#conditions helmert coded
+dataexpSPR$c <- factor(dataexpSPR$condition, levels = c("baseline","V2a","V3a"))
+contrasts(dataexpSPR$c) <- contr.sdif(3)
+colnames(contrasts(dataexpSPR$c))  <- c("V2vsV1","V3vsV2")
+
+#helmert coded again as separated factos for lmer model
+dataexpSPR$V2vsV1 <- 0
+dataexpSPR$V3vsV2 <- 0
+dataexpSPR[dataexpSPR$condition %in% "baseline",]$V2vsV1 <- -2/3
+dataexpSPR[dataexpSPR$condition %in% "baseline",]$V3vsV2 <- -1/3
+
+dataexpSPR[dataexpSPR$condition %in% "V2a",]$V2vsV1 <- 1/3
+dataexpSPR[dataexpSPR$condition %in% "V2a",]$V3vsV2 <- -1/3
+
+dataexpSPR[dataexpSPR$condition %in% "V3a",]$V2vsV1 <- 1/3
+dataexpSPR[dataexpSPR$condition %in% "V3a",]$V3vsV2 <- 2/3
+
+# (mc<-lmer.slimr(I(-10000/rt) ~ (V2vsV1+V3vsV2) * (wmc+I(wmc^2)+rs) + ((V2vsV1+V3vsV2)* (wmc+I(wmc^2)+rs) |itemnumber)  + (V2vsV1+V3vsV2|subj), data= dauxSPR ))
+
+boxcox(rt~ c * (wmc+I(wmc^2)+rs) ,data = dataexpSPR)  #near -1
+boxcox(rt~ c * (wmc+I(wmc^2)+rs) ,data = dataexpSPR[dataexpSPR$region=="auxV",])  #near -1
+#auxiliary verb
+mexp2.auxV.quad.withOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+I(wmc^2)+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+I(wmc^2) |itemnumber)+(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "auxV"  )
+
+qqPlot(resid(mexp2.auxV.quad.withOutliers))
+(o <- outliers(lmer=mexp2.auxV.quad.withOutliers,320) )
+dataexpSPR[rownames(o),]$rt
+dataexpSPR[rownames(o),]$rt <- NA  #8 outliers
+
+mexp2.auxV.quad.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+I(wmc^2)+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+I(wmc^2) |itemnumber)+(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "auxV"  )
+qqPlot(resid(mexp2.auxV.quad.withoutOutliers))
+
+mexp2.auxV.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "auxV"  )
+
+
+#model comparison with the same random factors
+exp1auxV <- dataexpSPR[dataexpSPR$region %in% "auxV",]
+(mexp2.auxV.quad <- lmer(I(-rtfactor/rt) ~ c * (wmc+I(wmc^2)+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber), # no +(0+I(wmc^2) |itemnumber)
+                  exp1auxV  ,REML=F))
+
+(mexp2.auxV.noquad <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber), # no +(0+I(wmc^2) |itemnumber)
+                  exp1auxV  ,REML=F))
+modelc <- anova(mexp2.auxV.quad,mexp2.auxV.noquad)
+
+
+##Participle form:
+mexp2.partV.withOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "partV"  )
+
+qqPlot(resid(mexp2.partV.withOutliers ))
+(o <- outliers(lmer=mexp2.partV.withOutliers ,320) )
+dataexpSPR[rownames(o),]$rt
+dataexpSPR[rownames(o),]$rt <- NA  #1 outliers
+
+mexp2.partV.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "partV"  )
+qqPlot(resid(mexp2.partV.withoutOutliers ))
+
+#sp1
+mexp2.sp1.withOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp1"  )
+
+qqPlot(resid(mexp2.sp1.withOutliers ))
+(o <- outliers(lmer=mexp2.sp1.withOutliers ,330) )
+dataexpSPR[rownames(o),]$rt
+dataexpSPR[rownames(o),]$rt <- NA  #6 outliers
+
+mexp2.sp1.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp1"  )
+qqPlot(resid(mexp2.sp1.withoutOutliers ))
+
+#sp2
+mexp2.sp2.withOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp2"  )
+
+qqPlot(resid(mexp2.sp2.withOutliers ))
+(o <- outliers(lmer=mexp2.sp2.withOutliers ,290) )
+dataexpSPR[rownames(o),]$rt
+dataexpSPR[rownames(o),]$rt <- NA  #6 outliers
+
+mexp2.sp2.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp2"  )
+qqPlot(resid(mexp2.sp2.withoutOutliers ))
+
+#sp3
+
+(mexp2.sp3.withOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp3"  ))
+
+
+qqPlot(resid(mexp2.sp3.withOutliers ))
+(o <- outliers(lmer=mexp2.sp3.withOutliers ,310) )
+dataexpSPR[rownames(o),]$rt
+dataexpSPR[rownames(o),]$rt <- NA  #5 outliers
+
+(mexp2.sp3.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR,subset= region %in% "sp3"  ))
+qqPlot(resid(mexp2.sp3.withoutOutliers ))
+
+
+#in this case the cuadratic factor is not justified:
+exp1sp3 <- dataexpSPR[dataexpSPR$region %in% "sp3",]
+
+mexp2.sp3.quad <- lmer(I(-rtfactor/rt) ~ c * (wmc+I(wmc^2)+rs) +
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),exp1sp3,REML=F)
+
+mexp2.sp3.noquad <- lmer(I(-rtfactor/rt) ~ c * (wmc+rs) +
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),exp1sp3,REML=F)
+anova(mexp2.sp3.noquad,mexp2.sp3.quad )
+
+
+
+dataexpSPR.withoutOutliers <- dataexpSPR
+save(dataexpSPR.withoutOutliers,
+     mexp2.auxV.quad.withoutOutliers,mexp2.auxV.quad.withOutliers,mexp2.auxV.withoutOutliers,
+     mexp2.auxV.quad,mexp2.auxV.noquad,  #for model comparison
+     mexp2.partV.withoutOutliers, mexp2.partV.withOutliers,
+     mexp2.sp1.withoutOutliers, mexp2.sp1.withOutliers,
+     mexp2.sp2.withoutOutliers, mexp2.sp2.withOutliers,
+     mexp2.sp3.withoutOutliers, mexp2.sp3.withOutliers,
+     mexp2.sp3.quad,mexp2.sp3.noquad,  #for model comparison
+     file="data/mexp2.Rda")
+
+@
+
+<<exp2second_contrast,include=FALSE,eval=FALSE>>==
+load("data/mexp2.Rda")
+
+dataexpSPR.withoutOutliers$c2 <- factor( dataexpSPR.withoutOutliers$condition, levels = c("baseline","V3a","V2a"))
+contrasts( dataexpSPR.withoutOutliers$c2) <- contr.sdif(3)
+colnames(contrasts( dataexpSPR.withoutOutliers$c2)) <- c("V3vsV1","V2vsV3")
+
+ dataexpSPR.withoutOutliers$V3vsV1 <- 0
+ dataexpSPR.withoutOutliers$V2vsV3 <- 0
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "baseline",]$V3vsV1 <- -2/3
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "baseline",]$V2vsV3 <- -1/3
+
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "V2a",]$V3vsV1 <- 1/3
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "V2a",]$V2vsV3 <- -1/3
+
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "V3a",]$V3vsV1 <- 1/3
+ dataexpSPR.withoutOutliers[ dataexpSPR.withoutOutliers$condition %in% "V3a",]$V2vsV3 <- 2/3
+
+
+mexp2.c2.auxV.quad.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+I(wmc^2)+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+I(wmc^2) |itemnumber)+(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "auxV"  )
+
+mexp2.c2.auxV.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "auxV"  )
+
+mexp2.c2.partV.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "partV"  )
+
+mexp2.c2.sp1.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "sp1"  )
+
+mexp2.c2.sp2.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "sp2"  )
+
+
+mexp2.c2.sp3.withoutOutliers <- lmer(I(-rtfactor/rt) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpSPR.withoutOutliers,subset= region %in% "sp3"  )
+
+
+save(mexp2.c2.auxV.quad.withoutOutliers,mexp2.c2.auxV.withoutOutliers,mexp2.c2.partV.withoutOutliers,
+     mexp2.c2.sp1.withoutOutliers,mexp2.c2.sp2.withoutOutliers,mexp2.c2.sp3.withoutOutliers, file="data/mexp2c2.Rda")
+
+@
+
+<<load-previous-m3-SPR1,include=FALSE>>=
+load("data/mexp2.Rda")
+load("data/mexp2c2.Rda")
+
+coefRT.trend <- latexcoef(mexp2.auxV.withoutOutliers, "cV3vsV2:wmc")
+coefRT.wmc <- latexcoef(mexp2.auxV.quad.withoutOutliers, "cV3vsV2:wmc")
+coefRT.wmc2 <- latexcoef(mexp2.auxV.quad.withoutOutliers, "cV3vsV2:I(wmc^2)")
+coefRT2.wmc <- latexcoef(mexp2.auxV.quad.withoutOutliers, "cV2vsV1:wmc")
+coefRT2.wmc2 <- latexcoef(mexp2.auxV.quad.withoutOutliers, "cV2vsV1:I(wmc^2)")
+coefRT.rs1 <- latexcoef(mexp2.auxV.withoutOutliers, "rs")
+coefRT.rs2 <- latexcoef(mexp2.partV.withoutOutliers, "rs")
+coefRT.rs3 <- latexcoef(mexp2.sp1.withoutOutliers, "rs")
+coefRT.rsint <- latexcoef(mexp2.auxV.withoutOutliers, "cV3vsV2:rs")
+model.comp.p <- format.pval(anova(mexp2.auxV.noquad,mexp2.auxV.quad )[2,8],digits=2,eps=0.0001,scientific=F) 
+model.comp.ll <- paste(round(anova(mexp2.auxV.noquad,mexp2.auxV.quad )[,4],0) ,collapse= " vs.\\ " )
+model.comp.chi <- round(anova(mexp2.auxV.noquad,mexp2.auxV.quad )[2,6],1)
+model.comp.df <- round(anova(mexp2.auxV.noquad,mexp2.auxV.quad )[2,7],1)
+
+coefRT.auxV.V3 <- latexcoef(mexp2.auxV.quad.withoutOutliers, "cV3vsV2")
+coefRT.partV.V3 <- latexcoef(mexp2.partV.withoutOutliers, "cV3vsV2")
+coefRT.sp1.V3 <- latexcoef(mexp2.sp1.withoutOutliers, "cV3vsV2")
+
+origdata <- nrow(dataexpSPR[ !is.na(dataexpSPR$rt) &dataexpSPR$region %in% c("auxV","partV","sp1"),])
+useddata<- nrow(dataexpSPR.withoutOutliers[ !is.na(dataexpSPR.withoutOutliers$rt) &dataexpSPR.withoutOutliers$region %in% c("auxV","partV","sp1"),])
+
+outTFT <- round( ((origdata-useddata)/origdata) * 100,digits=2)
+
+
+@
+
+\subsubsection{Reading Times}
+
+We compared reading times at the same three regions of interest as in experiment 1, using the same successive differences contrast coding. Since the effects appeared in the same regions as in experiment 1, the added spillover regions were omitted from the analysis.
+
+We removed \Sexpr{outTFT}\% of the data in order to keep the residuals normally distributed; the results of the model were virtually the same without this removal.
+
+\paragraph{First critical region (auxiliary verb ``había'')}
+
+For this region, including a quadratic term for WMC was justified according to a model comparison; an anova comparison of  models based on a Chi-squared test yielded: $\chi^2_\Sexpr{model.comp.df}$~=~\Sexpr{model.comp.chi}, \textit{p}~=~\Sexpr{model.comp.p}. 
+
+The main results for this region are displayed in table \ref{tab:summary-exp2}. Consistent with the indirect evidence in experiment~1 (recall that for re-reading probabilities, we found significant facilitation in VP3 vs.\ VP1, but not  in VP2 vs.\ VP1), 
+we found a differential facilitation between VP2 and VP3: the critical region was read faster in VP3 in comparison with VP2. We also found a significant interaction between WMC$^2$ and VP2-VP1 showing an inverted U-shaped effect of WMC on reading times (see figure \ref{fig:experiment2-auxV-graph}), that is, shorter reading times in  VP2 versus VP1 for low and high-WMC than
+for mid-WMC. In other words, speedups were seen in low as well as high-capacity readers, but not in medium-capacity readers.
+An interaction between WMC and VP2-VP1, even though non-significant, suggests that the speedup may be stronger for high-WMC than for low-WMC. We also found significant interactions between WMC and VP3-VP2, and between WMC$^2$ and VP3-VP2. Due to these findings, we also fitted a separate model that included the VP3-VP1 contrast. This new model revealed that the effect of WMC was only  relevant in relation to VP2 (as can be seen in figure \ref{fig:experiment2-auxV-graph}).
+
+
+As expected, subjects with higher reading skills scores tended to have shorter reading times, but we also found an unpredicted interaction of  reading skills with VP3-VP2 showing that as the reading skill score increases, reading times at the critical region get increasingly shorter for VP3 in comparison with VP2.
+
+
+\begin{table}[h]
+\textbf{\refstepcounter{table}\label{tab:summary-exp2} Table \arabic{table}.}{ Summary of the fixed effects in the LMM with a quadratic term of WMC for reading times at first critical region in experiment 2.}
+
+\processtable{ }
+{
+
+
+ <<rt-cuadterm-exp2-summary, results='asis', echo=FALSE>>=
+
+auxV.quad <- format.lmer(mexp2.auxV.quad)[c(-1),]
+
+tabular.table.frontiers(auxV.quad)
+
+ @
+ }{}
+\end{table}
+
+
+<<experiment2-auxV-graph,echo=FALSE,include=FALSE,eval=TRUE>>=
+minrt <- 250
+maxrt <- 450
+
+
+  
+p<-gplotlmer(lmer=mexp2.auxV.quad.withoutOutliers, c(1,"I(wmc^2)","wmc" ,"cV2vsV1","cV3vsV2","cV3vsV2:I(wmc^2)","cV2vsV1:I(wmc^2)","cV3vsV2:wmc","cV2vsV1:wmc"),x="wmc",group="c", color="c", linetype="c",shape="c")+  geom_smooth(method= lm,formula = y ~ poly(x,2), fill="grey85",size=1)+theme_bw() + ggtitle("Experiment 2. Critical Region (auxiliary verb 'habia')") +  ylab("RT (ms)") +scale_linetype_manual(values=c("solid","dashed", "solid"),name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3")) + scale_shape(solid=FALSE,name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3")) +  scale_y_continuous(limit = c(-rtfactor/minrt,-rtfactor/maxrt), breaks=-rtfactor/seq(minrt,maxrt,25) ,labels = function(x) format(-rtfactor/x,digits = 2) ) +  scale_x_continuous(labels = function(x) format( unscale(x,mean(dataexpSPR.withoutOutliers$pcu),sd(dataexpSPR.withoutOutliers$pcu)) ,digits = 3) ) +  xlab("WMC (partial-credit units)")+scale_color_manual(values=c("black","black", "grey50"),name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3"))+ geom_point(size=3) 
+
+p<-p+ theme(legend.position="bottom",legend.background = element_rect(fill = "transparent",colour = NA))
+
+
+p <- p+   annotate("text", x = 2.2, y = -300, label = "VP1",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+p <- p+   annotate("text", x = 2.2, y = -350, label = "VP2",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+p <- p+   annotate("text", x = 2.2, y = -325, label = "VP3",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+
+
+ggsave(plot=p,file="figure/graphics-experiment2-auxV-graph.eps",dpi=1200,width= 17.6,unit="cm", device=cairo_ps)
+@
+
+\paragraph{Second critical region}
+For these regions a quadratic term for WMC was not justified, so we report the main findings for the model including only linear terms for WMC and reading skills. As in the previous region, there was a speedup for VP3 in comparison VP2, which was independent of WMC (\Sexpr{coefRT.partV.V3}). The results showed reading skills to be significant as well: subjects with a higher score tended to have shorter reading times (\Sexpr{coefRT.rs2}).
+
+
+\subsection{Discussion}
+
+The main results of the self-paced reading study are an inverted U-shaped effect of WMC on reading times for the first critical region for the condition where the extra material modified the VP (VP2) in comparison with the condition with the short dependency (VP1), and a speedup at the two critical regions when the extra material modified the VP that contained the subcategorizing verb (VP3) in comparison with when it modified the intermediate VP (VP2).
+
+
+
+
+The study thus shows that individual differences associated with working memory  have an impact in reading strategies for processes associated with build-up of expectations and retrieval.  Moreover, this study provides more evidence for a differential effect that depends on whether the VP that contains the head of the dependency is modified, as predicted by the activation-based model, but not by DLT and the expectation account.
+
+
+We found that when the extra material modifies the VP where the dependency is completed (VP3), participants  showed a speedup in comparison with the condition where the extra material modifies the intermediate verb (VP2). Since the dependencies in both conditions had the same length, this experiment provides further evidence  for facilitation because of preactivation of the subcategorizing verb as predicted by the activation-based account (\citealp{VasishthLewis2006}; and consistent with figure \ref{fig:difftheories}f).
+
+The data also showed  a surprising inverted U-shaped interaction between WMC  and VP2-VP1 conditions. 
+An analogy to exam-taking may explain how two different underlying causes may lead to a process finishing early:
+students leave an examination hall early either because they  do not have the resources (knowledge, skills, etc) to complete the exam (i.e., they effectively give up), or because they have the resources in excess and can complete the exam quickly. 
+Similarly, 
+there may be two different reasons for the shorter RTs: 
+Low-WMC subjects may read fast because they  have done a shallow parse due to not having enough computational resources (probably using a good-enough parsing heuristic \citealp[see:][]{FerreiraEtAl2002,FerreiraPatson2007}), while high-WMC participants may read fast because they did a complete parse and still had enough resources to take advantage of the build-up of expectations (see the right part of figures \ref{fig:difftheories}e and \ref{fig:difftheories}f). Medium-WMC participants, however, may have built a complete parse but either did not have enough resources available for the build-up of predictions of the upcoming head, or the memory-driven locality effect offset the facilitation due to expectations. The difference between this study and the eye-tracking study may be due to the increased task demands of self-paced reading and the impossibility of making regressive saccades. This difference is also evident from the lower comprehension accuracy in  self-paced reading  in comparison with  eye-tracking  (70\% vs.\ 82\%).
+
+
+
+
+
+As in the previous experiment, the speedup at the critical region depends only on WMC when the dependent-head distance is increased without a modification of the VP that contains the head (VP2-VP1), while the speedup is independent of WMC when distance is increased by a modification of the VP that contains the head (VP3-VP1). As it was shown in figures \ref{fig:difftheories}b and \ref{fig:difftheories}f, it is expected that a facilitation that depends on WMC will have a bottom asymptote since the duration of the reading times cannot be zero and presumably there is a minimum time needed (for recognizing the word, pressing the space bar, etc). Since the activation-based model predicts stronger facilitation for VP3 in contrast to VP2, it also predicts that the effect of WMC on VP3 will reach the bottom asymptote earlier than on VP2 (and thus showing a ``flat'' WMC effect if all the participants have a relatively high WMC). It should be noted that for the extremely high values of WMC, however, the speedup of VP2 is stronger than of VP3, which is not predicted by the activation-based model (and neither by the expectation account or DLT). However, this is true for a few subjects, and it may be due to the lack of data for the extreme values of WMC.
+
+In addition, the results showed that the facilitation due to preactivation (VP3 vs.\ VP2) ``lasts longer''. This is in some way parallel to the findings of experiment~1, where the facilitation at VP3 condition (this time in comparison with VP1) appeared both in a different measure (re-reading instead of first pass regression probabilities) and it spilled over to the second critical region.  
+

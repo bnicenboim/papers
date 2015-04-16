@@ -1,0 +1,35 @@
+% !TeX root = NicenboimEtAl2015. Working memory differences- MAIN FILE.Rnw
+% !Rnw weave = knitr
+% !TeX program = pdfLaTeX
+
+
+
+
+\section*{Figures}
+
+
+\begin{figure}
+\begin{center}
+\includegraphics{figure/graphics-difftheories.pdf} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:difftheories} Figure \arabic{figure}.}{ The figure depicts the predictions of DLT, activation-based acount, and expectation-based acount without and with the effect of WMC in the four upper subfigures, and in the two lower subfigures the combination of the predictions of DLT and the expectation-based account, and of the activation- and the expectation-based accounts.}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics{figure/graphics-fprp-auxV-exp1-graph.eps} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:fprp-auxV-exp1-graph} Figure \arabic{figure}.}{ The figure depicts the  partial effects on first pass regression probabilities in log-odds scale for the contributing factors condition, WMC, and their interaction;  random factors variance and effects due to reading skills were removed from the dependent variable using the remef function \citep{HohensteinReinhold2013}.}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{center}
+\includegraphics{figure/graphics-experiment2-auxV-graph.eps} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:experiment2-auxV-graph} Figure \arabic{figure}.}{ The figure depicts the  partial effects on the transformed -1/RT scale for the contributing factors condition, WMC, WMC$^2$ and their interaction;  random factors variance and effects due to reading skills were removed from the dependent variable using the remef function \citep{HohensteinReinhold2013}. }
+\end{figure}
+
+
+

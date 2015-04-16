@@ -1,0 +1,265 @@
+% !TeX root = NicenboimEtAl2015. Working memory differences- MAIN FILE.Rnw
+% !Rnw weave = knitr
+% !TeX program = pdfLaTeX
+
+
+
+The experiments have two main objectives. The first objective is to disentangle memory- and expectation-based explanations on the processing of long-distance dependencies. While both the expectation and activation accounts may predict antilocality effects, the activation-based model predicts that facilitation should occur when intervening material modifies an upcoming head, whereas the expectation account predicts facilitation regardless of what the intervening material modifies. Even though this is an oversimplification of the expectation account as defined by \citet{Hale2001} and \cite{Levy2008}, it should hold for the type of sentences we included in our stimuli.
+
+
+
+The second objective is to examine the effect of individual differences in dependency resolution:  if working memory constraints are involved, participants with different WMC should show differential locality or antilocality effects. 
+
+
+In order to address these objectives, we measured WMC and reading skills of (Argentinean) Spanish native speakers, and we used both self-paced reading and eyetracking methodologies to provide converging evidence. The use of Spanish stimuli allowed us to investigate antilocality effects in an SVO language. In addition, because of the relatively free order and long sentences permitted by Spanish, we could do a manipulation that is more common in studies that investigate antilocality in \emph{SOV} structures: increasing the dependent-head distance by interposing material that belongs to the verbal phrase (VP) but appears prior to the verb.
+
+The design of the stimuli is exemplified by (\ref{items}). The distance between the wh-element and the head verb (\textit{had fired}) was manipulated by including an adverbial phrase (AdvP; \textit{before some days}) that attaches to the different VPs in the sentence. Hence there are two different aspects of the manipulation to consider for each condition: (i) the attachment site of the adverbial phrase (main VP, intermediate VP, and last VP where the dependency is completed) and (ii) the length of the dependency between the wh-word (who.ACC) and the head verb.  In (\ref{et:V1}), the length of the dependency is the shortest one, since the AdvP is attached to the main clause VP \textit{asked} (henceforth condition VP1). This entails that by the time the dependency is started at the wh-element, the AdvP has already been interpreted. In this condition, the action that was performed \textit{before some days} was the ``asking''. In both conditions (\ref{et:V2}) and (\ref{et:V3}) the dependency length is larger than in (\ref{et:V1}), since the the AdvP is interposed between the dependent and head verb. However, while in (\ref{et:V2}) the AdvP modifies an intermediate VP (henceforth condition VP2), in (\ref{et:V3}) it modifies the third VP, which contains the head verb, where the dependency is completed (henceforth condition VP3). So while in condition VP2 the ``saying'' happened \textit{before some days}, in condition VP3 the ``firing'' of the dependent ``who.ACC''  was \textit{before some days}. All the items had as a second verb either \emph{comentar} or \emph{decir} ``to say''. Even though these two verbs are ditransitive, the ditransitive construction is extremely uncommon in Argentinean Spanish without a clitic. This means that the reading that would allow an indirect object such as \emph{a quién} completing the dependency is very unlikely \citep[for a similar construction in Spanish with clitic left-dislocation, see ][]{Pablos2006}. Since this type of verbs appears in all conditions, and they are not in the region of interest, they should not affect the experiment. Notice, as well, that the head verb position is kept fixed across conditions in order to avoid word-position effects \citep{FerreiraHenderson1993}. The characteristics of the stimuli are summarized in table \ref{tab:sum-conditions}.
+
+
+\begin{exe} 
+\ex \label{items}
+
+\begin{xlist}
+\ex \textsc{attachment at VP1}
+\gll  \underline{Hace algunos días}, José preguntó {\textbf{a quién}} comentaron que el gerente \textbf{había despedido} por equivocación.  \label{et:V1}\\ 
+\underline{Before some days} José asked \textbf{who.ACC}  they-said that the manager \textbf{had fired} because-of mistake\\
+\glt  ``Some days ago, José asked who they said that the manager had fired by mistake.''
+\ex \textsc{attachment at VP2}
+\gll  José preguntó {\textbf{a quién}}, \underline{hace algunos días}, comentaron que el gerente \textbf{había despedido} por equivocación.   \label{et:V2}\\ 
+José asked \textbf{who.ACC} \underline{before some days} they-said that the manager \textbf{had fired} because-of mistake\\
+\glt  ``José asked who they said  some days ago that the manager had fired by mistake.''
+\ex \textsc{attachment at VP3}
+\gll  José preguntó {\textbf{a quién}} comentaron que, \underline{hace algunos días}, el gerente \textbf{había despedido} por equivocación. \label{et:V3}\\ 
+José asked \textbf{who.ACC}  they-said that \underline{before some days} the manager \textbf{had fired} because-of mistake\\
+\glt   ``José asked who they said that the manager had fired some days ago by mistake.''
+\end{xlist} 
+\end{exe}
+
+
+\begin{table}[h]
+\textbf{\refstepcounter{table}\label{tab:sum-conditions} Table \arabic{table}.}{ Summary of the conditions }
+
+\processtable{ }
+{\begin{tabular}{clc}
+\toprule
+cond. & constituent modified by AdvP
+ & dependency length \\
+\midrule
+VP1 & main VP (head: asked) & short  \\ 
+VP2 & intermediate VP (head: said) & long   \\ 
+VP3 & VP where the dep. is completed (head: had fired) & long \\ 
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+
+\subsection{Predictions}
+Predictions for the critical region (head verb) are summarized in table \ref{tab:predictions}. When the dependency length is increased (VP2 vs.\ VP1 and VP3 vs.\ VP1), DLT predicts increased processing effort, that is, locality-effects. In contrast, the expectation account predicts facilitation at the head verb, that is, antilocality effects. The activation-based model predicts, similar to DLT, increased processing effort for both VP2 and VP3 due to the decay of the wh-element. However, in contrast to DLT, the activation-based model also predicts that in VP3 this difficulty should be counteracted by the preactivation of the VP that contains the head verb. According to the activation account, while VP2 should display locality effects, the effect displayed by VP3 should depend on which underlying process is stronger: activation or decay (which in turn should depend on WMC). 
+
+It should be noted  that while for self-paced reading experiments stronger locality effects imply longer reading times \citep{Gibson2000,GrodnerGibson2005,BartekEtAl2011} and stronger antilocality effects imply shorter ones \citep{Konieczny2000,Levy2008,VasishthLewis2006}, for eye-tracking studies these effects have been associated with different measures. Locality has been associated with the increase in the duration of  first pass reading times in \citet{Staub2010}, total reading times and second pass reading in \citet{LevyKeller2012} and \citet{BartekEtAl2011}, and higher re-reading probabilities in \citet{VasishthDrenhaus2011}; and antilocality with the reduction of the duration of total reading times and second pass reading in  \citet{LevyKeller2012}, regression-path durations in \citet{KoniecznyDoering2003}, and lower first-pass regression probabilities in \citet{VasishthDrenhaus2011}.
+ 
+
+
+\begin{table}[h]
+\textbf{\refstepcounter{table}\label{tab:predictions} Table \arabic{table}.}{ Summary of the conditions and predictions for the head of the dependency }
+
+\processtable{ }
+{\begin{tabular}{ c c c c }
+\toprule
+cond. & expectation & \multicolumn{2}{c}{memory-based accounts} \\
+ 
+        &     account  & DLT    &   activation \\
+\midrule
+VP1 & baseline & baseline & baseline \\ 
+VP2 & facilitation & difficulty & difficulty \\ 
+VP3 & facilitation & difficulty & difficulty \textbf{and} facilitation  \\ 
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+
+Since the processing efforts of DLT and the activation account are associated with working memory constraints, according to these memory-based theories,  participants with different WMC should show differential effects: the parse of the critical region will require more processing effort for low-WMC readers than for high-WMC. Thus DLT predicts that as WMC increases, locality effects should decrease; and for high WMC (compared to low WMC) there should be the smallest difference between long and short conditions (see figure \ref{fig:difftheories}a). For the expectation account, it is not clear whether WMC plays a role at all. If WMC is not relevant, there should not be a differential effect depending on the WMC of the readers (as in figure \ref{fig:difftheories}c). It may be the case, however, that readers with more WMC are able to predict upcoming material better, then they should also display stronger antilocality effects (till a certain limit: either a minimal duration of the fixations or reading times or virtually no re-reading, as it is seen in figure \ref{fig:difftheories}d). Regarding the activation-based account, its prediction for condition VP2 should be the same as the one of DLT: as WMC increases, locality effects should decrease; however, for condition VP3 the locality effects should be counteracted with facilitation due to preactivation, and given enough WMC, readers should offset the processing efforts and display antilocality effects (\ref{fig:difftheories}b). 
+
+<<fakedata-predictions,include=FALSE>>=
+fakedata <- data.frame(wmc = rep(seq(.15, .9, .02),3)  , condition = rep(c("V1","V2","V3"),each=38), rt = rep(0,114) )
+fakedata[fakedata$condition%in%"V1",]$rt=400
+factorofsep = 5
+#only DLT
+fakedata.dlt <- fakedata
+
+plot(function(x) -log(x)*100 +400,xlim=c(.15,.9))
+fakedata.dlt$rt <- ifelse(fakedata.dlt$condition %in% "V2" | fakedata.dlt$condition %in% "V3", -log(fakedata$wmc)*100 +400,400)
+fakedata.dlt[fakedata.dlt$condition %in% "V3",]$rt <- fakedata.dlt[fakedata.dlt$condition %in% "V3",]$rt+factorofsep
+fakedata.dlt$condition <- factor(fakedata.dlt$condition)
+
+#expectations -no WMC
+fakedata.expectations.nowmc <- fakedata
+fakedata.expectations.nowmc$rt <- ifelse(fakedata.expectations.nowmc$condition %in% "V2" | fakedata.expectations.nowmc$condition %in% "V3", 
+                        350,400)
+fakedata.expectations.nowmc[fakedata.expectations.nowmc$condition %in% "V3",]$rt <- fakedata.expectations.nowmc[fakedata.expectations.nowmc$condition %in% "V3",]$rt+factorofsep
+
+#expectations - WMC
+fakedata.expectations.wmc <- fakedata
+
+plot(function(x) -1/(1+exp(-(x*8-3.5) ))*100+400,xlim=c(.15,.9))
+
+fakedata.expectations.wmc$rt <- ifelse(fakedata.expectations.wmc$condition %in% "V2" | fakedata.expectations.wmc$condition %in% "V3",-1/(1+exp(-(fakedata$wmc*8-3.5) ))*100+400,400) #-1/(1+exp(-(fakedata$wmc*10-5.5) ))*150+400,400)
+fakedata.expectations.wmc[fakedata.expectations.wmc$condition %in% "V3",]$rt <- fakedata.expectations.wmc[fakedata.expectations.wmc$condition %in% "V3",]$rt+factorofsep
+
+
+#expectations and DLT
+fakedata.expectations.dlt <- fakedata
+
+fakedata.expectations.dlt$rt <- ifelse(fakedata.expectations.dlt$condition %in% "V2" | fakedata.expectations.dlt$condition %in% "V3", -log(fakedata.expectations.dlt$wmc)*150 +300,400)
+fakedata.expectations.dlt[fakedata.expectations.dlt$condition %in% "V3",]$rt <- fakedata.expectations.dlt[fakedata.expectations.dlt$condition %in% "V3",]$rt+factorofsep
+
+#activation
+
+fakedata.activation <- fakedata
+
+fakedata.activation$rt <- ifelse(fakedata.activation$condition %in% "V3", -log(fakedata.activation$wmc)*150 +300,fakedata.activation$rt)
+fakedata.activation$rt <- ifelse(fakedata.activation$condition %in% "V2" , -log(fakedata.activation$wmc)*100 +400,fakedata.activation$rt)#only decay
+
+#activation and expectations
+
+fakedata.expectations.activation <- fakedata
+
+fakedata.expectations.activation$rt <- ifelse(fakedata.expectations.activation$condition %in% "V2", -log(fakedata.expectations.activation$wmc)*150 +300,fakedata.expectations.activation$rt)
+
+fakedata.expectations.activation$rt <- ifelse(fakedata.expectations.activation$condition %in% "V3" , -log(fakedata.expectations.activation$wmc)*80 +300,fakedata.expectations.activation$rt)
+
+
+ploperty.fake <- list(
+  geom_line(size=1),  scale_x_continuous(breaks=c(.2, .5, .8),labels = c("low-WMC", "mid-WMC",  "high-WMC")),
+  labs(x="", y="RT or some eye-tracking measure"),
+  theme_bw(),
+  scale_linetype_manual(values=c("solid","dashed", "solid"),name=""), #dotted
+  scale_color_manual(values=c("black","black", "grey"),name=""),
+  scale_shape(solid=FALSE,name="Conditions"),
+  scale_y_continuous(breaks=c(), labels = c(),limits=c(300,525)),
+  theme(legend.justification=c(1,1), legend.position=c(1,1),legend.title.align =.5
+        ,legend.background = element_rect(fill = "transparent",colour = NA),
+            panel.grid = element_blank(),text = (element_text(size=8)) )
+)
+@
+
+%fig.height=5,
+
+<<difftheories,echo=FALSE, eval=TRUE,include=FALSE>>=
+p.dlt <- ggplot(data=fakedata.dlt,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake+ggtitle("(a) DLT")
+p.activation <- ggplot(data=fakedata.activation,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake +ggtitle("(b) Activation-based account ")
+p.expectations.nowmc <- ggplot(data=fakedata.expectations.nowmc,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake+ggtitle("(c) Expectation-based account without WMC")
+p.expectations.wmc <- ggplot(data=fakedata.expectations.wmc,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake +ggtitle("(d) Expectation-based account with WMC")
+
+
+p.expectation.dlt <- ggplot(data=fakedata.expectations.dlt,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake +ggtitle("(e) DLT and expectation-based account")
+p.expectation.activation <- ggplot(data=fakedata.expectations.activation
+,aes(x=wmc,y=rt,group=condition,linetype=condition,color=condition)) + ploperty.fake +ggtitle("(f) Activation- and expectation-based accounts")
+
+
+#suppressWarnings( grid.arrange(heights=unit(.5, "npc") , widths=unit(0.5, "npc"),p.dlt,p.expectations.nowmc,p.expectations.wmc,p.activation,ncol=2))
+
+vplayout <- function(x, y) viewport(height=unit(1.8, "npc"), layout.pos.row = x, layout.pos.col = y)
+
+grid.newpage()
+pushViewport(viewport(height=1, layout = grid.layout(3, 2)))
+suppressWarnings(print(p.dlt, vp = vplayout(1, 1)))
+suppressWarnings(print(p.activation, vp = vplayout(1, 2)))
+suppressWarnings(print(p.expectations.nowmc, vp = vplayout(2, 1)))
+suppressWarnings(print(p.expectations.wmc, vp = vplayout(2, 2)))
+
+suppressWarnings(print(p.expectation.dlt, vp = vplayout(3, 1)))
+suppressWarnings(print(p.expectation.activation, vp = vplayout(3, 2)))
+
+@
+
+However, expectation and memory-based theories are not mutually exclusive; recent research supports the idea that insights from both types of theories are needed \citep{Staub2010,VasishthDrenhaus2011,LevyKeller2012,LevyEtAl2013,HusainEtAl2014}. If DLT acts together with the expectation account (either the type that does not depend on memory, see figure~\ref{fig:difftheories}c, or the one that does depend on memory, see figure~\ref{fig:difftheories}d), locality effects should decrease as WMC increases until they become increasing antilocality effects, but, as before, the facilitation should not exceed a certain lower limit (see figure~\ref{fig:difftheories}e). As it is the case with each of these two accounts independently, the combination of DLT with the expectation account does not predict any difference between VP2 and VP3. If the activation-based model acts together with the expectation account, locality effects should also decrease together with an increase of WMC till they become increasing antilocality effects. However, processing efforts should be weaker and facilitation stronger for VP3 in contrast to VP2, since the facilitation of VP3 has two sources: expectations and preactivation, while the source of facilitation in VP2 is only expectations (see figure~\ref{fig:difftheories}f).
+ 
+
+
+<<diffcombintheories,echo=FALSE,fig.cap="The figure depicts the prediction for DLT and the expectation-based account, and for the activation and the expectation-based accounts-acount.", eval=FALSE, fig.env="figure*",  out.width='.75\\linewidth'>>=
+
+p.expectation.dlt <- ggplot(data=fakedata.expectations.dlt,aes(x=wmc,y=rt,group=condition,linetype=condition)) + ploperty.fake +ggtitle("(a) DLT and expectation-based account")
+p.expectation.activation <- ggplot(data=fakedata.expectations.activation
+,aes(x=wmc,y=rt,group=condition,linetype=condition)) + ploperty.fake +ggtitle("(b) Activation- and expectation-based accounts")
+
+#suppressWarnings( multiplot(p.expectation.dlt,p.expectation.activation,cols=2))
+
+
+#suppressWarnings( grid.arrange(heights=unit(0.5, "npc") , widths=unit(0.5, "npc"),p.expectation.dlt, p.expectation.activation, ncol=2))
+
+#otro intento
+vplayout <- function(x, y) viewport(layout.pos.row = x, layout.pos.col = y, height=.50)
+
+grid.newpage()
+pushViewport(viewport( layout = grid.layout(1, 2) ))
+suppressWarnings(print(p.expectation.dlt, vp = vplayout(1, 1)))
+suppressWarnings(print(p.expectation.activation, vp = vplayout(1, 2)))
+
+@
+
+
+\subsection{General Procedure}
+Participants were tested individually using a PC computer. They got an overview of the whole experiment and then completed three tasks at their own pace: First, they performed a rapid automatized naming task; second,  an operation span task; and finally, subjects performed an eye-tracking experiment in experiment~1, and a self-paced reading task  in experiment~2. 
+
+
+\subsubsection{Operation Span Task}
+Participants took part in the operation span task \citep{TurnerEngle1989} using a software developed by von der Malsburg (\url{https://github.com/tmalsburg/py-span-task}) and used in \citet{vonderMalsburgVasishth2012} following the  recommendations given in \citet{ConwayEtAl2005}. Even though variants of the reading span task by \citet{DanemanCarpenter1980} have been used in many psycholinguistic studies, it is likely that the reading span task measures verbal ability or reading experience as well as WMC \citep{MacDonaldChristiansen2002,ConwayEtAl2005}. Since reading experience is also a good candidate for explaining differential effects in sentence processing, a solution is to include a
+nonverbal task to examine the domain-general aspects of cognition that may contribute to the individual differences \citep{SwetsEtAl2007}. Since the operation span task probably measures mathematical ability as well as working memory (but not reading skills),  if higher scores of the operation span task predict facilitation between experimental conditions, it would be unlikely that the result could be explained by the effect of reading experience alone.
+
+ The procedure of the operation span task test was similar to the one employed by \citet{vonderMalsburgVasishth2012} with some minor modifications:
+First, participants had to verify the correctness of 25 simple equations. At this stage, the reaction time of the equations 10 to 25 was measured;  the average reaction time plus two standard deviations was used as a time-out at the second stage. Calculating a time-out for every participant ensures that participants that are fast will not have time left to rehearse the items at the following stage of the test.
+Afterwards, participants had to carry out  a dual task: check equations and memorize letters that were shown between the equations for 800 ms. After a group of equation-letter successions, participants were instructed to type in order the letters that had   appeared before.
+
+
+Before participating in the actual test, subjects practised with four trials of equation-letter successions. In the main test, successions of equation-letter had between three and seven elements, and there were eight sets for each size resulting in 32 trials. Presentation order of the sets was randomized and no feedback regarding the correctness of the judgments of equations or recalled items was given.
+
+In all parts of the test, participants had to read the equations and letters aloud in order to prevent vocal rehearsal strategies. Only consonants were used as memory items to prevent participants from forming ``words'' with vowels and consonants, or ``sentences'', if words had been used.
+
+Partial-credit unit scores, which indicate the mean proportion of correctly recalled items within the sets  \citep{ConwayEtAl2005}, were used as a numeric score of individual working memory.
+
+
+
+
+\subsubsection{Rapid Automatized Naming Tasks}
+
+Working memory-capacity correlates with other reader characteristics, which may in turn account for the variance in participants’ reading behavior as well as or better than working memory capacity \citep{TraxlerEtAl2012}. To determine whether working memory capacity correlates with reading times independently of reading skills, it is important to assess the effects of working memory capacity  in the presence of some measure of reading skills.
+
+Even though there are different ways to measure reading skills (among others: speeded naming abilities, oral language ability, vocabulary, attention), \citet{KupermanVanDyke2011} analyzed which tests from a broad battery of individual difference measures were predictive of eye-movement patterns associated with reading ability. They showed that rapid automatized naming was a robust predictor across the entire eye-movement record.
+
+
+
+Participants with longer rapid automatized naming times tend to have lower reading comprehension scores, slower reading rates  and their initial landing position when fixating tends to be further to the left (\citealp[among others:][]{HoweEtAl2006,ArnellEtAl2009,KupermanVanDyke2011}
+). Moreover, rapid automatized naming tasks seem to recruit a network of neural structures also involved in more complex reading tasks \citep{MisraEtAl2004}. In normal reading, readers must be able to disengage from one stimulus and move to another, rapidly programming saccades as the eyes move. Since this task involves speeded serial visual inspection and subsequent naming of items, the oculomotor component of this task is very similar to that required in natural reading. 
+
+
+In order to measure rapid automatized naming times, the first author developed a software that automatizes the test (\url{https://github.com/bnicenboim/py-ran-task}). In this task, participants saw a grid containing items (either letters or digits), and they were instructed to name them as fast as possible. 
+
+
+Each subject read a series of screens with 50 items;  the items were the same set of letters or numbers that were used in \citet{DenklaRudel1976}: \{o, a, s, d, p\} and \{2, 6, 9, 4, 7\}. The first eight trials were composed of letters and the following eight had numbers. The items were displayed in five rows of ten columns and were listed in random order with the constraint that adjacent items were not the same. Before every trial, a screen with underscores instead of the items was displayed.
+
+The participants were instructed to read aloud as fast as possible, and in case they misread, they were instructed to reread only the misread item. The test started with two practice trials to familiarize the participants with the task. Each trial started and ended with the spacebar: participants were instructed to start reading immediately after pressing the spacebar, and to press it again immediately after finishing reading aloud the last item.  
+<<include=FALSE>>=
+#all items
+corexpET <- round(cor(indivET$rann,indivET$ranl),2)
+corexpSPR <- round(cor(indivSPR$rann,indivSPR$ranl),2)
+
+
+@
+
+Since the total reading times  for letters and for numbers were highly correlated (r~=~\Sexpr{corexpET} for experiment~1 and r~=~\Sexpr{corexpSPR} for  experiment~2), both were averaged together. The inverse of this averaged reading time was used as the \textit{reading skills measure}; this way the measure furnishes an intuitive value associated with speed: a higher value represents a more skilled reader.
+
+
+
+\subsubsection{Data Analysis}
+The data analysis was conducted in the R programming environment \citep{R2013}, using either linear mixed-effects model (LMM; \citealp{PinheiroBates2000}) or generalized linear  mixed-effects models with a binomial link function to the response data (GLMM). Both are regression models that include both fixed effects (such as predictors) and random effects, and they are available in  the package \textit{lme4} \citep{lme4}. Since LMMs minimize the false positives when they include the maximal random effects structure justified by the design \citep{SchielzethForstmeier2009,BarrEtAl2013}, both LMMs and GLMMs were fit following this guideline. However, the random effects structure was simplified by removing the correlations, since the models either did not converge or the correlation between variance components could not be estimated. 
+
+For large samples, the \textit{t} distribution approximates the normal distribution and an absolute value of \textit{t} larger than 2 indicates a significant effect at $\alpha$~=~0.05. 
+For all the models presented in the study, covariates such as WMC and reading skills were scaled and centered. 
+
+
+
+
+

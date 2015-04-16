@@ -1,0 +1,241 @@
+
+% !Rnw weave = knitr
+% !TeX program = pdfLaTeX
+
+\documentclass{frontiersSCNS} 
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,german,english]{babel}
+
+\usepackage{url,lineno}
+\usepackage{underarrows}
+
+\linenumbers
+
+\copyrightyear{}
+\pubyear{}
+
+\def\journal{Psychology}
+\def\DOI{}
+\def\articleType{Research Article}
+\def\keyFont{\fontsize{8pt,11pt}\helveticabold }
+\def\firstAuthorLast{Nicenboim {et~al.}}
+\def\Authors{Nicenboim, Bruno\,$^{1,*}$,  Vasishth, Shravan\,$^{2}$, Gattei, Carolina\,$^{3}$, Sigman, Mariano\,$^{4}$, and Kliegl, Reinhold$^{5}$}
+
+\def\Address{
+$^{1}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+$^{2}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+School of Mathematics and Statistics, University of Sheffield,Sheffield, UK \\
+$^{3}$INCIHUSA, CONICET, Mendoza, Argentina \\
+$^{4}$Laboratory of Integrative Neuroscience, Buenos Aires, Argentina \\
+$^{5}$Department of Psychology, University of Potsdam, Potsdam, Germany
+ }
+
+\def\corrAuthor{Bruno Nicenboim}
+\def\corrAddress{Departament of Linguistics, University of Potsdam
+Haus 14, Karl-Liebknecht-Str. 24-25, D-14476 Potsdam, Germany}
+\def\corrEmail{bruno.nicenboim@uni-potsdam.de}
+
+
+\newcommand{\writenote}[1]{
+{\fontfamily{iwona}\selectfont
+\color{blue}
+  {[}#1{]} }
+}
+
+\newcommand{\posscitet}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+
+\usepackage{gb4e}
+\noautomath
+
+\begin{document}
+
+<<setup,cache=FALSE,include=FALSE>>=
+# global chunk options
+opts_chunk$set(cache=TRUE, autodep=TRUE,fig.path='figure/graphics-', cache.path='cache/graphics-', fig.align='center', fig.pos='!ht')
+opts_knit$set(self.contained=FALSE)
+
+#for labeling
+knit_hooks$set(rexample = function(before, options, envir) {
+  if (before) sprintf('\\begin{rexample}\\label{%s}\\hfill{}', options$label) else '\\end{rexample}'
+})
+
+
+library(knitr)
+require(plyr)
+require(reshape2)
+require(car)
+require(lme4)
+require(gridExtra)
+
+#some custom functions:
+source("functions//remef.v0.6.8.R")
+source("functions//usefulfunctions0.3.1.R")
+
+load("data/NicenboimEtAl2013ET.Rda")
+#dataET all the data of the ET
+#dataexpET only the relevant experiment ET
+#indivET individual data of ET
+load("data/NicenboimEtAl2013SPR.Rda")
+#dataSPR all the data of the SPR
+#dataexpSPR only the relevant experiment SPR
+#indivSPR individual data of SPR
+
+@
+
+\onecolumn
+\firstpage{1}
+
+\title[Working memory differences in long-distance dependency resolution]{Working memory differences in long-distance dependency resolution}
+\author[\firstAuthorLast ]{\Authors}
+\address{}
+\correspondance{}
+\extraAuth{}
+\topic{Encoding and navigating linguistic representations in memory}
+
+\maketitle
+
+\begin{abstract}
+\section{}
+There is a wealth of evidence showing that increasing the distance between an argument and its head leads to more processing effort, namely, locality effects; these are usually associated with constraints in working memory (DLT: \citealp{Gibson2000}; activation-based model: \citealp{LewisVasishth2005}). In SOV languages, however, the opposite effect  has been found: antilocality \citep[see discussion in][]{LevyEtAl2013}. Antilocality effects can be explained by the expectation-based approach as proposed by \citet{Levy2008} or by the activation-based model of sentence processing   as proposed by \citet{LewisVasishth2005}.
+We report an eye-tracking and a self-paced reading study with sentences in Spanish  together with measures of individual differences to examine the distinction between expectation- and memory-based accounts, and  within memory-based accounts the further distinction between DLT and the activation-based model. The experiments show that (i) antilocality effects as predicted by the expectation account appear only for high-capacity readers; (ii) increasing dependency length by interposing material that modifies the head of the dependency (the verb) produces stronger facilitation than increasing dependency length with material that does not modify the head; this is in  agreement with the activation-based model but not with the expectation account; and (iii) a possible outcome of memory load on low-capacity readers is the increase in regressive saccades (locality effects as predicted by memory-based accounts) or, surprisingly, a speedup in the self-paced reading task; the latter consistent with good-enough parsing \citep{FerreiraEtAl2002}. In sum, the study suggests that individual differences in working memory capacity play a role in dependency resolution, and that some of the aspects of dependency resolution  can be best explained with the activation-based model together with a prediction component.
+
+
+\tiny
+\keyFont{ 
+\section{Keywords:} locality, antilocality, working memory capacity, individual differences, Spanish, activation, DLT, expectation
+} 
+\end{abstract}
+
+
+\section{Introduction}
+
+Long-distance dependencies (also called non-local, filler-gap, or unbounded dependencies) have been investigated since \posscitet{Fodor1978}  work on parsing strategies, but many questions remain unanswered or only partially answered. It is uncontroversial that the distance over which a dependency is resolved, shown in (\ref{ex:whq}) with an arrow,  is a primary determinant of the speed and the accuracy of the dependency resolution \citep[among others:][]{Gibson2000,McElreeEtAl2003,LewisVasishth2005,Levy2008}.  It is controversial, however, how increasing this distance affects the speed and the accuracy of the resolution. 
+\begin{exe} 
+\ex  \linkfrom What \under do different theories \to predict? \label{ex:whq}
+\end{exe}
+
+
+\subsection{Memory-based explanations} 
+
+There is a wealth of evidence showing that increasing the distance between an argument and its head hinders underlying memory processes in some way. This is supported by research that shows that longer dependencies produced (i) locality effects, that is, a slowdown (or increase of regressive saccades) at the region of the dependency resolution when the distance between dependent and head or subcategorizing verb (or gap) is increased \citep[either in self-paced reading, eye-tracking experiments, or both; among others:][]{Gibson2000,GrodnerGibson2005,DembergKeller2008,BartekEtAl2011,VasishthDrenhaus2011}; (ii) Event Related Potential (ERP) measures associated with difficulty (\citealp{KluenderKutas1993,FiebachEtAl2002}; \citealp[but see:][]{PhillipsEtAl2005}); and (iii) deterioration of response accuracy in speed-accuracy trade-off (SAT) experiments \citep{McElree2000,McElreeEtAl2003}. The underlying memory process that is adversely affected when distance is increased is subject to debate. Here we discuss two theories that account for the memory-based locality effects: dependency locality theory  \citep[DLT;][]{Gibson2000} and the activation-based model  \citep{LewisVasishth2005}.
+
+DLT posits two separate components of a sentence's  processing cost:  storage and integration costs. Storage cost is argued to depend on the number of syntactic heads required to complete the current input as a grammatical sentence \citep{Gibson2000} and seems to be independent of the amount of time that an incomplete dependency is held in memory \citep{GibsonEtAl2005}. On the other hand, integration cost is locality-based, that is, the cost is based on the distance between the dependent and its head; this distance is based on the number of new intervening discourse referents \citep{Gibson2000}.
+
+In contrast to DLT, which is a theory specific to sentence comprehension processes, the activation-based model is based on a general cognitive model. 
+In the activation-based model, linguistic items in memory are represented as feature bundles that suffer from decay and interference from the features of other linguistic items. Under this model, locality effects can be explained in terms of difficulty in the retrieval of a non-local argument; retrieval is driven by cues that are set at the moment of dependency resolution. Since the access to the argument involves a match of retrieval cue features against candidate memory items \citep{LewisEtAl2006}, this access is adversely affected when (i) more time has passed from the encoding of the argument (decay); and (ii) when there are other items with similar features that serve as distractors (similarity-based interference). The activation-based model excludes the possibility of storage costs as proposed by DLT, but stored memories have their observable effects through interference \citep{VanDykeLewis2003,LewisEtAl2006}.
+
+Thus, in cases such as (\ref{ex:GrodnerGibson2005}), both DLT and the activation-based model predict that as the distance between the displaced argument \textit{who} and the subcategorizing verb \textit{supervised} increases, the retrieval of the argument will be harder. This is supported by the evidence of locality effects in relative clauses \citep{GrodnerGibson2005,BartekEtAl2011}.
+
+\begin{exe} 
+\ex From experiment~2 of \citet{GrodnerGibson2005} \label{ex:GrodnerGibson2005}
+\begin{xlist}
+\ex The administrator \textbf{who} the nurse \textbf{supervised}...
+\ex The administrator \textbf{who} the nurse from the clinic \textbf{supervised}...
+\ex The administrator \textbf{who} the nurse who was from the clinic \textbf{supervised}...
+\end{xlist}
+\end{exe}
+
+
+In spite of the evidence for locality effects, there is a growing body of evidence showing the opposite effect: antilocality. Studies on SOV structures (\citealp[in Hindi:][]{Vasishth2003,VasishthLewis2006}; \citealp[ and in German:][]{Konieczny2000,KoniecznyDoering2003,LevyKeller2012}) showed that increasing distance can produce a  speedup at the site of the dependency completion. In many cases the speedup can be accommodated in the activation-based model since the interposed material can help to strengthen the representation of the upcoming head by activating it through modification \citep{VasishthLewis2006}. This would entail that the processing of the head will be facilitated since it has already been generated; we will express that here by saying that the VP has been \emph{preactivated}. This is specially relevant for SOV languages, where the arguments of the VP appear preverbally, modifying the VP before the head is parsed. So, in cases such as (\ref{ex:VasishthLewis2006}), where the extra material belongs to the VP,  the activation-based account will predict that increasing distance should, in fact, result in a speedup   \citep[but only if the decay does not offset the benefit of activation;][]{LewisEtAl2006}.
+
+\begin{exe} 
+\ex From \citet{VasishthLewis2006} \label{ex:VasishthLewis2006}
+\begin{xlist}
+\ex 
+\gll Vo kaagaz \textbf{jisko} us la\d{r}ke-ne \textbf{dekhaa} bahut puraanaa thaa. \\
+ that paper \textbf{which} that boy-ERG \textbf{saw} very old was \\
+\glt `That paper which that boy saw was very old.’ (Object relative, no intervening discourse referents) \\
+\ex 
+\gll Vo kaagaz \textbf{jisko} us la\d{r}ke-ne mez-ke piiche gire.hue \textbf{dekhaa} bahut puraanaa thaa. \\
+ that paper \textbf{which} that boy-ERG table-GEN behind fallen \textbf{saw}  very old was\\
+\glt  `That paper which that boy saw fallen behind a/the table was very old.’ (Object relative, two intervening discourse referents)\\
+\end{xlist}
+\end{exe}
+
+
+\subsection{Expectation-based explanations} 
+As in other aspects of cognition,  predictions play an important role in language, and evidence from different sources supports the view that language processing does not only depend on bottom-up processes \citep[for a review of prediction in language see:][]{KutasEtAl2011}. It has been shown that a syntactically constraining context can lead to facilitation when a word is predicted either (i) because of local syntactic constraints related to characteristic of verbs, as proposed by \citet{TrueswellEtAl1993}, and \citet{Konieczny2000}; or (ii) because the parser is able to build structure in a top-down manner, using grammatical or probabilistic 
+information, as proposed by \citet{Jurafsky1996} and \citet{Hale2001}. The latter idea was developed further in an expectation-based theory of processing \citep{Levy2008} where the main source of difficulty is determined by the surprisal (negative log of the conditional probability) of a word given its context \citep[as proposed by ][]{Hale2001}. The surprisal metric proposed by \citeauthor{Hale2001} formalizes the idea that a more surprising lexical content is also less predictable.
+
+Long-distance dependency resolution is a situation where the comprehender knows that a subcategorizing verb has to appear, but does not know exactly when. Since each constituent of a given category that is integrated after the dependent (a wh-element in this case) eliminates most of the expectation for seeing another constituent of the same type next, each constituent that is read  increases the expectation for seeing a constituent of one of the remaining types. Because the subcategorizing verb is one of the remaining types, the expectations of finding it will increase monotonically, and being more expected it will also be processed more easily. In other words, given that the clause has a finite
+length, the probability that the next word will be the subcategorizing verb rises as the number of words after finding
+the wh-element increases (in a similar way to an increasing hazard function as proposed for visual search by \citealp{PetersonEtAl2001}, and for the anticipation function of environmental cues in macaques by \citealp{JanssenShadlen2005}).
+
+
+Thus, also in the cases where memory-based accounts will predict locality effects (due to integration or retrieval costs), the expectation-based account of dependency resolution will predict the opposite effect: antilocality. The predictions of the expectation-based account for non-local dependency resolution were borne out specially in studies using languages with SOV structures, which showed antilocality effects. However, as mentioned before, in many cases the predicted antilocality effects could also be explained either with local syntactic constraints \citep{Konieczny2000} or with an activation-based account \citep{Vasishth2003,VasishthLewis2006}. Independent support for the expectation-based account of antilocality in dependency resolution would come from cases where the length manipulation is independent of material that belongs to the VP and appears preverbally. Cases like this can be found in length manipulations such as  (\ref{ex:wh-overS}): object wh-questions where the dependency crosses over a sentence boundary. This is examined in more depth in the experiments of this paper.
+
+\begin{exe}
+\ex  \label{ex:wh-overS}
+\begin{xlist}
+\ex \textbf{Who} has John \textbf{called}?
+\ex \textbf{Who} does Mary think that John has \textbf{called}?
+\end{xlist}
+
+\end{exe}
+
+
+
+ \subsection{Individual differences}
+  \subsubsection{Working memory capacity and the parsing of unbounded dependencies}
+
+Memory-based accounts of locality effects assume, either implicitly or explicitly, that if more working memory capacity (WMC) is required for processing than is available, longer processing times and/or a higher proportion of errors will result during retrieval or integration. This prediction is implicit in DLT, where the upper limits on storage and integration cost \citep{gibsonthomas99,Gibson2000} should depend on WMC; and it is explicit in the activation-based model, where low capacity is argued to result in hindered ability to complete a retrieval \citep{DailyEtAl2001}. One plausible implication is that low-capacity readers may be more affected by locality effects, showing stronger effects than high-capacity readers.
+
+However, the effect of individual differences in WMC influencing dependency resolution processes has been neglected in the literature (but see: \citealp{VanDykeEtAl2014}). This absence of work is surprising given that there is considerable evidence for the interaction of individual differences with syntactic and semantic processes \citep{JustCarpenter1992,PearlmutterMacDonald1995,TraxlerEtAl2005,vonderMalsburgVasishth2012,TraxlerEtAl2012}, and there is also evidence for a reduction in performance during long-distance dependency resolution and memory dual-tasks \citep{FedorenkoEtAl2006,FedorenkoEtAl2013}. 
+
+
+
+
+Regarding the influence of working memory on expectation-based parsing, the predictions are less clear. The studies showing that expectations may play a dominant role only when working memory load is relatively low \citep{Levy2008,LevyKeller2012,HusainEtAl2014} suggest that  the processes involved in the anticipation of upcoming material may also depend on working memory. This is so because comprehenders' expectations depend on the accumulating information \citep{Levy2008}. Low-WMC readers, who have a reduced ability to temporarily store and manipulate information, may then be less able to adequately expect upcoming lexical material, relative to high-WMC readers.  To our knowledge, the only evidence for this claim, however, comes from \posscitet{OttenVanBerkum2009} ERP study where low-WMC participants showed an additional later negativity (900–1500 ms) to unexpected content.
+
+\subsubsection{WMC and reading skills} 
+
+Differences in WMC can successfully explain individual differences in comprehension performance \citep{DanemanCarpenter1980}; and this measure of individual differences seems to be the right candidate to account for differential effects in processes related to dependency resolution. There is ample evidence showing that lower WMC reflects higher limitations in attention allocation for goals \citep{Engle2002}, and several studies have shown the predictive power of WMC  for language comprehension ability \citep[for a meta-analysis of 77 studies till the mid-nineties:][]{DanemanMerikle1996}. 
+Furthermore,  some studies have shown that individuals with lower capacity are less successful in integrating information over distance in a text \citep{DanemanCarpenter1980,YuillEtAl1989}, and have greater comprehension deficits, in part, because they are less able to maintain on-task thought  \citep{McVayKane2011}. Moreover, low-capacity participants seem to have a greater disadvantage than high-capacity participants when they face  difficult sentences (\citealp[for garden-path vs.\ non-garden path sentences:][]{ChristiansonWilliams2006}; \citealp[ for comprehension reaction times in subject- vs.\ object-relative clauses:][]{KingJust1991,VosEtAl2001b}). The reason for differences in  WMC may be rooted in the variability  in either a limited amount of activation \citep{JustCarpenter1992,VanRijEtAl2013},  computational resources available or processing efficiency \citep[among others:][]{DanemanCarpenter1980,DanemanCarpenter1983}, the ability to overcome interference \citep{HasherZacks1988,UnsworthEngle2007}, or the efficiency of retrieval cues present in the active portion of working memory \citep{EricssonKintsch1995}.
+
+It is possible, however, that individual differences in capacity only reflect experience and not intrinsic capacity differences \citep{MacDonaldChristiansen2002,WellsEtAl2009}. Readers characterized as high-capacity may indeed be more sensitive to the semantic cues available to them, as proposed by \citet{PearlmutterMacDonald1995}, but mainly because these readers also have more language experience. In fact, recent work by \citet{TraxlerEtAl2012} raises the  concern that WMC correlates with many other reader characteristics. According to \citeauthor{TraxlerEtAl2012}, 
+fast readers, who read more often than slow readers, will have greater experience with language; this would in turn make them more sensitive to semantic cues in the syntactic analysis.  In a new set of analyses based on \posscitet{TraxlerEtAl2005} data set, Traxler and colleagues found that WMC interacted with sentence-characteristic variables only when reading speed was not included in the model (since they assumed that reading speed was a measure of reading skills).  
+
+In order to obtain a reliable measure of working memory that is not correlated with reading speed and experience, we chose to use the operation span task \citep{TurnerEngle1989,ConwayEtAl2005}. In addition, we adopted the rapid automatized naming task  \citep{DenklaRudel1976}, since it has been shown that it predicts reading speed, comprehension, and other characteristics associated with reading skills (among others: \citealp{KupermanVanDyke2011}). The inclusion of both tasks can therefore help to determine whether it is WMC and/or reading experience that account for differences in dependency resolution processes.
+
+
+
+ \section{Experiments} 
+  <<child='NicenboimEtAl2015. Working memory differences-Experiments.Rnw'>>=
+  @
+
+\section{Experiment 1} 
+  <<test, child='NicenboimEtAl2015. Working memory differences-Experiment1.Rnw'>>=
+  @
+
+ \section{Experiment 2} 
+ <<test, child='NicenboimEtAl2015. Working memory differences-Experiment2.Rnw'>>=
+ @
+
+
+\section{General Discussion}
+ <<test, child='NicenboimEtAl2015. Working memory differences-GeneralDiscussion.Rnw'>>=
+ @
+
+
+\section*{Disclosure/Conflict-of-Interest Statement}
+The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
+
+
+
+
+\section*{Acknowledgement}
+Thanks to Juan Kamienkowski and Diego Shalom for their assistance in the Integrative Neuroscience Lab. Thanks to Pavel Loga\v{c}ev for the student's exam simile and valuable feedback.  Special thanks to the reviewers (Kiel Christianson and the anonymous reviewer) for their valuable comments and suggestions. 
+
+\paragraph{Funding\textcolon} 
+The work was supported by Minerva Foundation, Potsdam Graduate School, and the University of Potsdam.
+
+
+\bibliographystyle{frontiersinSCNS&ENG} 
+
+\bibliography{frontiersbibtex.bib}
+
+<< child='NicenboimEtAl2015. Working memory differences-ending.Rnw'>>=
+  @
+  
+\end{document}

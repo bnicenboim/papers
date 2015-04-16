@@ -1,0 +1,97 @@
+%%%%%%%%%%%%%%%%  ARROWS FOR LINGUISTIC USES  %%%%%%%%%%%%%%%%
+% (extracted from ling05.sty)
+
+%-------------------Move Arrows (from J.Frampton):
+\def\leaderfill{\leaders\hrule\hfil}
+\def\pointerup{\hbox to 0pt{\hss
+  \vbox{\offinterlineskip\vskip-1pt\hbox{\elevenex\char'170}\null}\hss}}
+\def\pointerdown{\hbox to 0pt{\hss
+  \vtop{\offinterlineskip\null\hbox{\elevenex\char'171}\vskip-1pt}\hss}}
+
+\def\spacer{\hskip4.5pt}
+\def\fillright#1{\hfil#1\leaderfill}
+\def\fillleft#1{\leaderfill#1\hfil}
+% Changed spelling to \centr, else conflicts with LaTeX \center{} -CT
+\def\centr#1{\leaderfill#1\leaderfill}
+\def\link#1{\multispan#1\leaderfill}
+
+\def\arrowalign#1{\vtop{\baselineskip=0pt \lineskiplimit=0pt \lineskip=2pt
+  \halign{&##\cr#1}}}
+
+\font\elevenex=cmex10 scaled\magstephalf  % just for the arrow!
+      %PS: this may not work on some installations, not sure why. CT
+      %%PPS: (e.g., PCTeX, but it works find works fine with EmTeX)
+%----------------END Move Arrows
+
+% Easy-to-use movement underarrows; does not do overlapping arrows, alas.
+% Built on Frampton's macros.
+% Use: \linkto Word \under (any number of words) \from Word2. (leftward)
+% To get:
+%           Word (any number of Words) Word2.    
+%             ^__________________________|
+%
+%  Or: \linkfrom Word \under (any number of words) \to Word2. (rightward).
+% Arguments 1 and 3 are space-terminated.%
+%
+% Alexis Dimitriadis, 9/1997-11/2000.
+
+% a bar with no arrowhead.  Syntax: \pointernone [height dim] (default fill)
+\def\pointernone{\vrule depth 0pt}
+% Syntax: \depthstrut dim
+\def\depthstrut{\vrule width 0pt depth}
+
+% The omnibus linking engine for whatever we want (but no cross-linking!)
+% Syntax: left under right; left_post right_post; overstrike label
+%   Left, under and right are the parts of the text above the arrows.
+%   The "posts" are vertical lines or up arrows below left and right text.
+%   The overstrike allows for movement that is blocked.
+%   The label will be placed below the line.
+% There are no struts on the label row; add some to the label if it's used.
+%
+\def\@linkanything#1#2#3#4#5#6#7{\hskip 0pt%
+  \arrowalign{#1&#2\depthstrut 0.5ex&#3\cr
+  \fillright{#4}&\multispan 1\leaderfill\llap{#6\hss}\leaderfill&\fillleft{#5}\hfil\cr
+  &\hfil\llap{\scriptsize{#7}\hss}\depthstrut 3pt\hfil&\cr}}
+
+% The overstrike and label are centered on the \under portion of the text.
+% It would be better to center on the entire line, but at best we can center
+% on line + aligned-under words:
+%\def\@linkanything#1#2#3#4#5#6#7{\hskip 0pt%
+%  \arrowalign{#1&#2\depthstrut 0.5ex&#3\cr
+%  \fillright{#4}&\multispan 1\leaderfill\llap{#6\hss}\leaderfill&\fillleft{#5}\hfil\cr
+%  \multispan 3{\hfil \scriptsize#7\depthstrut 3pt\hfil}\cr}}
+
+% An overstrike character centered on the baseline (where the ruler is).
+% Redefine if needed for other fonts/sizes.
+\def\linkXsymbol{\raisebox{-0.54ex}{$\times$}}
+
+
+\def\linkfrom#1\under#2\to#3 {\@linkanything{#1}{#2}{#3 }
+	{\pointernone}{\pointerup}{}{}}
+
+\def\linkto#1\under#2\from#3 {\@linkanything{#1}{#2}{#3 }
+	{\pointerup}{\pointernone}{}{}}
+
+% SPECIALTIES: Roll your own as needed
+
+% Blocked leftward movement
+\def\xlinkto#1\under#2\from#3 {\@linkanything{#1}{#2}{#3 }
+	{\pointerup}{\pointernone}{\linkXsymbol}{}}
+	
+% Blocked  movement, no direction (but also no label)
+\def\xlinknone#1\under#2\from#3 {\@linkanything{#1}{#2}{#3 }
+	{\pointernone}{\pointernone}{\linkXsymbol}{}}
+
+% non-spacing variant: no space required after #3,
+% to make it possible to have a chain of links
+\def\nlinkto#1\under#2\from#3{\@linkanything{#1}{#2}{#3}
+	{\pointerup}{\pointernone}{}{}}
+
+% Williams-style link: no arrow, and a subscripted label
+% Example: \Wlink{n/d}they \under think \from they are smart.
+% Syntax: label left under right (no arrowheads)
+\def\Wlink#1#2\under#3\from#4 {\@linkanything{#2 }{#3 }{#4 }
+	{\pointernone height 1ex}{\pointernone}{}{#1}}
+
+
+%%%%---------- END Easy Movement Under-arrows

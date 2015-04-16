@@ -1,0 +1,865 @@
+% !TeX root = NicenboimEtAl2015. Working memory differences- MAIN FILE.Rnw
+% !Rnw weave = knitr
+% !TeX program = pdfLaTeX
+
+
+\subsection{Method}
+\subsubsection{Participants}
+<<include=FALSE>>=
+minageET <- format(round(min(indivET$age,na.rm=T), 0), nsmall=0) 
+maxageET <-format(round(max(indivET$age,na.rm=T), 0), nsmall=0) 
+meanageET <- format(round(mean(indivET$age,na.rm=T), 1), nsmall=1) 
+
+@
+
+Seventy-six subjects aged between \Sexpr{minageET}--\Sexpr{maxageET} years old (mean \Sexpr{meanageET} years)  participated in this experiment in Buenos Aires, Argentina.  All participants were native speakers of Spanish and were na\"{i}ve as to the purpose of the study. Five participants were excluded from the analysis: two participants had reading glasses that prevented an adequate calibration of the eye-tracker, two performed poorly in the mathematical task of the operation span test (with less than 70\% accuracy), and another subject reported that she consciously re-read every sentence.
+
+<<indiv-scors,include=FALSE>>=
+N <- length(unique(indivET$subj))
+
+
+
+minpcuET <- format(round(min(indivET$pcu), 3), nsmall=3) 
+maxpcuET <-format(round(max(indivET$pcu), 3), nsmall=3) 
+meanpcuET <- format(round(mean(indivET$pcu), 3), nsmall=3) 
+sepcuET <- format(round(sd(indivET$pcu)/sqrt(N), 3), nsmall=3) 
+
+minrsET <-format(round(min(50/indivET$ran) , 2), nsmall=2)    #each screen had 50 letters
+maxrsET <- format(round(max(50/indivET$ran) , 2), nsmall=2) 
+meanrsET <- format(round(mean(50/indivET$ran) , 2), nsmall=2) 
+sersET <- format(round(sd(50/indivET$ran)/sqrt(N) , 2), nsmall=2) 
+
+@
+
+Partial-credit unit scores \citep{ConwayEtAl2005} for the operation span test measuring WMC of the remaining 71 participants ranged between \Sexpr{minpcuET}--\Sexpr{maxpcuET} with an average of \Sexpr{meanpcuET} (\textit{SE}:~\Sexpr{sepcuET}). Average character speed for the rapid automatized naming task for measuring reading skills ranged between \Sexpr{minrsET}--\Sexpr{maxrsET} characters$/$second with an average of \Sexpr{meanrsET} (\textit{SE}:~\Sexpr{sersET}) characters/second.
+
+
+\subsubsection{Stimuli}
+
+The stimuli for this experiment consisted of 48 items with three conditions (place of attachment)  similar to example (\ref{items}). 
+Each participant read the 48 items together with 120 unrelated sentences (72 were experimental items of two unrelated experiments and 48 sentences were filler sentences)  in an individually randomized order. The 144 experimental sentences (48 items in three conditions each) were presented in Latin square design. In order to ensure that participants had paid attention to the sentences, a true-or-false  comprehension task was presented after half of all trials in the experiment, including fillers. Half of these statements were true and half false. For the sentences in (\ref{items}), for example, the statement was false and it was the following: \emph{El gerente fue despedido por equivocación.} ``The manager was fired by mistake.'' The statements following other experimental sentences focused on different aspects of the stimuli: the participants (such as ``Jose fired someone.''), the action (``The manager hired someone.''), the setting of the action (such as ``Someone was fired on purpose.''), etc. We chose to use  true-or-false statements instead of yes-no questions in order to avoid long and unnatural questions.
+
+
+
+
+\subsubsection{Procedure}
+Participants performed the eye-tracking task after having completed  a rapid automatized naming task and  an operation span task. Before the eye-tracking experiment  began, each participant was instructed to read for comprehension in a normal manner and had a practice session of seven sentences.  Eye movements were recorded using an EyeLink 1000 eye-tracker, interfaced with a PC. Stimuli were displayed on an 21'' monitor. Subjects were seated 65 cm from the computer screen. Viewing was binocular, but only the right eye was recorded. All sentences were displayed on a single line and were presented in twelve points Arial font. At the beginning of each trial, a dot appeared at the left edge of the screen and after participants fixated on this dot, the sentence appeared. Participants had to look at the bottom right corner of the screen to indicate they had finished reading. True-or-false statements appeared randomly for half of the stimuli at this point.  No feedback was given as to whether the response was correct or not. After reading half of the sentences, participants took a 10-minute break.
+A calibration procedure was performed at the beginning of the eye-tracking experiment, at the end of the  break,  and between trials as needed.
+
+\subsubsection{Data Analysis}
+Detection of saccades and fixations was done using a modification of the saccades package developed by von der Malsburg (\url{https://github.com/tmalsburg/saccades}), and eye-tracking measures were computed using \emph{em2} package \citep{LogacevVasishth2013}. The appropriate transformation of the dependent variable was determined using the Box-Cox method \citep{BoxCox1964,KlieglEtAl2010} with the boxcox function in the MASS package \citep{VenablesRipley2002}. The log transformation was suggested as the most appropriate transformation.
+
+
+
+\subsection{Results}
+
+\subsubsection{Comprehension Accuracy}
+<<accuracy-exp1,include=FALSE>>=
+#all items
+ETallacc <- dcast(data=dataET,formula=subj~., mean,value.var="question.acc",subset = .(wordn ==1 & !is.na(question.acc)) )
+
+
+N <- length(unique(dataET$subj))
+ETallav <- round(mean(ETallacc[,2])*100,0)
+ETallse <-  round(sd(ETallacc[,2])*100 /sqrt(N) ,0)
+
+ETexp1acc <- dcast(data=dataexpET,formula=subj~., mean,value.var="question.acc",subset = .(wordn ==1 & !is.na(question.acc)) )
+ETexp1av<- round(mean(ETexp1acc[,2])*100,0)
+ETexp1se<- round(sd(ETexp1acc[,2])*100/sqrt(N),0)
+
+ETexp1min<- round(min(ETexp1acc[,2])*100,0)
+ETexp1max<- round(max(ETexp1acc[,2])*100,0)
+quartiles <- round(quantile(ETexp1acc[,2])*100,0)
+dataexpET$wmc <- scale(dataexpET$pcu)
+wmcET <- glmer(question.acc ~  wmc +(wmc|itemnumber)+(1|subj) ,dataexpET,subset=region=="auxV",family=binomial ,
+control=glmerControl(optCtrl=list(maxfun=40000))
+      ) 
+
+wmcET <- latexcoef(wmcET, "wmc")
+
+@
+
+Participants answered correctly on average \Sexpr{ETallav}\% (\textit{SE}:~\Sexpr{ETallse}) comprehension probes of all trials, and \Sexpr{ETexp1av}\% (\textit{SE}:~\Sexpr{ETexp1se}) of the trials belonging to the experiment. The comprehension accuracy for the experimental trials ranged between \Sexpr{ETexp1min}\%--\Sexpr{ETexp1max}\%, while the 25th, 50th, and 75th quartiles were \Sexpr{quartiles[2]}\%, \Sexpr{quartiles[3]}\%, and \Sexpr{quartiles[4]}\% respectively. In addition, a GLMM showed that WMC was a significant predictor of accuracy (higher capacity led to greater accuracy); \Sexpr{wmcET}.
+
+
+
+<<contrastsetcET,include=FALSE>>=
+
+
+dataexpET$wmc <- scale(dataexpET$pcu)
+dataexpET$rs <- scale(1/dataexpET$ran)
+
+#conditions helmert coded
+dataexpET$c <- factor(dataexpET$condition, levels = c("baseline","V2a","V3a"))
+contrasts(dataexpET$c) <- contr.sdif(3)
+colnames(contrasts(dataexpET$c)) <- c("V2vsV1","V3vsV2")
+
+
+dataexpET$V2vsV1 <- 0
+dataexpET$V3vsV2 <- 0
+dataexpET[dataexpET$condition %in% "baseline",]$V2vsV1 <- -2/3
+dataexpET[dataexpET$condition %in% "baseline",]$V3vsV2 <- -1/3
+
+dataexpET[dataexpET$condition %in% "V2a",]$V2vsV1 <- 1/3
+dataexpET[dataexpET$condition %in% "V2a",]$V3vsV2 <- -1/3
+
+dataexpET[dataexpET$condition %in% "V3a",]$V2vsV1 <- 1/3
+dataexpET[dataexpET$condition %in% "V3a",]$V3vsV2 <- 2/3
+
+#second contrast
+ dataexpET$c2 <- factor( dataexpET$condition, levels = c("baseline","V3a","V2a"))
+contrasts( dataexpET$c2) <- contr.sdif(3)
+colnames(contrasts( dataexpET$c2)) <- c("V3vsV1","V2vsV3")
+
+ dataexpET$V3vsV1 <- 0
+ dataexpET$V2vsV3 <- 0
+ dataexpET[ dataexpET$condition %in% "baseline",]$V3vsV1 <- -2/3
+ dataexpET[ dataexpET$condition %in% "baseline",]$V2vsV3 <- -1/3
+
+ dataexpET[ dataexpET$condition %in% "V2a",]$V3vsV1 <- 1/3
+ dataexpET[ dataexpET$condition %in% "V2a",]$V2vsV3 <- -1/3
+
+ dataexpET[ dataexpET$condition %in% "V3a",]$V3vsV1 <- 1/3
+ dataexpET[ dataexpET$condition %in% "V3a",]$V2vsV3 <- 2/3
+
+@
+
+
+<<regressiondata, include=FALSE,eval=FALSE>>=
+
+
+
+#auxiliary verb
+
+mexp1.auxV.fp_reg <- glmer(fp_reg ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV" ,binomial )
+#cV2vsV1:wmc -0.37636    0.17342   -2.17    0.030 *  
+
+summary(glmer(fp_reg ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "auxV" ,binomial ))
+
+
+
+mexp1.partV.fp_reg <- glmer(fp_reg ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV" ,binomial )
+#cV2vsV1:rs  -0.21951    0.12798  -1.715   0.0863 .  
+
+summary(glmer(fp_reg ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "partV" ,binomial ))
+#cV2vsV1:wmc -0.228053   0.129257  -1.764   0.0777 .  
+summary(glmer(fp_reg ~ c * (wmc+rs) + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "partV" ,binomial ))
+#cV2vsV1:rs  -0.218669   0.127156  -1.720   0.0855 .
+
+
+mexp1.sp1.fp_reg <- glmer(fp_reg ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) ,
+                  dataexpET,subset= region %in% "sp1" ,binomial )
+
+#didn't converge with rs
+#wmc          0.18812    0.11360   1.656   0.0977 .  
+
+summary(glmer(fp_reg ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "sp1" ,binomial ))
+#wmc          0.19059    0.11352   1.679   0.0932 .  
+
+
+mexp1.auxV.rrp <- glmer(rrp ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV" ,binomial )
+#-
+summary(glmer(rrp ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "auxV" ,binomial ))
+
+
+mexp1.partV.rrp <- glmer(rrp ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV" ,binomial )
+#-
+summary(glmer(rrp ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "partV" ,binomial ))
+
+
+mexp1.sp1.rrp <- glmer(rrp ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber) ++(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1" ,binomial )
+#-
+summary(glmer(rrp ~ c * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "sp1" ,binomial ))
+
+
+save(          mexp1.auxV.fp_reg,
+               mexp1.partV.fp_reg,
+               mexp1.sp1.fp_reg,
+               mexp1.auxV.rrp,
+               mexp1.partV.rrp,
+               mexp1.sp1.rrp,
+ file="data/ET-regressions-c1.Rda")
+
+
+@
+
+
+<<regressiondatac2, include=FALSE,eval=FALSE>>=
+mexp1.c2.auxV.fp_reg <- glmer(fp_reg ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV" ,binomial )
+
+summary(glmer(fp_reg ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "auxV" ,binomial ))
+
+mexp1.c2.partV.fp_reg <- glmer(fp_reg ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV" ,binomial )
+
+summary(glmer(fp_reg ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "partV" ,binomial ))
+
+
+mexp1.c2.sp1.fp_reg <- glmer(fp_reg ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) ,
+                  dataexpET,subset= region %in% "sp1" ,binomial )
+
+summary(glmer(fp_reg ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "sp1" ,binomial ))
+
+
+mexp1.c2.auxV.rrp <- glmer(rrp ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV" ,binomial )
+
+summary(glmer(rrp ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "auxV" ,binomial ))
+
+
+mexp1.c2.partV.rrp <- glmer(rrp ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) +(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV" ,binomial )
+
+summary(glmer(rrp ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "partV" ,binomial ))
+
+
+mexp1.c2.sp1.rrp <- glmer(rrp ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber) ++(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1" ,binomial )
+
+summary(glmer(rrp ~ c2 * wmc + (1|itemnumber)  + (1|subj),dataexpET,subset= region %in% "sp1" ,binomial ))
+
+
+save(mexp1.c2.auxV.fp_reg,
+               mexp1.c2.partV.fp_reg,
+               mexp1.c2.sp1.fp_reg,
+               mexp1.c2.auxV.rrp,
+               mexp1.c2.partV.rrp,
+               mexp1.c2.sp1.rrp,
+file="data/ET-regressions-c2.Rda")
+@
+
+
+<< include=FALSE,eval=FALSE>>=
+
+#
+
+
+boxcox(FPRT~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "auxV",])  #near 0
+boxcox(FPRT~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "partV",])  #near 0
+boxcox(FPRT~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "sp1",])  #near 0
+
+
+mexp1.auxV.FPRT.withOutliers <- lmer(log(FPRT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+summary(lmer(log(FPRT) ~ c * wmc + 
+                  (1|itemnumber)  + (1|subj) ,
+                  dataexpET,subset= region %in% "auxV"  ))
+#rs          -0.031316   0.016049    -2.0
+#cV3vsV2:wmc -0.029738   0.016027    -1.9
+
+     
+qqPlot(resid(mexp1.auxV.FPRT.withOutliers))
+
+(o <- outliers(lmer=mexp1.auxV.FPRT.withOutliers,1.5) )
+dataexpET[rownames(o),]$FPRT
+dataexpET[rownames(o),]$FPRT <- NA  #4 outliers
+
+mexp1.auxV.FPRT.withoutOutliers <- lmer(log(FPRT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+#cV3vsV2:wmc -0.0282435  0.0179854    -1.6
+qqPlot(resid(mexp1.auxV.FPRT.withoutOutliers))
+
+
+
+mexp1.partV.FPRT.withOutliers <- lmer(log(FPRT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+
+qqPlot(resid(mexp1.partV.FPRT.withOutliers))
+(o <- outliers(lmer=mexp1.partV.FPRT.withOutliers,1.6) )
+dataexpET[rownames(o),]$FPRT
+dataexpET[rownames(o),]$FPRT <- NA  #3 outliers
+
+mexp1.partV.FPRT.withoutOutliers <- lmer(log(FPRT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+
+
+#-
+
+summary(lmer(log(FPRT) ~ c * wmc + 
+                  (1|itemnumber)  + (1|subj) ,
+                  dataexpET,subset= region %in% "partV"  ))
+
+
+mexp1.sp1.FPRT.withOutliers <- lmer(log(FPRT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+
+qqPlot(resid(mexp1.sp1.FPRT.withOutliers))
+#(o <- outliers(lmer=mexp1.sp1.FPRT.withOutliers,1.5) )
+#dataexpET[rownames(o),]$FPRT
+#dataexpET[rownames(o),]$FPRT <- NA  #0 outliers
+
+mexp1.sp1.FPRT.withoutOutliers  <- mexp1.sp1.FPRT.withOutliers 
+#-
+
+summary(lmer(log(FPRT) ~ c * wmc + 
+                  (1|itemnumber)  + (1|subj) ,
+                  dataexpET,subset= region %in% "sp1"  ))
+
+
+
+
+mexp1.auxV.FFD.withOutliers <- lmer(log(FFD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+
+qqPlot(resid(mexp1.auxV.FFD.withOutliers))
+(o <- outliers(lmer=mexp1.auxV.FFD.withOutliers,1.5) )
+dataexpET[rownames(o),]$FFD
+dataexpET[rownames(o),]$FFD <- NA  #5 outliers
+
+mexp1.auxV.FFD.withoutOutliers <- lmer(log(FFD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+#cV3vsV2:wmc -2.0
+ 
+
+mexp1.partV.FFD.withOutliers <- lmer(log(FFD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+
+qqPlot(resid(mexp1.partV.FFD.withOutliers))
+(o <- outliers(lmer=mexp1.partV.FPRT.withOutliers,1.6) )
+dataexpET[rownames(o),]$FFD
+dataexpET[rownames(o),]$FFD <- NA  #8 outliers
+
+mexp1.partV.FFD.withoutOutliers <- lmer(log(FFD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+#-
+
+
+mexp1.sp1.FFD.withOutliers <- lmer(log(FFD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+
+qqPlot(resid(mexp1.sp1.FFD.withOutliers))
+mexp1.sp1.FFD.withoutOutliers <-mexp1.sp1.FFD.withOutliers
+#-
+
+mexp1.auxV.TFT.withOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+qqPlot(resid(mexp1.auxV.TFT.withOutliers))
+
+(o <- outliers(lmer=mexp1.auxV.TFT.withOutliers,1.7) )
+dataexpET[rownames(o),]$TFT
+dataexpET[rownames(o),]$TFT <- NA  #~3 outliers
+
+#-
+
+mexp1.auxV.TFT.withoutOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+#
+
+mexp1.partV.TFT.withOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+qqPlot(resid(mexp1.partV.TFT.withOutliers))
+
+(o <- outliers(lmer=mexp1.partV.TFT.withOutliers,1.7) )
+dataexpET[rownames(o),]$TFT
+dataexpET[rownames(o),]$TFT <- NA  #~4 outliers
+
+
+mexp1.partV.TFT.withoutOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+
+mexp1.sp1.TFT.withOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+(o <- outliers(lmer=mexp1.sp1.TFT.withOutliers,1.7) )
+dataexpET[rownames(o),]$TFT  #2
+dataexpET[rownames(o),]$TFT <- NA  #~4 outliers
+
+mexp1.sp1.TFT.withoutOutliers <- lmer(log(TFT) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+
+
+
+boxcox(RPD~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "auxV",])  #near 0
+boxcox(RPD~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "partV",])  #near 0
+boxcox(RPD~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "sp1",])  #near 0
+
+
+mexp1.auxV.RPD.withOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+qqPlot(resid(mexp1.auxV.RPD.withOutliers))
+
+(o <- outliers(lmer=mexp1.auxV.RPD.withOutliers,.045) )
+dataexpET[rownames(o),]$RPD  #2
+dataexpET[rownames(o),]$RPD  <- NA #2
+
+mexp1.auxV.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+
+
+mexp1.partV.RPD.withOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+qqPlot(resid(mexp1.partV.RPD.withOutliers))
+
+(o <- outliers(lmer=mexp1.partV.RPD.withOutliers,.05) )
+dataexpET[rownames(o),]$RPD  #2
+dataexpET[rownames(o),]$RPD  <- NA #2
+
+mexp1.partV.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+mexp1.sp1.RPD.withOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+(o <- outliers(lmer=mexp1.sp1.RPD.withOutliers,.05) )
+dataexpET[rownames(o),]$RPD  #2
+dataexpET[rownames(o),]$RPD  <- NA #2
+
+
+mexp1.sp1.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+#RPD with logs
+mexp1.auxV.RPD.log <- lmer(log(RPD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+mexp1.partV.RPD.log <- lmer(log(RPD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+mexp1.sp1.RPD.log <- lmer(log(RPD) ~ c * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+dataexpET.withoutOutliers <- dataexpET
+
+save(
+
+               mexp1.auxV.FPRT.withOutliers,
+               mexp1.auxV.FPRT.withoutOutliers,
+               mexp1.partV.FPRT.withOutliers,
+               mexp1.partV.FPRT.withoutOutliers,
+               mexp1.sp1.FPRT.withOutliers,
+               mexp1.sp1.FPRT.withoutOutliers,
+               mexp1.auxV.TFT.withOutliers,
+               mexp1.auxV.TFT.withoutOutliers,
+               mexp1.partV.TFT.withOutliers,
+               mexp1.partV.TFT.withoutOutliers,
+               mexp1.sp1.TFT.withOutliers,
+               mexp1.sp1.TFT.withoutOutliers,
+               mexp1.auxV.RPD.withOutliers,
+               mexp1.auxV.RPD.withoutOutliers,
+               mexp1.partV.RPD.withOutliers,
+               mexp1.partV.RPD.withoutOutliers,
+               mexp1.sp1.RPD.withOutliers,
+               mexp1.sp1.RPD.withoutOutliers,
+               mexp1.auxV.RPD.log,
+               mexp1.partV.RPD.log,
+               mexp1.sp1.RPD.log,
+               dataexpET.withoutOutliers,
+file="data/ET-measures.Rda")
+
+
+
+mexp1.c2.auxV.FPRT.withoutOutliers <- lmer(log(FPRT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+summary(lmer(log(FPRT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "auxV"  ))
+
+mexp1.c2.partV.FPRT.withoutOutliers <- lmer(log(FPRT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+summary(lmer(log(FPRT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "partV"  ))
+
+
+mexp1.c2.sp1.FPRT.withoutOutliers <- lmer(log(FPRT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+summary(lmer(log(FPRT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "sp1"  ))
+
+
+mexp1.c2.auxV.TFT.withoutOutliers <- lmer(log(TFT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+summary(lmer(log(TFT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "sp1"  ))
+
+mexp1.c2.partV.TFT.withoutOutliers <- lmer(log(TFT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+summary(lmer(log(TFT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "partV"  ))
+
+
+mexp1.c2.sp1.TFT.withoutOutliers <- lmer(log(TFT) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V3vsV1|subj) +(0+V2vsV3|subj) +
+                  (0+V3vsV1|itemnumber) +(0+V2vsV3|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+summary(lmer(log(TFT) ~ c2 * wmc +(1|itemnumber)  + (1|subj), dataexpET,subset= region %in% "sp1"  ))
+
+
+
+mexp1.c2.auxV.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+
+
+
+mexp1.c2.partV.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+
+mexp1.c2.sp1.RPD.withoutOutliers <- lmer(I(-RPD^-.5) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+#RPD with logs
+mexp1.c2.auxV.RPD.log <- lmer(log(RPD) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "auxV"  )
+
+mexp1.c2.partV.RPD.log <- lmer(log(RPD) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "partV"  )
+
+mexp1.c2.sp1.RPD.log <- lmer(log(RPD) ~ c2 * (wmc+rs) + 
+                  (1|itemnumber)  + (1|subj) +
+                  (0+V2vsV1|subj) +(0+V3vsV2|subj) +
+                  (0+V2vsV1|itemnumber) +(0+V3vsV2|itemnumber) +
+                  (0+wmc|itemnumber)+(0+rs|itemnumber),
+                  dataexpET,subset= region %in% "sp1"  )
+
+
+
+save(
+               mexp1.c2.auxV.FPRT.withoutOutliers,
+               mexp1.c2.partV.FPRT.withoutOutliers,
+               mexp1.c2.sp1.FPRT.withoutOutliers,
+               mexp1.c2.auxV.TFT.withoutOutliers,
+               mexp1.c2.partV.TFT.withoutOutliers,
+               mexp1.c2.sp1.TFT.withoutOutliers,
+               mexp1.c2.auxV.RPD.withoutOutliers,
+               mexp1.c2.partV.RPD.withoutOutliers,
+               mexp1.c2.sp1.RPD.withoutOutliers,
+               mexp1.c2.auxV.RPD.log,
+               mexp1.c2.partV.RPD.log,
+               mexp1.c2.sp1.RPD.log,
+               file="data/ET-measures-c2.Rda")
+
+@
+
+
+
+
+
+
+<<RRTmeasures,include=FALSE,eval=FALSE>>==
+
+#standard RT:
+boxcox(I(RRT0+1)~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "auxV",])  #near 0
+boxcox(I(RRT0+1)~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "partV",])  #near 0
+boxcox(I(RRT0+1)~ c * (wmc+rs) ,data = dataexpET[dataexpET$region %in% "sp1",])  #near 0
+ hist(dataexpET$RRT0) #it doesn't make much sense
+#and RRT results don't make sense at all, are too different from rrp
+@
+
+
+<<load_previous-m3et,include=FALSE>>=
+load("data/ET-regressions-c1.Rda")
+load("data/ET-regressions-c2.Rda")
+load("data/ET-measures.Rda")
+load("data/ET-measures-c2.Rda")
+
+
+coeffprp <- latexcoef(mexp1.auxV.fp_reg, "cV2vsV1:wmc")
+coefTFTm <- latexcoef(mexp1.sp1.TFT.withoutOutliers, "cV2vsV1")
+coefTFTrs <- latexcoef(mexp1.sp1.TFT.withoutOutliers, "cV2vsV1:rs")
+coefrrp1 <- latexcoef(mexp1.c2.auxV.rrp, "c2V3vsV1")
+coefrrp2 <- latexcoef(mexp1.c2.partV.rrp, "c2V3vsV1")
+coefrrp.sp <- latexcoef(mexp1.sp1.rrp, "rs")
+coefFPRT.rs1 <- latexcoef(mexp1.auxV.FPRT.withoutOutliers, "rs")
+coefFPRT.rs2 <- latexcoef(mexp1.partV.FPRT.withoutOutliers, "rs")
+
+origdata <- nrow(dataexpET[ !is.na(dataexpET$TFT) &dataexpET$region %in% c("auxV","partV","sp1"),])
+useddata<- nrow(dataexpET.withoutOutliers[ !is.na(dataexpET.withoutOutliers$TFT) &dataexpET.withoutOutliers$region %in% c("auxV","partV","sp1"),])
+
+outTFT <- round( ((origdata-useddata)/origdata) * 100,digits=2)
+
+@
+
+
+
+
+\subsubsection{Eye-tracking measures}
+Reading times were inspected at three regions of interest: the first critical region (auxiliary verb ``había''), second critical region (participle form of the verb), and spillover region (P). We used successive differences contrast coding to test the predictions of the different accounts: VP2 (coded as $1$) against VP1 (coded as $-1$) and VP3 (coded as $1$) against VP2 (coded as $-1$). As in \citet{VasishthDrenhaus2011}, we found effects in the critical regions only in dependent measures related to re-reading;  in the spillover region, we found effects only for total fixation time, consistent with \citet{LevyKeller2012}. We provide the analysis of regions of interest for first-pass regression probability, re-reading probability and total fixation time. As defined in \citet{VasishthDrenhaus2011},  first-pass regression probability at a word is the probability of the eye moving leftwards after this word was fixated at least once;  re-reading probability for a word is the probability of revisiting that word after having having made a first-pass.
+
+After inspecting each LMM with total fixation time as dependent variable, we removed \Sexpr{outTFT}\% of the data in order to keep the residuals normally distributed; the results of the model were virtually the same without this removal. Below we report only statistically significant effects.
+
+\paragraph{First critical region (auxiliary verb ``había'')}
+We found a WMC and VP2-VP1 interaction for first-pass regression probabilities  (\Sexpr{coeffprp}) showing that as WMC increases, the probability of a regression at the auxiliary verb decreases for condition VP2  in comparison with VP1 (as shown in figure \ref{fig:fprp-auxV-exp1-graph}).
+
+
+<<fprp-auxV-exp1-graph,echo=FALSE,eval=TRUE,include=FALSE>>=
+
+p<-gplotlmer(lmer=mexp1.auxV.fp_reg, c(1,"wmc" ,"cV2vsV1","cV3vsV2","cV3vsV2:wmc","cV2vsV1:wmc"),x="wmc",group="c", color="c", linetype="c",shape="c",binomial=F,grouping=F)+  geom_smooth(method= "lm",fill="grey85",size=1)+theme_bw() + ggtitle("Experiment 1. First Critical Region (auxiliary verb 'habia')\nFirst Pass Regression Probabilities") +  ylab("Log-odds") +scale_linetype_manual( values=c("solid","dashed", "solid"),name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3")) + scale_shape(solid=FALSE,name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3") )+scale_color_manual(values=c("black","black", "grey50"),name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("VP1", "VP2", "VP3")) +  scale_x_continuous(labels = function(x) format( unscale(x,mean(dataexpET.withoutOutliers$pcu),sd(dataexpET.withoutOutliers$pcu)) ,digits = 3) ) +  xlab("WMC (partial-credit units)")+ geom_point(size=3) #+ #guides(point = guide_legend(override.aes = list(shape=20,linetype=1)))# +
+#geom_smooth(method= "lm", color="black")
+
+p <- p+   annotate("text", x = 2.5, y = -2.4, label = "VP1",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+p <- p+   annotate("text", x = 2.5, y = -2.85, label = "VP3",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+p <- p+   annotate("text", x = 2.5, y = -3.35, label = "VP2",
+            hjust=1.1, vjust=-1.1, col="black", cex=6,
+            fontface = "bold", alpha = 0.8)
+
+p<-p+ theme(legend.position="bottom",legend.background = element_rect(fill = "transparent",colour = NA))
+
+ggsave(plot=p,file="figure/graphics-fprp-auxV-exp1-graph.eps",dpi=1200,width= 17.6,unit="cm", device=cairo_ps)
+
+# remef(mexp1.auxV.fp_reg, fix= c(1,"wmc" ,"cV2vsV1","cV3vsV2","cV3vsV2:wmc","cV2vsV1:wmc"), keep=TRUE, family = binomial)
+
+@
+
+Since we did not find evidence of more facilitation in VP3 in comparison with VP2, we also fitted a separate model that included the VP3-VP1 contrast. We found a decrease in re-reading probability for VP3 in comparison with VP1 (\Sexpr{coefrrp1}).
+
+
+
+\paragraph{Second critical region (participle form)} As in the first critical region, we found a decrease in re-reading probabilities for VP3 condition in comparison with  VP1 (\Sexpr{coefrrp2}).
+
+ \paragraph{Spillover (preposition)}
+ We found a significant speedup for VP2 in comparison with VP1 for total reading time (\Sexpr{coefTFTm}), and an 
+unpredicted interaction between reading skills and VP2-VP1 (\Sexpr{coefTFTrs}) showing that as reading skills increases, total reading times at the spillover for condition VP2 increase in comparison with condition VP1.
+ 
+<<TFT-sp-exp1-graph,echo=FALSE,fig.cap="TEST",eval=FALSE>>=
+
+p<-gplotlmer(lmer=mexp1.sp1.TFT.withoutOutliers, c(1,"wmc" ,"cV2vsV1","cV3vsV2","cV3vsV2:wmc","cV2vsV1:wmc"),x="wmc",group="c", color="c", linetype="c",shape="c",binomial=F,grouping=F)+  geom_smooth(method= "lm",fill="grey85",size=1) +scale_linetype_manual( values=c("solid","dashed", "solid"),name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("V1", "V2", "V3")) + scale_shape(solid=FALSE,name="Conditions\n(place of attachment)",breaks=c("baseline", "V2a", "V3a"),labels=c("V1", "V2", "V3") ) +  scale_x_continuous(labels = function(x) format( unscale(x,mean(dataexpET.withoutOutliers$pcu),sd(dataexpET.withoutOutliers$pcu)) ,digits = 3) ) +  xlab("WMC (partial-credit units)")+ geom_point(size=3) #+ #guides(point = guide_legend(override.aes = list(shape=20,linetype=1)))# +
+#geom_smooth(method= "lm", color="black")
+
+
+p<-p+ theme(legend.position="bottom",legend.background = element_rect(fill = "transparent",colour = NA))
+
+print(p)
+
+# remef(mexp1.auxV.fp_reg, fix= c(1,"wmc" ,"cV2vsV1","cV3vsV2","cV3vsV2:wmc","cV2vsV1:wmc"), keep=TRUE, family = binomial)
+
+@ 
+ 
+\subsection{Discussion}
+
+
+The central finding in the eye-tracking study is that individual differences associated with working memory have an impact in parsing sentences with long-distance dependencies. When the extra material modifies the intermediate VP (VP2), results for first pass regression probabilities for the critical region are consistent with the idea that expectations play a dominant role when the individual capacity of the participants is large enough to overcome the memory-driven locality effects (see figure \ref{fig:fprp-auxV-exp1-graph}). That is, locality effects may become antilocality effects when WMC is large enough. This pattern can be explained by a memory account acting together with the
+expectation account. However, from this pattern alone it is not clear whether DLT or the activation-based model best explain  the data. The predictions of DLT are based solely on dependency length, entailing that VP2 should be fully aligned with VP3 (see figure \ref{fig:difftheories}e). The activation-based model predicts facilitation when the extra material is attached to the head verb, that is, facilitation for VP3 in comparison with VP2 (while sharing the same lower asymptote for extremely high WMC; see figure \ref{fig:difftheories}f). At least for first pass regression probabilities for the critical region, it is unclear where VP3 condition stands: there is no significant facilitation in comparison with VP1 as all the described accounts would predict.
+
+
+However, the study does provide some evidence for a differential effect that depends on \emph{where} the extra material is attached, and not just on the linear distance of the dependency (as DLT and expectation account would predict). When the extra material is part of the same VP as the subcategorizing head verb (VP3), re-reading probabilities show facilitation compatible both with expectations and with the preactivation of the subcategorizing verb and similar to the evidence from SOV languages \citep{Vasishth2003,VasishthLewis2006,Konieczny2000,LevyKeller2012,KoniecznyDoering2003}. The fact that facilitation occurs only for VP3 condition in comparison with the short dependency condition VP1, and not when the extra material modifies the intermediate VP (VP2), provides some indirect evidence indicating differential facilitation between VP2 and VP3 as predicted  by the activation account. 
+
+As mentioned before, one of the main differences between the predictions depicted in figure \ref{fig:difftheories} and our results is the status of VP3 condition: The facilitation of VP3 in comparison with the baseline VP1 appears in a different measure (re-reading instead of regression probabilities) than the facilitation of VP2 condition (in comparison with VP1), and it ``spilled over'' to the second critical region. In addition, and in contrast with VP2, the facilitation did not depend on the WMC of the participants. 
+
+Regarding the differences in the eye-tracking measures and spillover, the effect of adding preverbal material may have been more complex than hypothesized. The preverbal material may have added a new retrieval process at the head and thus overshadowed any facilitation caused by increased expectations. Furthermore, the appearance of the facilitation  in different measures can be accounted for by assuming that facilitation due to preactivation, and facilitation due to increased expectations depend on different underlying mechanisms resulting in qualitatively different behavioral consequences in reading \citep{Staub2010}.
+
+We can speculate that the difference in processing difficulty between VP3 and VP1 did not depend on WMC in our results because at VP3 condition, the facilitation has already reached a bottom asymptote (the minimum re-reading probability given the complexity of the stimuli; see figure  \ref{fig:difftheories}f). This lack of an effect of WMC on the facilitation might presumable be because of our relatively homogeneous pool of participants, who did not display a big enough variance in their WMC.
+
+
+
+
+
