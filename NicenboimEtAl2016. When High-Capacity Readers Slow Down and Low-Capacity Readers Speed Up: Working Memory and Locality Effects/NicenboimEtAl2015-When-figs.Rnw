@@ -1,0 +1,86 @@
+% !TeX root = NicenboimEtAl2015-When.Rnw
+% !TeX program = pdfLaTeX
+
+
+
+\section*{Figures}
+
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_regions_sp} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:everyregionsp} Figure \arabic{figure}.}{ Comparison of mean RTs for high- and low-WMC readers at each comparable region for every condition.}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_reg_all_logRTs_sp.eps} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:diffsp} Figure \arabic{figure}.}{  The figure depicts the partial effect for the difference between unbounded conditions and baseline conditions, that is the (anti)locality effects, on the transformed scale of the analysis;  random factors variance and effects due to reading skills were removed from the dependent variable \citep{HohensteinReinhold2013}. }
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_cater_sp.eps} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:catersp} Figure \arabic{figure}.}{  Overview of mean and 95\% credible intervals for the effect sizes of the parameters of interest for Experiment 1.}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_regions_de} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:everyregionde} Figure \arabic{figure}.}{ Comparison of mean RTs for high- and low-WMC readers at each comparable region for every condition. }
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_reg_all_logRTs_de.eps} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:diffde} Figure \arabic{figure}.}{  The figure depicts the partial effect for the difference between unbounded conditions and baseline conditions, that is the (anti)locality effects, on the transformed scale of the analysis;  random factors variance and effects due to reading skills were removed from the dependent variable \citep{HohensteinReinhold2013}. }
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_cater_de} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:caterde} Figure \arabic{figure}.}{  Overview of mean and 95\% credible intervals for the effect sizes of the parameters of interest for Experiment 2.}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_sim} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:st-models} Figure \arabic{figure}.}{  The figures show simulated retrieval latencies at the critical region. The simulation is based on the default but simplified version of ACT-R. See Table \ref{tab:default_model} for the parameters used.}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_sim2} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:st-models-tr} Figure
+\arabic{figure}.}{  The upper figures show simulated retrieval latencies and the
+lower figures the activation values that produced the latencies.  The simulation
+is based on the default but simplified version of ACT-R, where the threshold
+$\tau$ is zero. See Table \ref{tab:default_model} for the parameters used.}
+\end{figure}
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics{p_sim3} 
+\end{center}
+\textbf{\refstepcounter{figure}\label{fig:st-models-mod} Figure
+\arabic{figure}.}{  The upper figures show simulated retrieval latencies and the
+lower figures the activation values that produced the latencies.  The simulation
+is based on the modified version of ACT-R, where the threshold $\tau$ is zero. See Table \ref{tab:modified_model} for the parameters used.}
+\end{figure}
+

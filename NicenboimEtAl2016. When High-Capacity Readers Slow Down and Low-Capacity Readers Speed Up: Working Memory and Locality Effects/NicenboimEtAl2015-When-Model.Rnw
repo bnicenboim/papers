@@ -1,0 +1,612 @@
+% !TeX root = NicenboimEtAl2015-When.Rnw
+% !TeX program = pdfLaTeX
+
+\label{sec:model}
+
+Even though both the activation-based account and DLT would intuitively
+predict that increasing the distance between dependent and head should have
+produced a slowdown (once expectations are controlled), our results do not
+show a main effect of locality and only an interaction with WMC. Thus we first
+verified that the activation-based account in fact predicts  locality effects
+and stronger effects for low-span readers using the ACT-R framework
+\citep[see for example][] {AndersonEtAl2004}. ACT-R is a general
+cognitive architecture used to model a vast variety of cognitive phenomena; for
+our purposes, however, the relevant aspect of the architecture is that it can
+model the retrieval of items stored in memory. In order to simplify our models,
+we used only the equations that determine the probability and latency of a
+retrieval and not the full framework. In this section, we tested different
+implementations of WMC with the `default' ACT-R equations and we show that, no
+matter what the parameter settings are, they fail to account qualitatively for
+the results. Therefore, we tentatively suggest that a basic assumption about the
+relationship between latencies and activation needs some reconsideration; we
+propose  that items in memory with an activation below a certain threshold may
+show shorter latencies because of an early aborting of the retrieval process.
+
+The exact predictions of the ACT-R implementation of the activation-based
+account will depend on the exact syntactic structure and the type of parser
+that is assumed together with the values of the ACT-R parameters. In
+addition, it cannot at present accommodate certain aspects that seem to have
+an uncontroversial effect in language, such as expectations
+\citep{Hale2001,Levy2008}. Thus we focused on the explanation of (anti-)locality
+effects, (i.e. the interaction distance $\times$ dependency), which was the
+theoretical comparison of interest; and we did not investigate the underlying
+processes that generated the reading times for each condition (see
+introduction).
+
+
+In this framework, the latency of the retrieval of an item from memory is
+assumed to be a function of the item's activation value $A$: 
+
+\begin{equation}
+\label{ex:latency}
+Latency  = F \cdot e^{-A} 
+\end{equation} 
+where F (the latency factor) is a scaling constant.
+
+After verifying that ACT-R did not predict that other noun phrases would be
+mistakenly retrieved, we focused only on the retrieval of the wh-element. At the
+moment of retrieval, the activation $A$ is calculated as the sum of (i) a
+\emph{base level activation} $BA$ that depends on the previous use of the item
+(i.e., the number of previous retrievals and the time passed since those
+retrievals); (ii) \emph{spreading activation} $S$ that depends on a limited
+amount of source activation $W$ that is shared between all other items with
+features that match the retrieval cues; (iii) a penalty component for
+mismatching features (that we omit from the following equation); and (iv) a
+random noise component $\epsilon$ (that follows a logistic distribution with a
+mean of zero and scale $\sigma$):
+
+\begin{equation}
+A = BA + S + \epsilon
+\end{equation} 
+
+Locality effects affect only the base level activation due to decay; in our
+specific case, the base level activation of the wh-element can be described as:
+ \begin{equation}
+BA = log(t^{-d}) + \beta
+\end{equation} 
+where $d$ is the decay rate, $t$ is the time since the encoding of the
+wh-element, and $\beta$ is the base-level constant.
+
+The equation for the spreading activation S ensures that the wh-element would be
+retrieved due to the boost of activation produced by the unique matching features.
+For simplicity, we can assume that the wh-element has a unique feature that
+distinguishes it from the other four competitor NPs (in example
+\ref{ex:items-exp-sp}: Sofía, the younger sister, the younger sister of Sofía,
+and María), namely being $+wh$, and two non-unique features ($+animate$ and
+$+NP$) that it does share with the other NPs. The spreading activation of the
+wh-element is a function of the source activation $W$, and the weighted sum of
+the strength of association of the cues. The source activation is usually set
+to one, but it can also vary by participants \citep{DailyEtAl2001}, and it is
+divided between the cues. In the present case, this can be simplified as:
+
+\begin{equation}
+S = W \cdot \left[{w_{wh}} \cdot{(MAS - \log(1))}  + {w_{anim}}\cdot {(MAS - \log(5))} + 
+{w_{NP}}\cdot{(MAS - \log(5))}\right]
+\end{equation}
+
+where $MAS$ is the maximum associative strength; and $w_{wh}$, $w_{anim}$, and
+$w_{NP}$ are the weights given to the cues $+wh$, $+animate$, and $+NP$,  and
+must sum to one. The maximum associative strength is subtracted by the natural
+logarithm of the number of competing items in memory that match a given cue plus
+one. $MAS$ is an arbitrary value, which is usually fixed since it trades off
+with $F$ \citep{SchneiderAnderson2012}. We fixed this parameter to two since the
+difference between $MAS$ and $log(matching$ $cues +1)$ must be always positive
+in ACT-R. The three summands of the previous equation represent three features
+that match with three retrieval cues: The first summand represents the unique
+feature $+wh$, which ensures the highest value of $S$ for the wh-element, and
+the next two summands represent the features $+animate$ and $+NP$, which are
+shared with four competitors (hence $\log(5)$, as there are five noun phrases in
+total). (The spreading activation equations of the competitor noun phrases would
+have only the last two summands; and their activation would be reduced further
+by a penalty component that is also subtracted from their total activation).
+
+
+
+
+
+WMC has been assumed to either affect the decay rate or affect in some way the
+spreading activation, that is, the activation shared between the retrieval cues
+(see the introduction section). We simulated these possibilities by using
+standard ACT-R parameters from sentence processing
+\citep{LewisVasishth2005,VasishthLewis2006}, except for $MAS$, and the latency
+factor and base levels constants that were adjusted to achieve realistic
+latencies based on previous studies.
+
+The first possibility is the \emph{capacity-as-decay-rate} model, which assumes
+that higher-WMC should predict a lower decay rate $d$
+\citep[e.g.,][]{ByrneBovair1997,CunningsFelser2013}. Then high-WMC participants
+will be less affected by longer dependency distance (which entails longer time
+since encoding); see Figure  \ref{fig:st-models}(a). 
+
+If higher-WMC correlates with more spreading activation, there are two
+approaches: (i) The \emph{capacity-as-source-activation} model assumes that the
+total amount of activation that is shared between matching cues (the source
+activation $W$) is a function of  WMC
+\citep[as in][]{CantorEngle1993,DailyEtAl2001,VanRijEtAl2013}; see Figure 
+\ref{fig:st-models}(b). (ii) The \emph{capacity-as-interference}
+model assumes that WMC represents susceptibility to interference
+\citep{BuntingEtAl2004}. Non-unique retrieval cues such as looking for a noun
+phrase or for the feature $+animate$ cause the limited amount of source
+activation to be shared between competitor noun phrases, decreasing the total
+level of activation of the target (and also increasing the activation level of
+competitors). A way to model this susceptibility to interference is to change
+the weight given to unique cues and non-unique cues, so that as WMC increases,
+the weight given to a unique retrieval cue (such as being a wh-element)
+increases too; see Figure  \ref{fig:st-models}(c).
+
+
+These models predict mainly that an increase in WMC would increase the speed
+of the retrievals, as well as an interaction between WMC and dependency-head
+distance in raw RTs. The strength of the effect of WMC as well as the
+interaction will depend on the values of the parameters, and given that there
+is noise in the system (recall that the activation includes also a component
+$\epsilon$), not every possible model will show these effects.
+
+Given the relation between activation and latency, the models that assume that
+WMC affects the activation linearly (such as capacity-as-source-activation and
+capacity-as-interference) have two important implications: The first one is that
+if WMC affects the spreading activation $S$, locality effects \emph{in raw
+latencies} should be modulated by WMC. The second implication is that for
+\emph{log-transformed latencies}, the interaction should be exactly zero. The
+reason is the following: Locality effects are produced by the difference in the
+retrieval latencies, such that due to decay, the base level activation $BA$
+decreases as the distance between wh-element and head increases:
+
+\begin{align}
+Locality &= Latency_{LongDep} - Latency_{ShortDep}\\
+ &= F \cdot (e^{-(BA_{low} + S) } -  e^{-(BA_{high} + S)})\\
+ &= F \cdot e^{-S }\cdot(e^{-BA_{low}  } -  e^{-BA_{high}})\\
+\end{align} 
+
+If, as hypothesized, WMC only affects the spreading activation $S$, such that
+the $S$ is higher for high-WMC than for low-WMC, then the interaction between
+locality effects and WMC would be defined as follows:
+
+\begin{align}
+Locality \times WMC &= Locality_{LowWMC} - Locality_{HighWMC}\\
+&= F \cdot ( e^{-S_{low}} -  e^{-S_{high}}) \cdot ( e^{-BA_{low}}  - e^{-BA_{high}}) \\
+\end{align} 
+
+However, log-transformed locality effects are independent of $S$:
+
+\begin{align}
+log(Locality) &=  log(F) -(BA_{low} + S) - [log(F) -(BA_{high} + S)]\\
+ &=   -BA_{low}  + BA_{high} \\
+\end{align} 
+
+and thus the difference between locality effects for high and low-WMC for
+log-transformed latencies would be simply zero.
+
+ But critically, no matter the values of the parameters, these two models cannot
+predict our findings, namely,  a speedup for low-span participants. This is so
+because the baseline activation of the wh-element when it is retrieved after
+a longer time (due to more intervening material between itself and the head verb)
+can never be higher than the level of activation when the element is retrieved
+after shorter time; furthermore, the spreading activation can at most attenuate
+this effect and only as WMC increases.
+
+It is further assumed in ACT-R models that there is a minimum level of
+activation $\tau$ that an item needs in order to be retrieved. This acts as a
+time-out: when an item has so low activation that it would take an
+unrealistic amount of time to be retrieved, the retrieval fails. The maximum
+amount of time is a function of this activation threshold $\tau$ such that:
+
+\begin{align}
+max(Latency) = F \cdot e^{-\tau}
+\end{align}
+
+If $\tau$ plays a role in retrieval, because the activation level of the
+dependent does not always exceed this value, it will produce a ceiling
+effect. Under this view, if the activation level of the dependent for low-WMC
+failed more often than for high-WMC to surpass  $\tau$, it would entail a
+maximum possible time for both short and long conditions. This would produce a
+difference in retrieval probabilities between short and long conditions, since
+it is more likely that long conditions fail more often to surpass the value
+$\tau$. However, this would also mean that with low-WMC, the difference
+between long and short conditions may disappear; see Figure
+\ref{fig:st-models-tr}. Our data cannot be accommodated in these models either,
+since the difference between long and short conditions was reversed for
+low-WMC.
+
+
+
+<<include=FALSE, eval=TRUE>>=
+#German data
+library(dplyr)
+load("data/data1de.Rda")
+
+dde <- dde[!(dde$subj %in% c("57","71","54")),]
+
+dde <- dde[!dde$region %in% "precriticalwords",] #irrelevant joind region
+dde$region<- as.character(dde$region)
+#ob won't be relevant later
+dde$region <- ifelse(dde$word %in% c("wen","ob"),"wh",dde$region) 
+dde<-dde[c("subj","item","word","wordn","distance","dependency","pcu","rt","trial","region")]
+dde <- arrange(dde,subj,item,wordn)
+dde <- mutate(group_by(dde,subj,trial),crt = cumsum(rt) )
+
+temp <- dde[dde$region %in% "critical1",]
+temp$decay <- (dde[dde$region %in% "critical1",]$crt -     dde[dde$region %in% "wh",]$crt) /1000
+
+
+
+ dde_model <- dplyr::filter(temp,dependency == "unbounded")
+
+ dde_model$exp <- "data"
+
+short_decay <- round(quantile(dde_model[dde_model$distance%in%"short",]$decay,c(.025,.5,.975)),0)
+long_decay <- round(quantile(dde_model[dde_model$distance%in%"long",]$decay,c(.025,.5,.975)),0)
+m_short_decay <- round(mean(dde_model[dde_model$distance%in%"short",]$decay),3)*1000
+m_long_decay <- round(mean(dde_model[dde_model$distance%in%"long",]$decay),3)*1000
+
+
+threshold <- -10000.0  #to ensure that the activation is always over the value
+ls_d <- list(MAS=2,W_int=1,sigma=.25,W_slope=0,expF=4.8,beta=-.65,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),d_int=.5,weight_slope=0,d_slope=-5 )
+
+
+
+ls_Daily <- list(MAS=2,W_int=1,sigma=.25,W_slope=3,expF=4.8,K=0.0001,beta=-1,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),d_int=.5,weight_slope=0 ,d_slope=0)
+
+ls_Bunting <- list(MAS=2,W_int=1,sigma=.25,W_slope=0,expF=4.8,K=0.0001,beta=-1,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),weight_slope=10,d_int=.5 ,d_slope=0)
+
+#### WITH RETRIEVAL THRESHOLD
+
+threshold <- 0
+
+ls_d_t <- ls_d
+ls_d_t$tau_int <- threshold
+
+ls_Daily_t <- ls_Daily
+ls_Daily_t$tau_int <- threshold
+
+ls_Bunting_t <- ls_Bunting
+ls_Bunting_t$tau_int <- threshold
+
+
+@
+
+<<include=FALSE, eval=TRUE>>=
+
+samples_actr_decay <- stan(file="stanmodels/actr_simulator_vanilla.stan", 
+                    data=ls_d ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+dde_sim_decay <- dde_model
+dde_sim_decay$exp <- "(a) capacity-as-decay-rate "
+dde_sim_decay$remef <- get_posterior_mean(samples_actr_decay,pars="pred_latency")
+dde_sim_decay$pred_accuracy <- get_posterior_mean(samples_actr_decay,pars="pred_accuracy")
+
+dde_sim_decay$A <- get_posterior_mean(samples_actr_decay,pars="A")
+
+
+d <- get_posterior_mean(samples_actr_decay,pars="d")
+range_d <- round(range(-d),2)
+
+
+samples_actr_Daily <- stan(fit=samples_actr_decay, 
+                    data=ls_Daily ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+
+dde_sim_Daily <- dde_model
+dde_sim_Daily$exp <- "(b) capacity-as-source-activation "
+dde_sim_Daily$remef <- get_posterior_mean(samples_actr_Daily,pars="pred_latency")
+dde_sim_Daily$pred_accuracy <- get_posterior_mean(samples_actr_Daily,pars="pred_accuracy")
+
+dde_sim_Daily$A <- get_posterior_mean(samples_actr_Daily,pars="A")
+
+W <- get_posterior_mean(samples_actr_Daily,pars="W")
+range_W <- round(range(W),1)   
+###############
+
+
+samples_actr_Bunting <- stan(fit=samples_actr_Daily, 
+                    data=ls_Bunting ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+dde_sim_Bunting <- dde_model
+dde_sim_Bunting$exp <- "(c) capacity-as-interference"
+dde_sim_Bunting$remef <- get_posterior_mean(samples_actr_Bunting,pars="pred_latency")
+dde_sim_Bunting$pred_accuracy <- get_posterior_mean(samples_actr_Bunting,pars="pred_accuracy")
+
+dde_sim_Bunting$A <- get_posterior_mean(samples_actr_Bunting,pars="A")
+
+w <- get_posterior_mean(samples_actr_Bunting,pars="weight")
+range_w <- round(range(w),1)   
+
+
+#dde_model,
+dde_model_all <- bind_rows(dde_sim_decay,dde_sim_Daily,dde_sim_Bunting)
+
+summarise(group_by(ungroup(dde_model_all),exp,quartile=ntile(pcu,2),distance ),pcu=mean(pcu),latency=mean(remef),acc= mean(pred_accuracy),A=mean(A))
+
+
+p_sim <- ggplot(dplyr::summarise(group_by(ungroup(dde_model_all),distance,exp,pcu =ntile(pcu,5)),latency=mean(remef)) , aes(y=latency, x=pcu,color=distance,linetype=distance)) + geom_point() + geom_line()+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance") + scale_linetype(name="Distance")+ ggtitle("") +  ylab("Latency of retrieval (ms)")+xlab("WMC (20% quantiles)")+ facet_grid(.~exp)+ theme(legend.position="bottom") + theme(strip.text.x = element_text(size = 9))
+p_sim
+
+ggplot2::ggsave(plot= p_sim, file="p_sim.eps",dpi=1200,width= 17.6, height=8.9,unit="cm")
+
+
+
+
+samples_actr_decay <- stan(fit=samples_actr_decay, 
+                    data=ls_d_t ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+dde_sim_rt_decay <- dde_model
+dde_sim_rt_decay$exp <- "(a) capacity-as-decay-rate"
+dde_sim_rt_decay$remef <- get_posterior_mean(samples_actr_decay,pars="pred_latency")
+dde_sim_rt_decay$pred_accuracy <- get_posterior_mean(samples_actr_decay,pars="pred_accuracy")
+
+dde_sim_rt_decay$A <- get_posterior_mean(samples_actr_decay,pars="A")
+
+mean(get_posterior_mean(samples_actr_decay,pars="Pr"))
+mean(get_posterior_mean(samples_actr_decay,pars="pred_accuracy"))
+
+
+
+samples_actr_Daily <- stan(fit=samples_actr_decay, 
+                    data=ls_Daily_t ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+
+dde_sim_rt_Daily <- dde_model
+dde_sim_rt_Daily$exp <- "(b) capacity-as-source-activation"
+dde_sim_rt_Daily$remef <- get_posterior_mean(samples_actr_Daily,pars="pred_latency")
+dde_sim_rt_Daily$pred_accuracy <- get_posterior_mean(samples_actr_Daily,pars="pred_accuracy")
+
+dde_sim_rt_Daily$A <- get_posterior_mean(samples_actr_Daily,pars="A")
+
+    
+###############
+samples_actr_Bunting <- stan(fit=samples_actr_Daily, 
+                    data=ls_Bunting_t ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+dde_sim_rt_Bunting <- dde_model
+dde_sim_rt_Bunting$exp <- "(c) capacity-as-interference"
+dde_sim_rt_Bunting$remef <- get_posterior_mean(samples_actr_Bunting,pars="pred_latency")
+dde_sim_rt_Bunting$pred_accuracy <- get_posterior_mean(samples_actr_Bunting,pars="pred_accuracy")
+
+dde_sim_rt_Bunting$A <- get_posterior_mean(samples_actr_Bunting,pars="A")
+# dde_sim_rt_Bunting$BA <- get_posterior_mean(samples_actr_Bunting,pars="W_int")
+
+
+#dde_model,
+dde_model_all_rt <- bind_rows(dde_sim_rt_decay,dde_sim_rt_Daily,dde_sim_rt_Bunting)
+
+summarise(group_by(ungroup(dde_model_all_rt),exp,quartile=ntile(pcu,2),distance ),pcu=mean(pcu),latency=mean(remef),acc= mean(pred_accuracy),A=mean(A))
+
+
+p_sim_rt <- ggplot(dplyr::summarise(group_by(ungroup(dde_model_all_rt),distance,exp,pcu =ntile(pcu,5)),latency=mean(remef)) , aes(y=latency, x=pcu,color=distance,linetype=distance)) + geom_point() + geom_line()+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance") + scale_linetype(name="Distance")+ ggtitle("") +  ylab("Latency of retrieval (ms)")+ facet_grid(.~exp) + theme(legend.position="none")+xlab("") + theme(strip.text.x = element_text(size = 9))
+# p_sim_rt + geom_hline(yintercept=exp(as.numeric(-threshold)+ls_Bunting$expF)  ,linetype="dashed")
+#method=lm, formula=y ~log(x)
+p_A <- ggplot(dplyr::summarise(group_by(ungroup(dde_model_all_rt),distance,exp,pcu =ntile(pcu,5)),A=mean(A)) , aes(y=A, x=pcu,color=distance,linetype=distance)) + geom_point() + geom_line()+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance") + scale_linetype(name="Distance")+ ggtitle("") +  ylab("Activation level")+xlab("WMC (20% quantiles)")+ facet_grid(.~exp)+ geom_hline(yintercept=as.numeric(threshold),linetype="dotted")+ theme(legend.position="bottom") + theme(strip.text.x = element_text(size = 9))
+p_A
+# ggsave(plot= p_sim, file="p_sim.eps",dpi=1200,width= 17.6,unit="cm")
+
+library(gridExtra)
+ grid.arrange(p_sim_rt, p_A, nrow=2)
+
+
+
+sim2 <-arrangeGrob(p_sim_rt, p_A, nrow=2)
+
+
+
+
+
+ggplot2::ggsave( file="p_sim2.eps",sim2,dpi=1200,width= 17.6,unit="cm")
+
+
+@
+
+\begin{table}[h!]
+\textbf{\refstepcounter{table}\label{tab:default_model} Table \arabic{table}.}{ Parameter values for the models with the default (simplified) ACT-R. The decay time was calculated from the data of the German experiment; we used the mean reading time elapsed from the wh-element until the verb, which was \Sexpr{m_short_decay}ms for the short condition and  \Sexpr{m_long_decay}ms for the long one.}
+
+\processtable{ }
+{\begin{tabular}{ l r r r }
+\toprule
+         & cap-as-decay-rate                & cap-as-source-activation            & cap-as-interference\\
+$d$      & $\boldsymbol{[\Sexpr{range_d}]}$ & \Sexpr{ls_Daily$d_int}              & \Sexpr{ls_Bunting$d_int} \\
+$W$      & \Sexpr{ls_d$W_int}               & $\boldsymbol{[\Sexpr{range_W}]}$    & \Sexpr{ls_Bunting$W_int} \\
+$w_{wh}$ & $1/3$                            & $1/3$                               & $\boldsymbol{[\Sexpr{range_w}]}$\\
+$MAS$    & \Sexpr{ls_d$MAS}                 & \Sexpr{ls_Daily$MAS}                & \Sexpr{ls_Bunting$MAS} \\
+$F$      & \Sexpr{round(log(ls_d$expF),1)}  & \Sexpr{round(log(ls_Daily$expF),1)} & \Sexpr{round(log(ls_Bunting$expF),1)} \\
+$\sigma$ & \Sexpr{ls_d$sigma}               & \Sexpr{ls_Daily$sigma}              & \Sexpr{ls_Bunting$sigma} \\
+$\beta$  & \Sexpr{ls_d$beta}                & \Sexpr{ls_Daily$beta}               & \Sexpr{ls_Bunting$beta} \\
+(without threshold) $\tau$ & $-Inf$                            & $-Inf$                              & $-Inf$ \\
+(with threshold) $\tau$    & \Sexpr{threshold}                 & \Sexpr{threshold}                   & \Sexpr{threshold} \\
+
+
+
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+ The pattern that we found in our data, however, can only  be accommodated in
+the models presented before by changing one assumption, namely, by assuming that
+in the cases where the activation does not reach the threshold $\tau$, the
+retrieval would be aborted at any moment before the maximum amount of time. In this
+view, failed retrievals would take less time on average than the time needed to
+retrieve the item, with the activation influencing the retrieval probability and
+WMC in turn influencing the level of activation; see Figure
+\ref{fig:st-models-mod}. This would mean that $\tau$ would act as a critierion
+for aborting instead of a time-out. We simulated this by assuming that WMC
+affects the activation of the wh-element  very weakly and, critically, that
+retrievals can fail at any time before the maximum retrieval latency (i.e.,
+following a uniform distribution limited between zero and $max(Latency)$). There
+are, of course, other possibilities that will fit with the general pattern as
+well: Any distribution of latencies with a mean that is smaller than the average
+latency for a retrieval will show this pattern. Importantly, by relaxing the
+ACT-R assumption that too low activation must produce the longest possible
+latency, we are able to account qualitatively for the pattern in our data. This
+is so, because participants with lower-WMC would fail more often than high-WMC,
+and since they would complete retrievals relatively slowly, their failures would
+be on average faster. An interesting prediction from this modification is that
+in the small number of cases where a retrieval would fail for high-WMC
+participants, because high-WMC subjects should produce faster than average
+retrievals, they would still show slower failures in comparison to their
+retrievals.
+
+There is some parallelism between fast failures in our experiment and fast
+errors  in two-alternative forced choice tasks. Recent research in
+two-alternative forced choice tasks has shown that time-varying collapsing
+thresholds \citep[e.g., ][]{FrazierYu2008,DrugowitschEtAl2012,ThuraEtAl2012} can explain
+wrong answers  that are given too early, even though there is no apparent
+imposed deadline. Self-paced reading presents a paradigm, however, where the
+only possible choice at every point is to press the space bar to continue
+reading. In order to build a complete representation of the sentences,
+participants reading the verb region should delay pressing the space bar,
+until they retrieve from memory the dependent and they complete the
+dependency. However, we have argued that, when the dependent does not have
+enough activation, retrieval processes are aborted early. Assuming time has a
+cost, \citet{FrazierYu2008} argue that an optimal stopping rule for a process
+is to stop the first time that the expected cost of continuing exceeds that of
+stopping, and to continue only if it is going to improve the chances of
+success enough to offset the extra time. A stopping rule  in self-paced
+reading would mean pressing the space bar and continue reading. When an item
+to be retrieved has enough activation, an optimal stopping rule could be to
+wait and continue reading only when the retrieval is finished. Alternatively,
+when an item has insufficient activation,  the parser could evaluate that the
+activation would not be enough to finish the retrieval before a time out ($F
+\cdot e^{-\tau}$), abort the process, and continue reading, explaining the
+fast failures.
+
+ Further research with data that include RTs as well as some index of
+retrieval accuracy, which is as little contaminated as possible with general
+comprehension accuracy, other retrievals, and offline processes, could shed
+light on how and when exactly retrieval fails.
+
+
+
+
+
+
+<<include=FALSE, eval=TRUE>>=
+
+threshold <- 0
+
+ls_d_modified <- list(MAS=2,W_int=1,sigma=.25,expF=4.8,beta=-.300,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),d_int=.5,weight_slope=0,d_slope=-1 ,W_slope=0)
+
+ls_Daily_modified <- list(MAS=2,W_int=1,sigma=.25,expF=4.8,beta=-.3,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),d_int=.5,weight_slope=0 ,d_slope=0,W_slope=.5)
+
+ls_Bunting_modified <- list(MAS=2,W_int=1,sigma=.25,expF=4.8,beta=-.3,tau_int=threshold,decay_time = dde_model$decay,wmc =as.numeric(dde_model$pcu-.5),N_obs=nrow(dde_model),d_int=.5,weight_slope=2 ,d_slope=0,W_slope=0)
+
+
+samples_actr_myver_decay <- stan(file="stanmodels/actr_simulator_fastfailures.stan", 
+                    data=ls_d_modified ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+dde_sim_myver_decay <- dde_model
+dde_sim_myver_decay$exp <- "(a) capacity-as-decay-rate"
+dde_sim_myver_decay$remef <- get_posterior_mean(samples_actr_myver_decay,pars="pred_latency")
+dde_sim_myver_decay$pred_accuracy <- get_posterior_mean(samples_actr_myver_decay,pars="pred_accuracy")
+
+dde_sim_myver_decay$A <- get_posterior_mean(samples_actr_myver_decay,pars="A")
+
+mean(get_posterior_mean(samples_actr_myver_decay,pars="Pr"))
+mean(get_posterior_mean(samples_actr_myver_decay,pars="pred_accuracy"))
+
+
+
+samples_actr_myver_Daily <- stan(fit=samples_actr_myver_decay, 
+                    data=ls_Daily_modified ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+
+dde_sim_myver_Daily <- dde_model
+dde_sim_myver_Daily$exp <- "(b) capacity-as-source-activation"
+dde_sim_myver_Daily$remef <- get_posterior_mean(samples_actr_myver_Daily,pars="pred_latency")
+dde_sim_myver_Daily$pred_accuracy <- get_posterior_mean(samples_actr_myver_Daily,pars="pred_accuracy")
+
+dde_sim_myver_Daily$A <- get_posterior_mean(samples_actr_myver_Daily,pars="A")
+
+    
+###############
+
+
+samples_actr_myver_Bunting <- stan(fit=samples_actr_myver_Daily, 
+                    data=ls_Bunting_modified ,algorithm="Fixed_param",
+                    iter=1000,chains=1)
+
+
+dde_sim_myver_Bunting <- dde_model
+dde_sim_myver_Bunting$exp <- "(c) capacity-as-interference"
+dde_sim_myver_Bunting$remef <- get_posterior_mean(samples_actr_myver_Bunting,pars="pred_latency")
+dde_sim_myver_Bunting$pred_accuracy <- get_posterior_mean(samples_actr_myver_Bunting,pars="pred_accuracy")
+
+dde_sim_myver_Bunting$A <- get_posterior_mean(samples_actr_myver_Bunting,pars="A")
+# dde_sim_myver_Bunting$BA <- get_posterior_mean(samples_actr_myver_Bunting,pars="W_int")
+
+
+#dde_model,
+dde_model_all_myver <- bind_rows(dde_sim_myver_decay,dde_sim_myver_Daily,dde_sim_myver_Bunting)
+
+summarise(group_by(ungroup(dde_model_all_myver),exp,quartile=ntile(pcu,2),distance ),pcu=mean(pcu),latency=mean(remef),acc= mean(pred_accuracy),A=mean(A))
+
+
+p_sim_myver <- ggplot(dplyr::summarise(group_by(ungroup(dde_model_all_myver),distance,exp,pcu =ntile(pcu,5)),latency=mean(remef)) , aes(y=latency, x=pcu,color=distance,linetype=distance)) + geom_point() + geom_line()+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance") + scale_linetype(name="Distance")+ ggtitle("") +  ylab("Latency of retrieval (ms)")+ facet_grid(.~exp) + theme(legend.position="none")+xlab("") + theme(strip.text.x = element_text(size = 9))
+
+p_A <- ggplot(dplyr::summarise(group_by(ungroup(dde_model_all_myver),distance,exp,pcu =ntile(pcu,5)),A=mean(A)) , aes(y=A, x=pcu,color=distance,linetype=distance)) + geom_point() + geom_line()+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance") + scale_linetype(name="Distance")+ ggtitle("") +  ylab("Activation level")+xlab("WMC (20% quantiles)")+ facet_grid(.~exp)+ geom_hline(yintercept=as.numeric(threshold),linetype="dotted")+ theme(legend.position="bottom") + theme(strip.text.x = element_text(size = 9))
+
+library(gridExtra)
+ grid.arrange(p_sim_myver, p_A, nrow=2)
+
+
+
+sim3 <-arrangeGrob(p_sim_myver, p_A, nrow=2)
+
+
+
+
+
+ggplot2::ggsave( file="p_sim3.eps",sim3,dpi=1200,width= 17.6,unit="cm")
+
+
+
+d <- get_posterior_mean(samples_actr_myver_decay,pars="d")
+range_d <- round(range(-d),2)
+
+W <- get_posterior_mean(samples_actr_myver_Daily,pars="W")
+range_W <- round(range(W),1)   
+
+w <- get_posterior_mean(samples_actr_myver_Bunting,pars="weight")
+range_w <- round(range(w),1)   
+
+@
+
+
+\begin{table}[h!]
+\textbf{\refstepcounter{table}\label{tab:modified_model} Table \arabic{table}.}{
+Parameter values for the models with the modified (simplified) ACT-R. The decay
+time was calculated from the data of the German experiment; we used the mean reading time elapsed from the wh-element until the verb, which was 
+\Sexpr{m_short_decay}ms for the short condition and  \Sexpr{m_long_decay}ms for
+the long one.}
+
+\processtable{ }
+{\begin{tabular}{ l r r r }
+\toprule
+         & cap-as-decay-rate                & cap-as-source-activation            & cap-as-interference\\
+$d$      & $\boldsymbol{[\Sexpr{range_d}]}$ & \Sexpr{ls_Daily$d_int}              & \Sexpr{ls_Bunting_modified$d_int} \\
+$W$      & \Sexpr{ls_d_modified$W_int}               & $\boldsymbol{[\Sexpr{range_W}]}$    & \Sexpr{ls_Bunting_modified$W_int} \\
+$w_{wh}$ & $1/3$                            & $1/3$                               & $\boldsymbol{[\Sexpr{range_w}]}$\\
+$MAS$    & \Sexpr{ls_d_modified$MAS}                 & \Sexpr{ls_Daily_modified$MAS}                & \Sexpr{ls_Bunting_modified$MAS} \\
+$F$      & \Sexpr{round(log(ls_d_modified$expF),1)}  & \Sexpr{round(log(ls_Daily_modified$expF),1)} & \Sexpr{round(log(ls_Bunting_modified$expF),1)} \\
+$\sigma$ & \Sexpr{ls_d_modified$sigma}               & \Sexpr{ls_Daily_modified$sigma}              & \Sexpr{ls_Bunting_modified$sigma} \\
+$\beta$  & \Sexpr{ls_d_modified$beta}                & \Sexpr{ls_Daily_modified$beta}               & \Sexpr{ls_Bunting_modified$beta} \\
+(with threshold) $\tau$    & \Sexpr{threshold}                 & \Sexpr{threshold}                   & \Sexpr{threshold} \\
+
+
+
+\botrule
+\end{tabular}}{}
+\end{table}
+
+

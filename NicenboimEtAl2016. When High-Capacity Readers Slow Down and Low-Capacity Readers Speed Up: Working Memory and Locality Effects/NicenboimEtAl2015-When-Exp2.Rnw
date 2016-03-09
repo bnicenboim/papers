@@ -1,0 +1,708 @@
+% !TeX root = NicenboimEtAl2015-When.Rnw
+% !TeX program = pdfLaTeX
+
+The second experiment 
+attempts to replicate Experiment 1 using SOV
+structures in German, in contrast to the SVO structures in Spanish of the
+previous experiment. The main objective of the second experiment was to verify
+whether the same account for the findings of Experiment~1 is
+valid for an SOV language.
+This is important because SVO structures seem to
+trigger mostly locality effects at the head verb \citep[among others][]
+{GrodnerGibson2005,LewisVasishth2005,VasishthLewis2006,DembergKeller2008,BartekEtAl2011},
+while SOV structures seem to trigger either antilocality effects
+(\citealp{Vasishth2003,VasishthLewis2006,Konieczny2000,KoniecznyDoering2003};
+but see \citealp{SafaviEtAl2015}) or both locality and antilocality
+\citep{VasishthDrenhaus2011,LevyKeller2012,HusainEtAl2014}. It was therefore
+important to verify whether the same results can be obtained with the same
+manipulation irrespective of the OV/VO order.
+
+
+
+
+
+<<include=FALSE>>=
+load("data/data1de.Rda")
+dde <- dde[!(dde$subj %in% c("57","71","54")),]
+
+
+indivde <- unique(dde[c("subj","age", "pcu","ran","wmcacc","gen.acc")]) 
+@
+
+\subsection{Method}
+\subsubsection{Participants}
+
+<<include=FALSE>>=
+
+minage <- format(round(min(indivde$age,na.rm=T), 0), nsmall=0) 
+maxage <-format(round(max(indivde$age,na.rm=T), 0), nsmall=0) 
+meanage <- format(round(mean(indivde$age,na.rm=T), 1), nsmall=1) 
+N <- nrow(indivde)
+
+@
+
+\Sexpr{proper(numbers2words(N))} subjects aged between
+\Sexpr{minage}--\Sexpr{maxage} years old (mean \Sexpr{meanage} years)  were
+recruited using ORSEE \citep{Greiner2004} at the University of Potsdam, Germany.
+All participants reported to be native speakers of German and were na\"{i}ve to
+the purpose of the study. Three other participants had to be removed from the
+data: one subject answered randomly at the operation span task, another subject
+answered the comprehension questions at chance level, and the data of a third
+participant was lost due to technical reasons.
+%bad subjects:
+% #57 answered at chance level (and press the space bar mostly);
+% #71 got a negative score in wmc,
+% #and 54 had a problem with the data (overwritten)
+
+\subsubsection{Stimuli}
+Similarly to Experiment~1, the stimuli for this experiment consisted of 48 items
+in German with four conditions in a two-by-two design: embedded subject length
+$\times$ dependency (see ex. \ref{ex:items-exp-de}).
+
+For this experiment, the embedded subject length manipulation was created by
+changing the determiner (\textit{die}) of the noun phrase of the short condition
+with a longer genitive phrase such as \textit{Marias äußerst kaltschnäuzige},
+``Mary's extremely uncaring'': (\ref{de:short-fgd} vs.\  \ref{de:long-fgd}, and
+\ref{de:short-baseline} vs.\ \ref{de:long-baseline}). The dependency
+manipulation was created as in Experiment~1 by comparing conditions with an
+unbounded dependency versus local dependency (baseline) conditions. Thus,
+conditions (\ref{de:short-fgd}-\ref{de:long-fgd}) were compared with two
+baseline conditions  (\ref{de:short-baseline}-\ref{de:long-baseline}) with
+similar structure, but that lacked the unbounded dependency: The dependent of
+the verb \textit{jemanden} (someone.ACC) appeared at the same distance of the
+verb in both short and long baseline conditions.
+
+
+\begin{exe} 
+\ex \label{ex:items-exp-de}
+
+\begin{xlist}
+\ex \textsc{short - unbounded dependency}
+\gll  Marias äußerst kaltschnäuzige Lehrerin fragte, \textbf{wen} \underline{die Mutter} gestern beim Treffen \textbf{angeschrien hat} mit schriller Stimme. \label{de:short-fgd}\\ 
+Mary's extremely uncaring teacher asked \textbf{who.ACC} \underline{the mother} yesterday at.the meeting  \textbf{yelled had} with shrill voice\\
+\glt   
+\ex \textsc{long - unbounded dependency}
+\gll   Die Lehrerin fragte, \textbf{wen} \underline{Marias äußerst kaltschnäuzige Mutter} gestern beim Treffen \textbf{angeschrien hat} mit schriller Stimme. \label{de:long-fgd}\\
+The teacher asked \textbf{who.ACC} \underline{Mary's extremely uncaring mother} yesterday at.the meeting  \textbf{yelled had} with shrill voice\\
+\glt
+\ex \textsc{short - baseline}
+\gll Marias äußerst kaltschnäuzige Lehrerin fragte, ob \underline{die Mutter}
+jemanden beim Treffen \textbf{angeschrien hat} mit schriller Stimme. \label{de:short-baseline}\\ Mary's extremely uncaring asked teacher if \underline{the
+mother} someone.ACC at.the meeting  \textbf{yelled had} with shrill voice\\
+\glt  
+\ex \textsc{long - baseline}
+\gll  Die Lehrerin fragte, ob \underline{Marias äußerst kaltschnäuzige Mutter} jemanden beim Treffen \textbf{angeschrien hat} mit schriller Stimme.
+\label{de:long-baseline} \\
+The teacher asked if \underline{Mary's extremely uncaring mother} someone at.the meeting  \textbf{yelled had} with shrill voice\\
+\glt
+
+
+\end{xlist} 
+\end{exe}
+
+The 48 experimental items of the current experiment were presented together with
+98 experimental items belonging to  experiments from unpublished studies. The
+sentences presented included (i) 32 items with subject and object relative
+clauses attached to the subject or the object of sentences; (ii) 42 items with
+attachment ambiguity involving dative and genitive noun phrases; and (iii) 24
+items that contrasted personal and demonstrative pronouns.
+
+
+
+
+\subsubsection{Procedure}
+The procedure was the same as the one used in Experiment~1, with the exception
+that comprehension questions appeared after every trial in the self-paced
+reading experiment.
+
+\subsection{Results}
+
+\subsubsection{Results of the individual differences measures}
+
+\paragraph{Operation span}
+<<include=FALSE>>=
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = 3)
+minpcu <- format(round(min(indivde$pcu), 2), nsmall=2) 
+maxpcu <-format(round(max(indivde$pcu), 2), nsmall=2) 
+meanpcu <- format(round(mean(indivde$pcu), 2), nsmall=2) 
+sepcu <- format(round(sd(indivde$pcu)/sqrt(N), 2), nsmall=2) 
+
+
+lsindiv_WMC <- list(n=length(indivde$pcu),x=as.matrix(cbind(indivde$pcu, indivde$gen.acc)))
+
+smp_WMC <- stan(file="stanmodels/pearsonR.stan", data=lsindiv_WMC)
+
+print(smp_WMC,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+cor(x=indivde$pcu, y=indivde$gen.acc)
+
+r_summ_WMC<-summary(smp_WMC,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary = 3)
+rvalue_WMC<- format(round(r_summ_WMC$summary[1], 2), nsmall=2) 
+CrIlow_WMC<- format(round(r_summ_WMC$summary[4], 2), nsmall=2) 
+CrIhigh_WMC<- format(round(r_summ_WMC$summary[5], 2), nsmall=2) 
+
+@
+Partial-credit unit scores for the operation span test measuring WMC of the
+\Sexpr{N} participants had an average of \Sexpr{meanpcu}
+(\textit{SE}=~\Sexpr{sepcu}; range \Sexpr{minpcu}--\Sexpr{maxpcu}).
+
+
+\paragraph{Rapid automatized naming}
+<<include=FALSE>>=
+indivde$rs <- 1/indivde$ran
+ minrs <-format(round(min(50*indivde$rs) , 2), nsmall=2)    #each screen had 50 letters
+  maxrs <- format(round(max(50*indivde$rs) , 2), nsmall=2) 
+  meanrs <- format(round(mean(50*indivde$rs) , 2), nsmall=2) 
+  sers <- format(round(sd(50*indivde$rs)/sqrt(N) , 2), nsmall=2) 
+
+lsindiv_RS <- list(n=length(indivde$pcu),x=as.matrix(cbind(1/indivde$ran, indivde$gen.acc)))
+
+smp_RS <- stan(file="stanmodels/pearsonR.stan", data=lsindiv_RS)
+
+print(smp_RS,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+cor(x=1/indivde$ran, y=indivde$gen.acc)
+
+
+r_summ_RS<-summary(smp_RS,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary = 3)
+rvalue_RS<- format(round(r_summ_RS$summary[1], 2), nsmall=2) 
+CrIlow_RS<- format(round(r_summ_RS$summary[4], 2), nsmall=2) 
+CrIhigh_RS<- format(round(r_summ_RS$summary[5], 2), nsmall=2) 
+  
+@
+Average character speed for the rapid automatized naming task for measuring
+reading fluency ranged between \Sexpr{minrs}--\Sexpr{maxrs} characters$/$second
+with an average of \Sexpr{meanrs} (\textit{SE}=~\Sexpr{sers}) characters/second.
+As in Experiment~1, the reciprocal of the averaged reading time was used as the
+reading fluency measure.
+
+<<include=FALSE>>=
+lsindiv <- list(n=length(indivde$pcu),x=as.matrix(cbind(indivde$pcu, indivde$rs)))
+
+smp <- stan(file="stanmodels/pearsonR.stan", data=lsindiv)
+
+print(smp,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+cor(x=indivde$pcu, y=indivde$rs)
+
+
+r_summ<-summary(smp,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary = 3)
+rvalue<- format(round(r_summ$summary[1], 2), nsmall=2) 
+CrIlow<- format(round(r_summ$summary[4], 2), nsmall=2) 
+CrIhigh<- format(round(r_summ$summary[5], 2), nsmall=2) 
+
+
+
+
+@
+
+As in Experiment~1, these two measures were not correlated for the participants
+of the experiment \textit{r} = \Sexpr{rvalue}, \textit{CrI} =
+$[\Sexpr{CrIlow},\Sexpr{CrIhigh}]$. In contrast with the previous experiment,
+only WMC was correlated with the general accuracy for all the items; WMC:
+\textit{r} = \Sexpr{rvalue_WMC}, \textit{CrI} =
+$[\Sexpr{CrIlow_WMC},\Sexpr{CrIhigh_WMC}]$; reading fluency: \textit{r} =
+\Sexpr{rvalue_RS}, \textit{CrI} = $[\Sexpr{CrIlow_RS},\Sexpr{CrIhigh_RS}]$.
+
+
+
+\subsubsection{Results of the self-paced reading experiment}
+\paragraph{Comprehension Accuracy}
+<<include=FALSE>>=
+library(dplyr)
+
+critical1 <- dde[dde$region %in% "critical1" & !is.na(dde$question.acc),]
+critical1 <- as.data.frame(critical1)
+
+qavde <- summarise(group_by(critical1, subj),acc=mean(question.acc))
+
+accavde<- round(mean(qavde$acc)*100,0)
+accsede<- round(sd(qavde$acc)*100/sqrt(N),0)
+@
+
+Participants answered correctly on average  \Sexpr{accavde}\%
+(\textit{SE}=\Sexpr{accsede}) comprehension probes  of the trials belonging to
+the experiment.
+
+
+\paragraph{Reading Times}
+As for Experiment~1, we fitted a single model for our four regions  of interest
+(\ref{ex:regions-exp2}) using Helmert contrasts. Figure \ref{fig:everyregionde}
+shows mean RTs for high- and low-WMC readers at each comparable region, while
+Figure
+\ref{fig:diffde} shows only the locality effects $\times$ WMC interaction.
+\begin{exe}
+\ex \label{ex:regions-exp2}
+\glll ... fragte \{wen; ob\} \{die; Marias äußerst kaltschnäuzige\} Mutter
+gestern beim $|$ Treffen $|$ angeschrien $|$ hat $|$ mit $|$ schriller $|$ ...\\
+... asked \{who.ACC; if\} \{the; Maria's extremely uncaring\} mother  yesterday
+at.the $|$ meeting $|$ shouted $|$ have $|$ with $|$ shrill $|$  ...\\ {} {} {}
+{} {} {} {} {} {} {}  {} $|$ precritical $|$ {critical 1} $|$ {critical 2} $|$
+{spillover 1} $|$ {spillover 2} $|$  \\
+\glt   
+\end{exe}
+
+
+<<include=FALSE>>=
+
+
+
+o <- c(150,5000)
+dde <- dde[dde$rt > o[1] & dde$rt < o[2] ,]
+dde_regions <- dde[dde$region %in% c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" ),] #%in% "critical2"
+
+
+dde_regions$wmc <- scale(dde_regions$pcu)
+dde_regions$rs <- scale(1/dde_regions$ran)
+dde_regions$c_trial <- scale(dde_regions$trial)
+contrasts(dde_regions$dependency) <- contr.sum(2)
+contrasts(dde_regions$distance) <- contr.sum(2)
+colnames(contrasts(dde_regions$distance))<-""
+colnames(contrasts(dde_regions$dependency))<-""
+
+dde_regions$region  <- factor(dde_regions$region )
+contrasts(dde_regions$region) <- contr.helmert(5)
+dde_regions$sent <- factor(paste(dde_regions$trial,dde_regions$subj))
+
+effsize <- .2  #assumed effect size for the normal prior
+
+X <- model.matrix(~ 1+  distance * dependency * (wmc+rs) * region , data=dde_regions)
+
+Intercept <-  model.matrix(~ 1, data=dde_regions) #for item
+X_u <-  model.matrix(~ 1 + distance * dependency , data=dde_regions) #for subj +  distance * dependency* region
+X_w <-  model.matrix(~ 1 + distance * dependency  , data=dde_regions) # #for item #it doesn converge with this: * (wmc+rs)
+X_v <-  model.matrix(~ 1  , data=dde_regions) #for sent
+
+lsdata_de <- list(rt=dde_regions$rt, 
+                subj=as.numeric(factor(dde_regions$subj)),
+                item=as.numeric(factor(dde_regions$item)),
+                sentence = as.numeric(factor(dde_regions$sent)),
+                N_obs=nrow(dde_regions),
+                N_coef=ncol(X),
+                N_coef_u=ncol(X_u), 
+                N_coef_w=ncol(X_w),
+                N_coef_v=ncol(X_v),
+                x =X,
+                x_u=X_u,
+                x_w=X_w,
+                x_v=X_v,
+                N_subj=length(unique(dde_regions$subj)),
+                N_item=length(unique(dde_regions$item)),
+                N_sentence=length(unique(dde_regions$sent)),
+                effsize = effsize)
+
+if(!file.exists("summaries/summary_spanish_3p_prev.Rda") ){ 
+#If the summary is saved don't try to fit a model or even load a model
+
+    if(RUN & !file.exists("samples/samples_de_3p_prev.Rda")){
+
+        samples_de <- stan(file="stanmodels/shifted_lognormal_3re_param_prev.stan",    
+                        data=lsdata_de , #init= init_fun,
+                        #control=list(adapt_delta=.93),
+                        iter=niter,chains=chains,
+                        pars=c("alpha","beta","delta","sigma","shift",
+                            "tau_shift","shift_u","tau_u","tau_w","tau_v",
+                            "pred_rt","log_lik","resid","Cor_u","Cor_w","Cor_v","lp__")
+                        )
+
+        save(samples_de,file="samples_de_3p_prev.Rda")
+
+   } else {
+        if(!file.exists("samples/samples_de_3p_prev.Rda")){
+            load("samples/samples_de_3p_prev.Rda")
+        } else {
+            print("samples/samples_de_3p_prev.Rda not found")
+        }
+    }
+
+
+
+    print(samples_de,probs = c(0.025,  0.975),pars=c("pred_rt","log_lik","resid"),include=F ,digits_summary = 3)
+    summary(do.call(rbind, args = get_sampler_params(samples_de, inc_warmup = TRUE)), digits = 2)
+
+    summary <- summary(samples_de,pars=c("alpha","beta","delta","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+    betas <- c(colnames(X),paste("Ð",colnames(X)[-1]) ,"Sigma")
+    summ <- data.frame(summary$summary)
+    summ$'P>0' <- c(NA,colMeans(rstan::extract(samples_de)$beta>0),
+            colMeans(rstan::extract(samples_de)$delta>0),NA)
+    rownames(summ) <- betas
+    round(summ,2)
+
+
+    dde_regions$predRT <- colMeans(rstan::extract(samples_de)$pred_rt)# 
+    dde_regions$resid <-  colMeans(rstan::extract(samples_de)$resid)
+
+    all <- summary(samples_de,probs = c(0.025,  0.975) ,digits_summary = 3)
+
+    qqPlot(dde_regions$resid)
+
+    pairs(samples_de,    pars=c("alpha","sigma","shift",
+                            "tau_shift","lp__"))
+
+    traceplot(samples_de,    pars=c("alpha","delta","sigma","shift",
+                            "tau_shift","shift_u","tau_u","tau_w","tau_v","Cor_u","Cor_w","Cor_v","lp__"))
+
+
+    save(summ,all,X,dde_regions, file="summaries/summary_german_3p_prev.Rda")
+} else {
+    load("summaries/summary_german_3p_prev.Rda")
+}
+
+@
+
+<<include=FALSE>>=
+effect_sizes <- summ[(1+ncol(X)):nrow(summ),]
+
+effect_sizes_show_de <- effect_sizes[rownames(effect_sizes) %in%  c("Ð distance","Ð dependency","Ð wmc","Ð rs","Ð distance:dependency","Ð distance:dependency:wmc","Ð distance:dependency:rs"),]
+
+
+effect_sizes_show_de_r <- cbind(pred=c("Length","Dependency", "WMC","RF","Length:dependency","Length:dependency:WMC","Length:dependency:RF"),round( effect_sizes_show_de,2))
+
+table_de <- with(effect_sizes_show_de_r,paste(paste(pred,mean,X2.5.,X97.5.,effect_sizes_show_de$'P>0',sep=" & "),collapse=" \\\\ "))
+
+dde_regions <- dde[dde$region %in% c("precritical", "critical1",   "critical2",
+"deillover1",  "deillover2" ),]
+Outs <- length(dde_regions[dde_regions$rt < 200  ,]$rt)
+Total <- length(dde_regions$rt)
+
+outperc <- round(Outs/Total * 100,2)
+@
+
+\begin{table}[!ht]
+\textbf{\refstepcounter{table}\label{tab:table_de} Table \arabic{table}.}{Main results for Experiment~2 (German). 
+The first column 
+$\hat{\delta}$ shows the estimated effect size of the coefficients; the next 
+two columns show the 2.5th and 97.5th
+percentiles of their posterior distribution, that is, where the effect
+size lies with 95\% probability; and $P(\hat{\delta}>0)$ indicates the
+posterior probability that each coefficient is positive.%
+}
+
+\processtable{ }
+{\begin{tabular}{ l r r r r }
+\toprule
+Predictor &  $\hat{\delta}$ & \multicolumn{2}{c}{95\% CrI} &  $P(\hat{\delta}>0)$ \\
+\Sexpr{table_de} \\
+
+\botrule
+\end{tabular}}{}
+\end{table}
+
+\label{sec:RT}
+
+
+<<include=FALSE>>=
+####nested models:
+
+ #all the data in lists
+lsdata <- list()
+    #ROI <- c("precritical", "critical1",   "critical2",   "spillover1",  "spillover2" )
+effsize =.2
+
+samples_lmm <- list()
+summ_reg <- list()
+if(!file.exists("summaries/summary_german_reg.Rda") ){ 
+#If the summary is saved don't try to fit a model or even load a model
+
+    if(RUN & !file.exists("samples/samples_german_reg.Rda")){
+
+    ROI <- unique(dde_regions$region)
+    for(reg in ROI){
+          
+        dde_reg <- dde_regions[dde_regions$region %in% reg,]
+
+        x_full_reg <- model.matrix(~ 1+  distance * dependency * (wmc+rs), data=dde_reg)
+        x_full_noind_reg <-  model.matrix(~ 1+  distance * dependency, data=dde_reg) #for item
+
+        lsdata_reg <- list(rt=dde_reg$rt, 
+                    subj=as.numeric(factor(dde_reg$subj)),
+                    item=as.numeric(as.character(dde_reg$item)),
+                    N_obs=nrow(dde_reg),
+                    N_coef=ncol(x_full_reg),
+                    N_coef_u=ncol(x_full_noind_reg), 
+                    N_coef_w=ncol(x_full_noind_reg),
+                    x =x_full_reg,
+                    x_u=x_full_noind_reg,
+                    x_w=x_full_noind_reg,
+                    N_subj=length(unique(dde_reg$subj)),
+                    N_item=length(unique(dde_reg$item)),
+
+                    effsize = effsize
+            )
+
+            lsdata[[paste(reg)]] <- (lsdata_reg)
+
+
+        print(paste(reg))
+        samples_lmm[[paste(reg)]] <- stan("stanmodels/shifted_lognormal_2re_param_prev.stan",    
+                        data=lsdata[[paste(reg)]] , 
+                        iter=niter,
+                        chains=chains,
+                        pars=c("alpha","beta","delta","sigma","shift","tau_shift","shift_u","tau_u","tau_w","pred_rt","log_lik","resid","Cor_u","Cor_w","lp__")
+                        )
+        }
+        save(samples_lmm,file="samples/samples_german_reg.Rda")
+    } else {
+        load("samples/samples_german_reg.Rda")
+    }
+
+
+    for(reg in ROI){
+        summary <- summary(samples_lmm[[paste(reg)]],pars=c("alpha","beta","delta","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+        betas <- c(colnames(x_full_reg),paste("Ð",colnames(x_full_reg)[-1]) ,"Sigma")
+        summ_reg[[paste(reg)]] <- data.frame(summary$summary)
+        summ_reg[[paste(reg)]]$'P>0' <- c(NA,colMeans(rstan::extract(samples_lmm[[paste(reg)]])$beta>0),
+                colMeans(rstan::extract(samples_lmm[[paste(reg)]])$delta>0),NA)
+        rownames(summ_reg[[paste(reg)]]) <- betas
+    }
+    save(summ_reg, x_full_reg,file="summaries/summary_german_reg.Rda")
+} else{
+    load("summaries/summary_german_reg.Rda")
+}
+
+
+@
+
+<<include=FALSE>>=
+
+table_de <- list()
+all_table_de <- ""
+ROI <- c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" )
+for(reg in ROI){
+
+
+    effect_sizes <- summ_reg[[paste(reg)]][(1+ncol(x_full_reg)):nrow(summ_reg[[paste(reg)]]),]
+
+
+    effect_sizes_show_de_reg <- round(effect_sizes[rownames(effect_sizes) %in%  c("Ð distance","Ð dependency","Ð wmc","Ð rs","Ð distance:dependency","Ð distance:dependency:wmc","Ð distance:dependency:rs"),],2)
+
+    effect_sizes_show_de_reg <- cbind(pred=c("length","dependency", "WMC","RF",
+        "length:dependency","length:dependency:WMC","length:dependency:RF"), 
+    effect_sizes_show_de_reg)
+
+    new_table_de <- with(effect_sizes_show_de_reg,paste(paste(pred,mean,X2.5.,X97.5.,effect_sizes_show_de_reg$'P>0',sep=" & "),collapse=" \\\\ "))
+
+    all_table_de <- paste(all_table_de,"\\\\ \\midrule \n \\hspace{1em}",reg,"\\\\ \n \\midrule \n", new_table_de)
+}
+
+
+
+
+@
+
+
+
+\begin{table}[!ht]
+\textbf{\refstepcounter{table}\label{tab:table_regions_de} 
+Table \arabic{table}.}{ Main results for each region of Experiment~2 (German). WMC stands
+for working memory capacity and RF for reading fluency. The first column 
+$\hat{\delta}$ shows the estimated effect size of the coefficients; the next 
+two columns show the 2.5th and 97.5th
+percentiles of their posterior distribution, that is, where the effect
+size lies with 95\% probability; and $P(\hat{\delta}>0)$ indicates the
+posterior probability that each coefficient is positive.%
+}
+
+\processtable{ }
+{\begin{tabular}{ l r r r r }
+\toprule
+Predictor &  $\hat{\delta}$ & \multicolumn{2}{c}{95\% CrI} &  $P(\hat{\delta}>0)$
+\Sexpr{all_table_de} \\
+\botrule
+\end{tabular} }{}
+\end{table}
+
+As in Experiment~1, RTs under 150ms and above 5000ms were  removed from the data
+(\Sexpr{outperc}\% of the observations).
+
+Table \ref{tab:table_de} and Figure
+\ref{fig:caterde} summarize the main results of the model for the effect of
+reading fluency, WMC, locality effect (embedded subject length $\times$
+dependency), and its interaction with reading fluency and WMC, including the
+data from all the regions of interest. We omitted the interactions with the
+different regions since the effects of interest had the same pattern in all
+the regions. Table \ref{tab:table_regions_de} summarizes the results from
+nested comparisons where the models were evaluated at the different regions.
+
+The models reveal the following: As in Experiment 1, even though it is with less
+certainty, subjects with higher reading fluency scores tended to have shorter
+RTs.  
+
+In addition, and as in the previous experiment, we did not find the hypothesized
+locality effects in this experiment. The models, however, show evidence for an
+interaction between locality effects and WMC. This interaction has the same
+pattern  in all regions of interest. The resulting effect is  similar to the one
+of Experiment~1, even though the underlying pattern is different (see Figure
+\ref{fig:everyregionde}): the effect was mainly driven by a speedup in long
+baseline conditions in comparison with short baseline conditions. This speedup
+was reduced as WMC decreased until it became an advantage for the short
+condition for low-WMC readers; compare the figures depicting the effects for
+high- and low-WMC in Experiment 2 (Figure \ref{fig:diffde}) with Experiment 1
+(Figure \ref{fig:diffsp}). 
+
+  We also found some evidence for a three-way interaction between
+embedded subject length, dependency type, and reading fluency, with the same
+direction as in Experiment~1, that is, decreasing locality effects as the
+score of reading fluency increases. The interaction had the following pattern:
+For the unbounded dependency conditions, as reading fluency increased, RTs at
+the long condition decreased in comparison with the RTs at the short
+condition; while for the baseline conditions this pattern was reversed.  
+
+
+ 
+
+
+
+\subsection{Discussion}
+
+We found a dependency type $\times$ embedded subject length $\times$ WMC
+interaction, which had the same sign as in the
+previous experiment. However, while in Experiment~1 the effect seemed to be
+caused by the difference between the unbounded dependency conditions, in
+Experiment~2, the effect was mainly caused by a difference between the
+baseline conditions. In contrast to the Spanish stimuli, the subject did not
+immediately precede the verb in the German stimuli and therefore had to be
+retrieved from memory. Since the long conditions appear together with a more
+informative and salient subject, and the encoding of the longer subjects seems
+to have not spilled over the head verb; it may be the case that the subject
+retrieval is faster
+\citep{Hofmeister2007,HofmeisterVasishth2014},  thus leading to a speedup in
+both long conditions (both unbounded dependency and baseline conditions).
+
+ But crucially, the dependency type $\times$ embedded subject length $\times$
+WMC interaction had the same direction and similar magnitude as in
+Experiment~1, that is, high-WMC participants showed the largest difference
+between \textit{long unbounded $-$ long baseline} and \textit{short unbounded
+$-$ short baseline}, while this difference is inverted for low-WMC readers.
+This outcome allows us to give the same interpretation to the results of the
+current experiment: high-WMC readers showed locality effects and low-WMC
+readers showed a speedup, which we argue that it is associated with a higher
+proportion of failure in retrieval in the long unbounded dependency condition.
+
+
+  In contrast with Experiment~1, reading fluency did not show a
+correlation with comprehension accuracy (while only WMC did). Similarly to the
+first experiment, however, participants with higher scores in reading fluency
+tended to read the critical region faster. In addition, we found somewhat
+stronger evidence favoring the hypothesis that fluent readers would overcome
+ locality effects more easily than less fluent readers.  
+
+
+<<include=FALSE,eval=TRUE>>=
+
+dde  <- dde[dde$rt >150 & dde$rt <5000,]
+dde <- dde[!is.na(dde$rt),]
+dde$memgroup <-NULL
+dde$memgroup <-ifelse(dde$pcu <= quantile(dde$pcu,c(1/4))[1],"low-WMC", ifelse(
+ dde$pcu >= quantile(dde$pcu,c(3/4))[1],"high-WMC",NA ))
+
+
+dde_s <- dde[dde$region %in% c("precritical","critical1","critical2","spillover1","spillover2","spillover3","spillover4")  , c("distance","dependency","pcu","item","subj","rt","word","memgroup","question.acc","region")]
+
+dde_s<-dde_s[!is.na(dde_s$memgroup),]
+
+#aux functions
+stat_sum_df <- function(fun, geom="crossbar", ...) {
+  stat_summary(fun.data=fun, geom=geom, width=.3,colour="black",linetype="solid", ...)
+}
+ #
+
+p_regions_de <- ggplot(data=dde_s,aes(x=region, y=rt,linetype=dependency,color=distance,shape=distance,group=interaction(dependency,distance))) + facet_grid(memgroup~.) + stat_sum_df("mean_cl_normal", geom = "errorbar",position= position_dodge(0.1),size=.3)+ stat_summary(fun.y=mean, geom="point",size=2,position= position_dodge(0.1))+stat_summary(fun.y=mean, geom="line")
+
+
+
+p_regions_de<-p_regions_de + ggtitle("Experiment 2. All comparable regions.") +  ylab("RT (ms)") +theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Embedded subject length" )+ scale_shape(name="Embedded subject length")+ scale_linetype_discrete(name="Dependency type")+ scale_x_discrete( labels=c("precritical\nTreffen", "critical 1\nangeschrien", "critical 2\nhat", "spillover 1\nmit", "spillover 2\nschriller", "spillover 3\nStimme."))
+p_regions_de <- p_regions_de+ scale_y_continuous(breaks = seq(300,600,50),minor_breaks=seq(300,600,25))+    theme(legend.position="bottom")
+print(p_regions_de)
+
+ggsave(plot= p_regions_de, file="p_regions_de.eps",dpi=1200,width= 17.6,unit="cm")
+
+
+
+###
+#caterpillar plots
+effect_sizes_show_de$pred <- factor(effect_sizes_show_de_r$pred ,levels =rev(effect_sizes_show_de_r$pred) )
+
+p_cater <- ggplot(effect_sizes_show_de, aes(x = mean, y = pred,
+                       xmin = X2.5.,
+                       xmax = X97.5.)) +
+    geom_point(size = 3) +
+    geom_segment(aes(x = X2.5., xend = X97.5., yend = pred),
+                 size = 0.5)  +
+    ylab('') + xlab('Effect size') +
+    theme_bw()             + 
+     geom_vline(aes(xintercept= 0), linetype = "dotted") +
+     ggtitle("Experiment 2") +
+    scale_x_continuous(limits=c(-.4,.4), breaks = seq(-.4,.4,.1),
+        minor_breaks=seq(-.4,.4,.025))
+p_cater
+
+ggsave(plot=p_cater, file="p_cater_de.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+
+
+#####
+load("summaries/summary_german_3p_prev.Rda")
+X_rel <- X[,c("(Intercept)",
+"distance",
+"dependency",
+"wmc",
+"distance:dependency",
+"distance:wmc",
+"dependency:wmc",
+"distance:dependency:wmc")]
+ 
+betas <- summ[c("(Intercept)",
+"distance",
+"dependency",
+"wmc",
+"distance:dependency",
+"distance:wmc",
+"dependency:wmc",
+"distance:dependency:wmc"),"mean"]
+
+
+
+###
+
+remef <- X_rel %*% betas +
+dde_regions$resid
+
+
+data_de_remef <- data.frame(X_rel)
+data_de_remef$remef <- remef#dde_regions$rt
+data_de_remef$distance <- ifelse(data_de_remef$distance==1,"long","short")
+data_de_remef$dependency <- ifelse(data_de_remef$dependency==1,"unbounded","baseline")
+
+data_de_remef$region <- dde_regions$region
+
+
+data_de_remef_wmc <- summarise(group_by(data_de_remef,distance,dependency,wmc,region), DV=mean(remef))
+
+
+remef_de <- mutate(spread(data_de_remef_wmc,dependency, DV),effect=unbounded-baseline)
+
+
+p_reg_all <- ggplot(data=remef_de,aes(x=wmc, y=effect, color=distance, shape=distance)) + geom_point(size=1) + geom_smooth(method=lm,size=1)+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance")+ ggtitle("Experiment 2") +  ylab("Locality effects in the log-transformed scale")+xlab("WMC (centered and scaled PCU)")  +scale_y_continuous(breaks = seq(-2,2,by = .2)) + facet_wrap(~region)  + theme(legend.position=c(.85,.25))
+print(p_reg_all)
+ggsave(plot=p_reg_all, file="p_reg_all_logRTs_de.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+# 
+
+
+
+
+data_de_reg_wmc <- summarise(group_by(data_de_remef_wmc,distance,dependency,wmc), DV=mean(DV))
+remef_de <- mutate(spread(data_de_reg_wmc,dependency, DV),effect=unbounded-baseline)
+
+
+p_one_reg <- ggplot(data=remef_de,aes(x=wmc, y=effect, color=distance, shape=distance)) + geom_point() + geom_smooth(method=lm)+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance")+ ggtitle("Experiment 2") +  ylab("Locality effects in the log-transformed scale")+xlab("WMC (centered and scaled PCU)")  +scale_y_continuous(breaks = seq(-2,2,by = .1)) 
+ print(p_one_reg)
+ggsave(plot=p_one_reg, file="p_one_reg_logRTs_de.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+
+@
+
+
+

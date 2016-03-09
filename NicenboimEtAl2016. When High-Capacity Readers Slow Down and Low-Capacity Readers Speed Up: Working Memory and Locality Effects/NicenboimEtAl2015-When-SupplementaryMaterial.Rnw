@@ -1,0 +1,502 @@
+%%%% !Rnw weave = knitr
+% !TeX program = pdfLaTeX
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is just an example/guide for you to refer to when producing your supplementary material for your Frontiers article.                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Version 1.1 Generated 2014/03/12 %%%
+%%% You will need to have the following packages installed: datetime, fmtcount, etoolbox, fcprefix, which are normally inlcuded in WinEdt. %%%
+%%% In http://www.ctan.org/ you can find the packages and how to install them, if necessary. %%%
+
+\documentclass{frontiersSCNSsuppmat}
+
+%\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
+\usepackage[spanish,german,english]{babel}
+\usepackage{listings}
+\lstdefinelanguage{stan}
+{
+morekeywords={int, vector, real, matrix, cholesky_factor_corr, cauchy, normal, lognormal, lkj_corr_cholesky,return, for, in, positive_infinity, negative_infinity,fmax, fmin, row, col, diag_pre_multiply, block},
+sensitive=false,
+morecomment=[l]{//},
+morecomment=[s]{/*}{*/},
+morestring=[b]",
+}
+\usepackage{url,lineno}
+\usepackage{fancyvrb}
+
+%\linenumbers
+
+% Leave a blank line between paragraphs in stead of using \\
+
+\copyrightyear{}
+\pubyear{}
+
+\def\journal{Psychology}%%% write here for which journal %%%
+\def\DOI{}
+\def\articleType{Research Article}
+\def\keyFont{\fontsize{8}{11}\helveticabold }
+\def\firstAuthorLast{Nicenboim {et~al.}} %use et al only if is more than 1 author
+\def\Authors{Nicenboim, Bruno\,$^{1,*}$,  Loga\v{c}ev, Pavel\,$^{2}$, Gattei, Carolina,$^{3}$ and Vasishth, Shravan\,$^{4}$}
+% Affiliations should be keyed to the author's name with superscript numbers and be listed as follows: Laboratory, Institute, Department, Organization, City, State abbreviation (USA, Canada, Australia), and Country (without detailed address information such as city zip codes or street names).
+% If one of the authors has a change of address, list the new address below the correspondence details using a superscript symbol and use the same symbol to indicate the author in the author list.
+\def\Address{
+$^{1}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+$^{2}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+$^{3}$Grupo de Lingüística y Neurobiología Experimental del Lenguaje, INCIHUSA, CONICET, Mendoza, Argentina. \\
+$^{4}$Department of Linguistics, University of Potsdam, Potsdam, Germany
+ }
+% The Corresponding Author should be marked with an asterisk
+% Provide the exact contact address (this time including street name and city zip code) and email of the corresponding author
+\def\corrAuthor{Bruno Nicenboim}
+\def\corrAddress{Department of Linguistics, University of Potsdam, Karl-Liebknecht-Str. 24-25, D-14476 Potsdam, Germany}
+\def\corrEmail{bruno.nicenboim@uni-potsdam.de}
+
+
+% \color{FrontiersColor} Is the color used in the Journal name, in the title, and the names of the sections.
+
+
+\begin{document}
+<<setup,cache=FALSE,include=FALSE>>=
+# global chunk options
+opts_chunk$set(cache=TRUE, autodep=TRUE,fig.path='figure/graphics-', cache.path='cache/graphics-', fig.align='center', fig.pos='!ht')
+opts_knit$set(self.contained=FALSE)
+
+#for labeling
+knit_hooks$set(rexample = function(before, options, envir) {
+  if (before) sprintf('\\begin{rexample}\\label{%s}\\hfill{}', options$label) else '\\end{rexample}'
+})
+
+
+library(knitr)
+
+
+@
+
+\onecolumn
+\firstpage{1}
+
+\title[Supplementary Material]{{\helveticaitalic{Supplementary Material}}:\\ \helvetica{ When high-capacity readers slow down and low-capacity readers speed up: Working memory and locality effects}}
+\author[\firstAuthorLast ]{\Authors}
+\address{}
+\correspondance{}
+\extraAuth{}% If there are more than 1 corresponding author, comment this line and uncomment the next one.
+%\extraAuth{corresponding Author2 \\ Laboratory X2, Institute X2, Department X2, Organization X2, Street X2, City X2 , State XX2 (only USA, Canada and Australia), Zip Code2, X2 Country X2, email2@uni2.edu}
+\topic{Encoding and navigating linguistic representations in memory}
+
+
+\maketitle
+
+
+
+
+\section{Supplementary Tables}
+For comparison purposes, we provide the results of the frequentist linear mixed-effects models (LMM; \citealp{PinheiroBates2000}) using the \emph{lme4} package \citep{lme4} in Tables \ref{tab:LMMsp} and \ref{tab:LMMger} . The models were fit with maximal random effects structure justified by the design removing the correlation between variance components to ensure convergence. We transformed the dependent variable (RT) using the reciprocal transformation (Box-Cox method: \citealp{BoxCox1964}), but we used ($-10^5/RT$) to improve the readability of the models (a positive t-value for $-10^5/RT$ corresponds to a positive t-value of the untransformed measure RT). Extreme values of RTs were removed from the analysis (either below 150ms or above 5000ms).
+
+<<include=FALSE>>=
+
+load("data/data1sp.Rda")
+
+
+o <- c(150,5000)
+dsp <- dsp[dsp$rt > o[1] & dsp$rt < o[2] ,]
+dsp_regions <- dsp[dsp$region %in% c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" ),] #%in% "critical2"
+
+dsp_regions$wmc <- scale(dsp_regions$pcu)
+dsp_regions$rs <- scale(1/dsp_regions$ran)
+dsp_regions$c_trial <- scale(dsp_regions$trial)
+
+
+contrasts(dsp_regions$dependency) <- contr.sum(2)
+contrasts(dsp_regions$distance) <- contr.sum(2)
+
+colnames(contrasts(dsp_regions$distance))<-""
+colnames(contrasts(dsp_regions$dependency))<-""
+
+library(MASS)
+dsp_regions$region  <- factor(dsp_regions$region )
+contrasts(dsp_regions$region) <- contr.helmert(5)
+dsp_regions$sent <- factor(paste(dsp_regions$trial,dsp_regions$subj))
+
+library(lme4)
+
+dsp_regions$dep <- ifelse(dsp_regions$dependency %in% "unbounded",1,-1)
+dsp_regions$dist <- ifelse(dsp_regions$distance %in% "long",1,-1)
+
+summary(m_sp <- lmer(I(-1000/rt) ~  distance * dependency * region* (wmc+rs)  +(dist * dep||subj) +(dist * dep||item) +(1|sent) ,data= dsp_regions))
+
+
+@
+
+<<include=FALSE>>=
+
+coef_sp <- round(summary(m_sp)$coefficients[c("distance","dependency","wmc","rs","distance:dependency","distance:dependency:wmc", "distance:dependency:rs"),],2)
+
+
+coef_sp<- cbind(pred=c("length","dependency","WMC","RF","length:dependency","length:dependency:WMC","length:dependency:RF"), data.frame(coef_sp))
+
+coef_sp <-apply(coef_sp, 1, function(x) paste(x,collapse=" & ",sep=" & "))
+coef_sp <- paste(paste(unlist(coef_sp), collapse=" \\\\ "),"\\\\")
+
+
+@
+
+\begin{table}[h]
+\textbf{\refstepcounter{table}\label{tab:LMMsp} Table \arabic{table}.}{ LMMs for Spanish experiment }
+
+\processtable{ }
+{\begin{tabular}{ l r r r }
+\toprule
+Predictor & Estimate & \emph{SE} &  \emph{t}-value \\
+%\midrule
+\Sexpr{coef_sp}
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+<<include=FALSE>>=
+load("data/data1de.Rda")
+
+dde <- dde[!(dde$subj %in% c("57","71","54")),]
+
+o <- c(150,5000)
+dde <- dde[dde$rt > o[1] & dde$rt < o[2] ,]
+dde_regions <- dde[dde$region %in% c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" ),] #%in% "critical2"
+
+
+dde_regions$wmc <- scale(dde_regions$pcu)
+dde_regions$rs <- scale(1/dde_regions$ran)
+dde_regions$c_trial <- scale(dde_regions$trial)
+contrasts(dde_regions$dependency) <- contr.sum(2)
+contrasts(dde_regions$distance) <- contr.sum(2)
+colnames(contrasts(dde_regions$distance))<-""
+colnames(contrasts(dde_regions$dependency))<-""
+
+library(MASS)
+dde_regions$region  <- factor(dde_regions$region )
+contrasts(dde_regions$region) <- contr.helmert(5)
+dde_regions$sent <- factor(paste(dde_regions$trial,dde_regions$subj))
+
+library(lme4)
+
+dde_regions$dep <- ifelse(dde_regions$dependency %in% "unbounded",1,-1)
+dde_regions$dist <- ifelse(dde_regions$distance %in% "long",1,-1)
+
+summary(m_de <- lmer(I(-1000/rt) ~  distance * dependency * region* (wmc+rs)  +(dist * dep||subj) +(dist * dep||item) +(1|sent) ,data= dde_regions))
+
+# summary(m_de <- lmer(I(-1000/rt) ~  distance * dependency * region* (wmc+rs)  +(1|subj) +(1|item) +(1|sent) ,data= dde_regions))
+
+
+@
+
+<<include=FALSE>>=
+
+coef_de <- round(summary(m_de)$coefficients[c("distance","dependency","wmc","rs","distance:dependency","distance:dependency:wmc", "distance:dependency:rs"),],2)
+
+
+coef_de<- cbind(pred=c("length","dependency","WMC","RF","length:dependency","length:dependency:WMC","length:dependency:RF"), data.frame(coef_de))
+
+coef_de <-apply(coef_de, 1, function(x) paste(x,collapse=" & ",sep=" & "))
+coef_de <- paste(paste(unlist(coef_de), collapse=" \\\\ "),"\\\\")
+
+
+@
+
+\begin{table}[h]
+\textbf{\refstepcounter{table}\label{tab:LMMger} Table \arabic{table}.}{ LMMs for German experiment }
+
+\processtable{ }
+{\begin{tabular}{ l r r r }
+\toprule
+Predictor & Estimate & \emph{SE} &  \emph{t}-value \\
+%\midrule
+\Sexpr{coef_de}
+\botrule
+\end{tabular}}{}
+\end{table}
+
+%%% There is no need for adding the file termination, as long as you indicate where the file is saved. In the examples below the files (logo1.jpg and logo2.eps) are in the Frontiers LaTeX folder
+%%% If using *.tif files convert them to .jpg or .png
+
+% \begin{figure}
+% \begin{center}
+% \includegraphics[width=10cm]{logo1}% This is a *.jpg file
+% \end{center}
+% \textbf{\refstepcounter{figure}\label{fig:01} Supplementary Figure \arabic{figure}.}{ Enter the caption for your figure here.  Repeat as  necessary for each of your figures }
+% \end{figure}
+
+%\begin{figure}
+%\begin{center}
+%\includegraphics[width=3.5cm]{logo2}% This is an *.eps file
+%\end{center}
+% \textbf{\refstepcounter{figure}\label{fig:02} Figure \arabic{figure}.}{ Enter the caption for your figure here.  Repeat as  necessary for each of your figures }
+%\end{figure}
+
+%\bibliographystyle{frontiersinSCNS&ENG} % for Science and Engineering articles
+%\bibliographystyle{frontiersinHLTH&FPHY} % for Health and Physics articles
+%\bibliography{test}
+
+
+
+\section{Stan code}
+We used the following code to fit the shifted lognormal mixed models for the analysis of RTs.
+
+% \begin{lstlisting}[language=stan]
+\begin{Verbatim}[numbers=left,frame=single,fontfamily=courier,fontsize=\footnotesize]
+
+functions {
+  real shift_max(vector shift_u, int[] subj, vector rt) {
+  
+    real shift_max;
+    shift_max <- positive_infinity();
+    for (i in 1:num_elements(rt)){
+         shift_max <- fmin(shift_max,log(rt[i]) - shift_u[subj[i]] );
+        }
+    return shift_max;
+  }
+
+  real shifted_lognormal_log(vector y, vector mu, real sigma, vector psi){
+
+    if (min(psi) < 0)
+      reject("Shift parameter (psi) should be bigger than 0, value found ",
+        min(psi));
+
+    if (min(y-psi) < 0)
+      reject(
+"Shift parameter (psi) should be smaller than y;  y-psi > 0 but here there is",
+min(y-psi));
+ 
+  return lognormal_log(y- psi,mu,sigma);
+  }
+
+}
+
+
+data {
+  int<lower=0> N_obs; 
+  int<lower=0> N_coef;  
+  int<lower=0> N_coef_u;  
+  int<lower=0> N_coef_w;  
+  int<lower=0> N_coef_v;  
+  int<lower=1> subj[N_obs];    //subject id
+  int<lower=1> item[N_obs];    //item id
+  int<lower=1> sentence[N_obs];    //sentence id
+
+  int<lower=1> N_subj;                
+  int<lower=1> N_item;  
+  int<lower=1> N_sentence;  
+  matrix[N_obs,N_coef] x;
+  matrix[N_obs,N_coef_u] x_u;
+  matrix[N_obs,N_coef_w] x_w;
+  matrix[N_obs,N_coef_v] x_v;
+  vector[N_obs] rt;
+
+}
+
+transformed data {
+  matrix[N_obs,N_coef-1] x_betas;
+  x_betas <- block(x,1,2,N_obs,N_coef-1); # I remove the intercept here
+}
+
+parameters {
+  vector[N_coef-1] delta;     //delta is size of the effect
+  real<lower=0> sigma;
+  real<lower=0> tau_shift;
+  vector[N_subj] shift_u_raw;  // subj shift
+  real<upper=shift_max(shift_u_raw * tau_shift,subj,rt)> shift;
+
+  //subj
+  vector<lower=0> [N_coef_u]  tau_u;     // subj sd
+  cholesky_factor_corr[N_coef_u] L_u;      // correlation matrix for random intercepts and slopes subj
+  vector[N_coef_u] z_u[N_subj];
+
+  //items
+  vector<lower=0> [N_coef_w]  tau_w;     // subj sd
+  cholesky_factor_corr[N_coef_w] L_w;      // correlation matrix for random intercepts and slopes item
+  vector[N_coef_w] z_w[N_item];
+
+  //sentence
+  vector<lower=0> [N_coef_v]  tau_v;     // subj sd
+  cholesky_factor_corr[N_coef_v] L_v;      // correlation matrix for random intercepts and slopes item
+  vector[N_coef_v] z_v[N_sentence];
+
+  real<lower=0> alpha; 
+
+}
+
+transformed parameters {
+     
+  vector[N_coef_u]  u[N_subj];         
+  vector[N_coef_w]  w[N_item];
+  vector[N_coef_v]  v[N_sentence];
+  matrix[N_coef_u,N_coef_u] Lambda_u;
+  matrix[N_coef_w,N_coef_w] Lambda_w;
+  matrix[N_coef_v,N_coef_v] Lambda_v;
+  vector[N_coef-1] beta;
+  vector[N_obs] psi;  //each shift
+  vector[N_obs] mu; 
+  vector[N_subj] shift_u;  // subj shift
+
+  beta <- delta * sigma;  
+
+  Lambda_u <- diag_pre_multiply(tau_u,L_u);
+  for (i in 1:N_subj){
+   u[i] <- Lambda_u * z_u[i];
+  }
+
+  Lambda_w <-  diag_pre_multiply(tau_w,L_w);  
+  for (i in 1:N_item){
+    w[i] <- Lambda_w * z_w[i]; // item random effects
+  } 
+
+  Lambda_v <-  diag_pre_multiply(tau_v,L_v);  
+  for (i in 1:N_sentence){
+    v[i] <- Lambda_v * z_v[i]; // item random effects
+  }
+
+
+  shift_u <- shift_u_raw * tau_shift; // =shift_u ~normal(0,tau_shift)
+  for (i in 1:N_obs){
+    mu[i] <- alpha + x_betas[i] * beta +   
+          x_u[i] * u[subj[i]] + 
+          x_w[i] * w[item[i]] + 
+          x_v[i] * v[sentence[i]];
+    psi[i] <- exp(shift + shift_u[subj[i]]); //
+  }
+
+} 
+
+
+model {
+
+  sigma ~ normal(0,1);
+  tau_u ~ normal(0,1);
+  tau_w ~ normal(0,1);
+  tau_v ~ normal(0,1);
+  tau_shift  ~ normal(0,.5);
+
+  alpha ~ normal(0, 5);
+  delta ~ normal(0, .2);
+
+  #for (i in 1:N_subj)
+  shift ~ normal(0,1); 
+  shift_u_raw ~ normal(0,1);
+
+  L_u ~ lkj_corr_cholesky(4.0);
+  L_w ~ lkj_corr_cholesky(4.0);
+  L_v ~ lkj_corr_cholesky(4.0);
+
+  for (i in 1:N_subj){
+    z_u[i] ~ normal(0,1);   
+  }
+
+  for (i in 1:N_item){
+    z_w[i] ~ normal(0,1);   
+  }
+
+  for (i in 1:N_sentence){
+    z_v[i] ~ normal(0,1);   
+  }
+
+    rt ~ shifted_lognormal(mu, sigma,psi);
+}
+
+\end{Verbatim}
+
+
+We used the following code to simulate the default implementation of ACT-R.
+
+\begin{Verbatim}[numbers=left,frame=single,fontfamily=courier,fontsize=\footnotesize]
+data {
+  int<lower=0> N_obs; 
+  real<lower=0> sigma;
+  real expF;  
+  real<lower=0> W_slope;
+  real weight_slope;
+  vector[N_obs] wmc;
+  real<lower=> W_int;
+  real<lower=log(5)> MAS;
+  real beta;
+  real tau_int;  #
+  vector[N_obs] decay_time;
+  real<upper=1> d;
+  real d_slope;
+
+}
+
+transformed data {
+ real shared_cues;
+ shared_cues <- 5.0;
+}
+
+model {
+}
+
+generated quantities {
+  vector[N_obs]  Base_level_activation;
+  vector<lower=0>[N_obs]  Spreading_activation;
+  vector[N_obs]  A;
+  vector<lower=0> [N_obs]  W;
+  vector[N_obs]  tau;
+  real s;
+  vector<lower=0>[N_obs]  Pr;
+  vector<lower=0,upper=1>[N_obs] weight;
+  vector<upper=0>[N_obs] d;
+
+  real pred_latency[N_obs];
+  real pred_accuracy[N_obs];
+
+
+  for (i in 1:N_obs){
+    d[i] <- -exp(log(d)+d_slope* wmc[i]);
+    Base_level_activation[i] <- log(decay_time[i]^d[i] ) +beta;
+    W[i] <- exp(log(W_int) + W_slope * wmc[i]);
+    tau[i] <- tau_int;
+    weight[i] <- inv_logit(logit(1.0/3) + weight_slope * wmc[i]);
+    Spreading_activation[i] <- W[i] * (weight[i] * (MAS-log(1)) + //unique cue
+                        (1-weight[i]) * (MAS-log(shared_cues))) ;//non-unique cues
+  }
+
+  A <- Base_level_activation+Spreading_activation;
+  s <- sqrt(3.0)*sigma/pi();
+  Pr <- 1.0 ./(1.0+exp(-(A-tau)/s) );
+
+  for (i in 1:N_obs){
+    pred_accuracy[i] <- bernoulli_rng(Pr[i]);
+    if(pred_accuracy[i]==1) {
+      pred_latency[i] <- exp(logistic_rng(-A[i] + expF, sigma));
+    } else {
+      pred_latency[i] <- exp(-tau[i]+ expF)  ;
+    }
+  } //for
+} // generated quantities
+
+\end{Verbatim}
+
+In our modified implementation of ACT-R only the predicted latency is changed:
+
+\begin{Verbatim}[numbers=left,frame=single,fontfamily=courier,fontsize=\footnotesize]
+  for (i in 1:N_obs){
+  pred_accuracy[i] <- bernoulli_rng(Pr[i]);
+    if(pred_accuracy[i]==1) {
+      pred_latency[i] <- exp(logistic_rng( -A[i] + expF , sigma));
+    } else {
+      pred_latency[i] <- uniform_rng(0,exp(-tau[i]+ expF))  ;
+    }
+  } //for
+\end{Verbatim}
+
+
+
+\bibliographystyle{frontiersinSCNS&ENG} % for Science and Engineering articles
+
+\bibliography{frontiersbibtex.bib}
+
+
+\end{document}

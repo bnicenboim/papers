@@ -1,0 +1,801 @@
+% !TeX program = pdfLaTeX
+
+\documentclass{frontiersSCNS} % for Science articles
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,german,english]{babel}
+
+\usepackage{url,lineno}
+\usepackage{underarrows}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+
+\linenumbers
+
+\copyrightyear{}
+\pubyear{}
+
+\def\journal{Psychology}
+\def\DOI{}
+\def\articleType{Research Article}
+\def\keyFont{\fontsize{8pt}{11pt}\helveticabold }
+\def\firstAuthorLast{Nicenboim {et~al.}} %use et al only if is more than 1 author
+\def\Authors{Nicenboim, Bruno\,$^{1,*}$,  Loga\v{c}ev, Pavel\,$^{2}$, Gattei, 
+Carolina\,$^{3}$ and Vasishth, Shravan\,$^{4}$}
+
+\def\Address{
+$^{1}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+$^{2}$Department of Linguistics, University of Potsdam, Potsdam, Germany \\
+$^{3}$Grupo de Lingüística y Neurobiología Experimental del Lenguaje, INCIHUSA,
+ CONICET, Mendoza, Argentina. \\
+$^{4}$Department of Linguistics, University of Potsdam, Potsdam, Germany
+ }
+
+\def\corrAuthor{Bruno Nicenboim}
+\def\corrAddress{Department of Linguistics, University of Potsdam, Karl-Liebknecht-Str. 24-25, D-14476 Potsdam, Germany}
+\def\corrEmail{bruno.nicenboim@uni-potsdam.de}
+
+
+\newcommand{\writenote}[1]{
+{\fontfamily{iwona}\selectfont
+\color{blue}
+  {[}#1{]} }
+}
+
+\newcommand{\posstextcite}[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+
+\usepackage{gb4e}
+\noautomath
+
+\begin{document}
+
+<<setup,cache=FALSE,include=FALSE>>=
+# global chunk options
+opts_chunk$set(cache=TRUE, autodep=TRUE,fig.path='figure/graphics-', 
+    cache.path='cache/graphics-', fig.align='center', fig.pos='!ht')
+opts_knit$set(self.contained=FALSE)
+
+#for labeling
+knit_hooks$set(rexample = function(before, options, envir) {
+  if (before) sprintf('\\begin{rexample}\\label{%s}\\hfill{}', options$label) 
+    else '\\end{rexample}'
+})
+    
+
+library(knitr)
+require(lme4)
+require(gridExtra)
+library(rstan)
+library(MASS)
+library(dplyr)
+library(tidyr)
+library(Hmisc)
+
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+chains = parallel::detectCores()
+niter <- 2000
+
+
+@
+
+\onecolumn
+\firstpage{1}
+
+\title[When high-capacity readers slow down]{When high-capacity readers slow 
+down and low-capacity readers speed up: Working memory and locality effects}
+\author[\firstAuthorLast ]{\Authors}
+\address{}
+\correspondance{}
+\extraAuth{}
+\topic{Encoding and navigating linguistic representations in memory}
+
+\maketitle
+
+
+
+\begin{abstract}
+\section{}
+We examined the effects of argument-head distance in SVO and SOV languages 
+(Spanish and German), while taking into account readers' working memory capacity
+and controlling for expectation (Levy, 2008) and other factors. We predicted 
+only \textit{locality effects}, that is, a slowdown produced by increased 
+dependency distance  (Gibson, 2000; Lewis \& Vasishth, 2005).  Furthermore, we 
+expected stronger locality effects for readers with low working memory capacity.
+Contrary to our predictions, low-capacity readers showed %antilocality effects (
+faster reading with increased distance, while high-capacity readers showed
+locality effects.  We suggest that while the locality effects are compatible
+with memory-based explanations, the speedup of low-capacity readers can be
+explained by an increased probability of retrieval failure. We present a
+computational model based on ACT-R built under the previous assumptions, which
+is able to give a qualitative account for the present data and can be tested in
+future research. Our results suggest that in some cases, interpreting longer RTs
+as indexing increased processing difficulty and shorter RTs as facilitation may
+be too simplistic: The same increase in processing difficulty may lead to
+slowdowns in high-capacity readers and speedups in low-capacity ones. Ignoring
+individual level capacity differences when investigating locality effects may
+lead to misleading conclusions.
+
+\tiny
+\keyFont{ 
+\section{Keywords:} locality, working memory capacity, individual differences, 
+Spanish, German, ACT-R} 
+\end{abstract}
+
+
+\section{Introduction}
+
+
+
+When a reader or hearer is faced with a sentence containing a non-local 
+dependency, (also called long-distance, filler-gap, or unbounded dependency)
+such as (\ref{ex:summer}), the interpretation of the dependent (\textit{what}) 
+has to be delayed until the reader parses the head of the dependency 
+(\textit{did}). It has been argued that the delay taxes memory processes, and 
+that processing difficulty increases with increasing distance 
+\citep[among others][]{Gibson2000,GrodnerGibson2005,LewisVasishth2005,
+VasishthLewis2006,BartekEtAl2011,HusainEtAl2015}. This increase in processing
+difficulty, which is reflected in longer reading times (RTs) at the head of the
+dependency, is known as a \textit{locality effect} \citep{Gibson2000,
+LewisVasishth2005}.
+
+\begin{exe} 
+\ex   Someone asked \linkfrom what \under the man \to did last summer. 
+\label{ex:summer}
+\end{exe}
+
+
+
+While the underlying memory processes are subject to debate, theories that
+predict locality effects are based on the deterioration in \textit{some} memory
+processes: either an increase in integration and storage costs in Dependency
+Locality Theory \citep[DLT:][]{Gibson2000}; or decay and interference in the
+case of the activation-based theory \citep{VasishthLewis2006}. Even though there
+has been evidence against online language processes drawing resources from a
+common working memory system
+\citep{WatersCaplan1996,CaplanWaters1999,WatersCaplan2001}, in recent work,
+\citet{CaplanWaters2013} argue that working memory may support retrievals in
+points of high processing load. Locality effects may happen in these points of
+high processing load, which are identified by regressive saccades and longer
+self-paced reading times that enable better comprehension. The interaction
+between individual differences in working memory capacity (WMC) and dependency
+resolution can shed further light on memory-based explanations of locality
+effects: Differential effects for different capacities can support the
+assumption that locality-related processing difficulty may in fact be memory
+based. This is not explicitly stated in DLT, but it is implied since the upper
+limits on storage and integration cost \citep{gibsonthomas99,Gibson2000} should
+depend on WMC. Furthermore, \citet{FedorenkoEtAl2006,FedorenkoEtAl2013} found a
+reduction in performance during long-distance dependency resolution and memory
+dual tasks, which they interpret as the integration of non-local dependents
+taxing memory resources.%something aboyt pnas? locality costly?
+
+The relationship between WMC and retrieval processes is more
+explicit in the activation-based  model of sentence processing
+\citep{LewisVasishth2005,VasishthLewis2006}, which is based on the Adaptive
+Character of Thought-Rational framework \citep[ACT-R; see for example][]
+{AndersonEtAl2004}. It is assumed that a head verb triggers the retrieval  from
+memory of its non-local dependents using cues such as number, animacy, being a
+{wh-element}, and so forth. There is no assumption of serial search in memory,
+but there is  instead a race between the stored items (i.e., the different
+encoded phrases), with the most highly activated item arriving to the threshold
+faster and being retrieved. The latency of a retrieval thus  depends on the
+item's level of activation. While the activation of an item decreases with
+a certain decay rate from the moment of its encoding, retrieval cues are used to
+improve the chances to identify the `right item' from memory: matching cues
+boost the activation of an item (while mismatching cues are penalized).
+
+WMC can be integrated into the activation-based model by assuming that it
+affects the activation of items in memory differentially. One possibility is
+that WMC affects the decay of information from memory. This has been modeled,
+for example,  in \citeauthor{JustCarpenter1992}'s (\citeyear{JustCarpenter1992})
+CAPS, by \citet{ByrneBovair1997} to explain errors after an activity that has
+been completed (such as forgetting the credit card in an ATM); and it has been
+assumed in sentence processing by, for example, \citet{CunningsFelser2013} to
+explain the differential processing of reflexives. 
+It has long been believed that
+it is not mainly because time passes
+that information in memory erodes (for a recent example, see 
+\citealp{BermanEtAl2009}). Some of the findings
+usually associated with decay can be accommodated within
+\emph{interference-based decay} \citep{LustigEtAl2009}, which is based on the
+idea that the passage of time increases the likelihood that the features of an
+item in memory will overlap with those of a noise distribution, making them
+increasingly difficult to distinguish \citep[see also][]{OberauerKliegl2006}.
+
+
+
+Another possibility is that WMC differentially affects  spreading activation,
+that is, the boost of  activation due to matching cues. There are at least two
+ways in which this could happen. One way could be because WMC modulates the
+total amount of activation which is shared between matching cues (see for
+example \citealp{CantorEngle1993} for the implementation in a 
+predecessor of  ACT-R, and \citealp{DailyEtAl2001,VanRijEtAl2013} for the 
+implementation in ACT-R of number recall and pronoun resolution respectively).
+Another way in which WMC could affect  spreading activation was suggested by
+\citet{BuntingEtAl2004}; in their view, WMC represents  susceptibility to
+interference. \citeauthor{BuntingEtAl2004}'s experiment showed that individual
+differences are better represented if low-capacity participants activate more
+irrelevant cues than high-capacity participants (recall that there is a total
+amount of activation that is shared between the cues).
+
+If we assume, as ACT-R does, that decay and interference both play a role
+ (and they may be functionally related, see, e.g., 
+\citealp{altmann2002forgetting}), we can schematize 
+locality effects as follows: when
+a dependent is parsed, it is stored in memory (together with every other phrase
+parsed so far in the sentence). As the distance between dependent and head
+increases, the representation of the dependent decays, which  translates to a
+reduction of its level of activation. Since more recent phrases will have a
+higher level of activation, the correct retrieval of a non-local dependent is
+possible by using retrieval cues that are derived from the word eliciting the
+retrieval (the head), together with context and grammatical knowledge
+\citep{LewisEtAl2006}.  Crucially, 
+when the amount
+of activation available for boosting matching cues decreases or when this
+activation is shared between more cues, the role of decay due to the increased
+distance will dominate. This would entail that the role of decay will be more
+pronounced for low-capacity readers. 
+
+Thus, if the source of locality effects is memory based processes (such as the
+ones predicted by the activation-based model or implicit in DLT), low-capacity
+readers should show a stronger slowdown than high-capacity ones when
+dependent-head distance is increased. This prediction is also supported by the
+following findings: When faced with difficult sentences, the disadvantage of
+low-WMC readers seems to increase in comparison to high-WMC ones  (\citealp[for
+garden-path vs.\ non-garden path sentences:][]{ChristiansonWilliams2006};
+\citealp[for comprehension reaction times in subject- vs.\ object-relative
+clauses:][]{KingJust1991,VosEtAl2001b}). This is also supported by evidence
+showing that: (a) WMC influences the probabilities of success in integrating
+information over a distance in a text \citep{DanemanCarpenter1980}; (b) WMC is
+associated with the ability to maintain on-task thoughts  \citep{McVayKane2011};
+and (c) there is a reduction in performance during long-distance dependency
+resolution and memory dual-tasks \citep{FedorenkoEtAl2006,FedorenkoEtAl2013}.
+However, this prediction is also based on the implicit assumption that RTs can
+be straightforwardly interpreted as indexing difficulty. We will 
+argue that this is the case only when the retrieval of the dependent is
+successful. We will return to this topic and discuss the specifics of the role
+of WMC in the general discussion and modeling section.
+
+Increasing dependent-head distance does not always have the same
+effect. Memory-driven explanations of locality effects are complicated by
+findings of so-called \textit{antilocality} effects, that is evidence showing
+that increased distance can result in \textit{faster} reading. For example,
+several studies on SOV structures (\citealp[in
+Hindi:][]{Vasishth2003,VasishthLewis2006}
+\citealp[and in German:][]{Konieczny2000,KoniecznyDoering2003,LevyKeller2012})
+showed that increasing the dependent-head distance can produce facilitation at
+the head of the dependency. However, such facilitation can be explained by
+increased expectations of the head (\citealp{Levy2008,LevyEtAl2013};
+\citealp[but for a memory-based explanation of facilitation see: ][]
+{VasishthLewis2006,NicenboimEtAl2015}). 
+According to the expectation-based account,
+the primary source of difficulty incurred in processing a word is determined by
+the surprisal (negative log of the conditional probability) of a word given its
+context \citep{Hale2001}.  Crucially for current purposes, this account suggests
+that when the distance of the dependency is increased, the appearance of the
+predicted head is delayed. As a consequence, the expectation of finding the head
+that will complete the dependency will increase monotonically. Thus, as the head
+is more expected, it will be processed more easily when it is encountered.
+
+Importantly, memory- and expectation-based processes are theoretically not
+incompatible, and recent research \citep{Staub2010,VasishthDrenhaus2011,
+LevyKeller2012,LevyEtAl2013,HusainEtAl2014,NicenboimEtAl2015} shows that they
+may coexist. However, many of the experimental results in the literature are not
+easily interpretable, since increasing the distance by adding material between
+dependent and head systematically changes the sentences, resulting in confounding
+effects due to the different sentence structures engendered by the distance
+manipulation.
+
+One aspect of the systematic difference between the sentences manipulated for
+dependency distance is the change in the linear position of the head. This is
+especially critical when the design argues for a speedup, since readers tend to
+speed up as the number of words increases
+\citep{FerreiraHenderson1993,BostonEtAl2008, DembergKeller2008}; in
+(\ref{ex:pos}), for example, distance is always confounded with position.
+
+\begin{exe} 
+\ex \label{ex:pos}
+\begin{xlist}
+\ex  \textsc{short} Someone asked  \textbf{what} the man \textbf{did} 
+last summer. \label{ex:short}
+\ex  \textsc{long} Someone asked \textbf{what} the man [words that should belong 
+somehow to the sentence]  \textbf{did} last summer. \label{ex:long}
+\end{xlist}
+\end{exe}
+
+The confound between word position and distance has been addressed (see for
+example: \citealp{VasishthDrenhaus2011,LevyKeller2012}) by adding the same or
+similar \textit{words that should belong somehow to the sentence} before the
+dependency in the short version; compare now (\ref{ex:short2}) with
+(\ref{ex:long2}).
+
+\begin{exe} 
+\ex \label{ex:2}
+\begin{xlist}
+\ex  \textsc{short} Someone [words that should belong somehow to the sentence] 
+asked  \textbf{what} the man \textbf{did} last summer. \label{ex:short2}
+\ex   \textsc{long} Someone asked \textbf{what} the man [words that should 
+belong somehow to the sentence]  \textbf{did} last summer. \label{ex:long2}
+\end{xlist}
+\end{exe}
+
+Even though the word position confound is controlled, the new problem that
+ arises is that the sentence structure is still consistently changed beyond the
+ distance manipulation. If a difference is found at the head of the dependency
+\textit{did} in (\ref{ex:2}), we cannot be sure whether it is a consequence of
+the distance manipulation or the change in the structure of the sentence. A
+slowdown (or a speedup) at the verb \textit{did} in (\ref{ex:long2}) in
+comparison with (\ref{ex:short2}) could, in principle, have different
+alternative explanations. When lexical material is attached to a dependent to
+increase the dependent-head distance, the dependent that is retrieved in the
+longer version has also a richer semantic content that may produce a speedup at
+the verb \citep{Hofmeister2007,HofmeisterSag2010,HofmeisterVasishth2014}. This
+would be the case if \emph{words that should belong somehow to the sentence}
+were, for example, a relative clause or a prepositional phrase in (\ref{ex:2}),
+so that the extra material is attached to \emph{the man} in the long condition
+(and to \emph{someone} in the short one). This is also exemplified in
+(\ref{ex:GrodnerGibson2005}) from \cite{GrodnerGibson2005}: when the distance is
+increased, the semantic content of the dependent also changes, namely,
+\emph{the nurse from the clinic} is retrieved at the verb instead of  just
+\emph{the nurse}. Even though \citeauthor{GrodnerGibson2005} did find locality
+effects, it does not rule out that the memory-driven locality effects were
+partially reduced by facilitation due to richer semantic content (and because of
+increased word position). %also shravan's paper
+But alternatively, the slowdown at the verb may have had independent reasons:
+When the dependent is more complex, it may include several nouns (\emph{nurse}
+and \emph{clinic} in the ex. \ref{ex:GrodnerGibson2005}) that could cause
+encoding  \citep{OberauerKliegl2006} and/or retrieval interference
+\citep{VanDykeMcElree2006}, producing a slowdown at the head verb as well.
+
+\begin{exe}
+\ex  Embedded verb conditions from  \posstextcite{GrodnerGibson2005} experiment
+2:  \label{ex:GrodnerGibson2005}
+\begin{xlist}
+\ex \textbf{The administrator} who the nurse \textbf{supervised} scolded the
+medic while ...
+\ex \textbf{The administrator} who the nurse from the clinic \textbf{supervised}
+scolded the medic while ...
+\end{xlist}
+\end{exe}
+
+
+In addition, there is evidence that preverbal material in the verbal phrase (VP)
+may cause a speedup at the verb, since the interposed material can help to
+strengthen the representation of the upcoming head by activating it through
+modification (as proposed by \citealp{VasishthLewis2006}, and more recently
+\citealp{NicenboimEtAl2015}). This would be the case if \emph{words that should
+belong somehow to the sentence} in (\ref{ex:2}) were an adverb such as
+\emph{secretly}, so that the VP that contains the head in the long distance
+condition is \emph{secretly did}, while it is only \emph{did} in the short one
+(since \emph{secretly} is attached to \emph{asked} in the short condition).
+Furthermore, when the distance is increased by any manipulation, expectations
+may play a role \citep{Hale2001,Levy2008}: Once the reader starts parsing the
+embedded sentence at \textit{what}, he or she will also start building
+expectations for the embedded verb; and these expectations will be different for
+the long and short conditions. In \posstextcite{Levy2008} study, this is
+explained by assuming that the reader has knowledge about the grammar of the
+sentence, that is, he or she knows that the embedded sentence has some verb, but
+does not know when it will appear. The more constituents within the embedded
+sentence that have been integrated, the fewer possible choices there are for
+subsequent constituents. This means that the reader's  expectation for the verb
+should increase as the number of integrated constituents increases. Thus, since
+the verb \textit{did} in (\ref{ex:long2}) is assumed to be more expected than in
+(\ref{ex:short2}), it is also predicted to be processed faster.
+
+
+One way to avoid many of the potential confounds and control for the differences
+in sentence structure is to compare each of the two experimental conditions,
+such as (\ref{ex:shortd}) and (\ref{ex:longd}), to baseline conditions without
+an unbounded dependency, such as (\ref{ex:shortb}) and (\ref{ex:longb}).
+Critically, in both short (\ref{ex:shortb}) and long  (\ref{ex:longb}) baseline
+conditions, a dependent of the verb (e.g., \textit{something}) appears locally
+in the VP after the verb and remains at the same distance from the verb
+replacing the wh-element of the unbounded dependency conditions
+(\ref{ex:shortd}) and (\ref{ex:longd}). In this experimental design, locality
+effects appear as an interaction between dependency type (unbounded vs.\ local,
+i.e., baseline), and the length of the material added immediately before the
+head verb (short vs.\ long). The sentences with local dependencies would act as
+baselines canceling out other effects that do not depend on the unbounded
+dependency. For example, if the extra material is attached to the subject of the
+embedded clause (\emph{the man}), both long (unbounded and local dependency)
+conditions will have an argument with a richer semantic content that would
+require more encoding and trigger more expectations for a head verb (since the
+clause that starts either at the \emph{what} or \emph{that} is longer) than both
+short (unbounded and local dependency) conditions. Thus, locality effects at the
+critical region (\textit{did}) would manifest as the difference between
+long-unbounded and short-unbounded (\ref{ex:longd})~$-$~(\ref{ex:shortd}) being
+larger than the difference between long-baseline and short-baseline
+(\ref{ex:longb})~$-$~(\ref{ex:shortb}) conditions.
+
+
+
+
+\begin{exe} 
+\ex \label{ex:distancebaseline}
+\begin{xlist}
+\ex  \textsc{short - unbounded dependency}
+
+Someone [words that should belong somehow to the sentence] asked  \textbf{what}
+the man \textbf{did} last summer. \label{ex:shortd}
+\ex  \textsc{long - unbounded dependency}
+
+ Someone asked \textbf{what} the man [words that should belong somehow to the
+ sentence]  \textbf{did} last summer. \label{ex:longd}
+\ex  \textsc{short - baseline (local dependency)}
+
+Someone [words that should belong somehow to the sentence] asked  if the man
+\textbf{did} \emph{something} last summer. \label{ex:shortb}
+\ex  \textsc{long - baseline (local dependency)}
+
+Someone asked if the man [words that should belong somehow to the sentence]
+\textbf{did} \emph{something} last summer. \label{ex:longb}
+
+\end{xlist}
+\end{exe}
+
+In the following experiments, we used this experimental design together with
+tasks that measure WMC and reading fluency in order to disentangle locality
+effects from potential confounds, and to find out whether locality interacts
+with individual differences. We used the operation span task
+\citep{TurnerEngle1989,ConwayEtAl2005} to obtain a reliable measure of WMC of
+our participants. We expected locality effects to be the strongest for readers
+with the lowest WMC readers, and we expected their magnitude to decrease with
+increasing WMC. One of the strengths of this type of design is that we can
+investigate locality effects without a priori commitments about the effect of
+the systematic change in the syntactic structure, that is, whether the long
+conditions will show a slowdown or a speedup at the critical region in
+comparison with the the short ones when we disregard the dependency
+manipulation.
+
+It has been argued  that differences in WMC may reflect differences in language
+experience or language skills, and not necessarily intrinsic capacity differences
+\citep{MacDonaldChristiansen2002,WellsEtAl2009,TraxlerEtAl2012}, since WMC tends
+to correlate with many other reader characteristics. 
+
+
+In fact, while \citet{TraxlerEtAl2005} found that WMC and syntactic complexity
+interacted in an eye-tracking experiment, a re-analysis of the data
+\citep{TraxlerEtAl2012} showed that reading speed  accounted for more variation
+in individuals' responses than WMC. According to \citet{TraxlerEtAl2012}, fast
+readers, who read more often than slow readers, will have greater experience
+with language; this would in turn make them more sensitive to semantic cues in
+the syntactic analysis.
+
+In order to obtain an independent measure of reading speed, 
+we
+included an additional task called rapid automatized naming task
+\citep[RAN:][]{DenklaRudel1976}. RAN has been shown to capture important variance
+associated with the processing of rapidly occurring serial information and it
+has been shown to predict reading speed, comprehension, and other
+characteristics associated with fluent reading (among others:
+\citealp{KupermanVanDyke2011,AraujoEtAl2014}).
+
+\citet{NortonWolf2012} recently reviewed an extensive body of research that
+led them to consider RAN tasks ``as one of the best, perhaps universal,
+predictors of reading fluency across all known orthographies'' (p.~430).
+\citeauthor{NortonWolf2012}'s view is that this task and reading are seen to
+require many of the same processes, such as eye saccade control, and the
+connecting of orthographic and phonological representations. By reading fluency,
+\citet{NortonWolf2012} mean ``fluent comprehension''
+\citep{WolfKatzir2001}, that is, ``a manner of reading in which all sublexical
+units, words, and connected text and all the perceptual, linguistic, and
+cognitive processes involved in each level are processed accurately and
+automatically so that sufficient time and resources can be allocated to
+comprehension and deeper thought'' \citep[p.~215]{NortonWolf2012}. Even though
+RAN tasks are usually used to study reading development and dyslexia, a few
+studies have shown that RAN is also predictive of some characteristics of
+reading fluency for non-college bound participants aged between 16 and 24
+\citep{KupermanVanDyke2011}, for undergrad students
+\citep{AlDahhan2014,KupermanEtAl}, and for adults aged between 36 to 65
+\citep{VandenBosEtAl2002}. In addition, some imaging studies performed in young
+adults have also shown that RAN and reading activate similar neural networks of
+neural structures \citep{MisraEtAl2004,CummineEtAl2015}. Even though RAN has
+been shown to be predictive of online processes associated with word
+recognition, a recent study \citep{KupermanEtAl} argued that RAN may not be
+predictive of comprehension accuracy, at least  for highly proficient population
+such as college students. However, it may be the case that in situations of high
+cognitive load, more fluent readers could show an advantage in comparison with
+less fluent readers. The inclusion of RAN can thus help us to determine whether
+some participants by virtue of being fluent readers have enough resources for a
+more efficient use of the retrieval cues and thus overcome more easily locality
+effects than less fluent readers.
+
+Since most of the evidence from locality effects and most of the evidence from
+antilocality effects come from SVO and SOV structures respectively, our
+experiments also verify whether the same account has cross-linguistic validity.
+
+
+
+
+
+
+ \section{Experiment 1} 
+<<exp1, child='NicenboimEtAl2015-When-Exp1.Rnw'>>=
+@
+
+  \section{Experiment 2} 
+<<exp2, child='NicenboimEtAl2015-When-Exp2.Rnw'>>=
+@
+
+
+\section{General Discussion}
+
+We found no evidence for locality effects across the board in either
+experiment, that is, no evidence for an interaction between dependency type and
+embedded subject length independent of individual differences in WMC. However,
+we did find evidence for an interaction between locality effects and WMC
+(dependency $\times$ embedded subject length $\times$ WMC) for both Spanish and
+German experiments. Even though there were differences in how the three-way
+interaction was produced between the two experiments, this may be due to the
+differences in the overall structure of the sentences, namely, SVO and SOV
+structures (and see the previous discussion). More importantly, when the
+differences are controlled via baselines, we see an interaction with the same
+(counterintuitive) pattern in both experiments: high-WMC readers showed the
+strongest locality effects that were reduced with decreasing WMC and eventually
+changed direction, such that low-capacity readers showed a speedup effect.
+
+The speedup of low-capacity readers is in line with independent evidence showing
+that in some cases high working memory load may lead to faster RTs:
+\citet{VanDykeMcElree2006} found that readers showed shorter RTs (together with
+lower comprehension accuracy) when a memory load was present in comparison with
+the conditions without the memory load. Furthermore, our findings are also
+compatible with studies showing that low-WMC subjects may take less time when
+ambiguities are present (at the expense of their accuracy) than high-WMCs
+\citep{MacDonaldEtAl1992,PearlmutterMacDonald1995}. 
+
+It should be underscored that, unlike \citet{JustCarpenter1992}, we do not 
+argue that the effect of WMC is  directly on mechanisms specific to language, 
+such as parsing rules.
+We argue instead that the effect of WMC is on the
+retrieval of the dependents, which we assume is driven by the same cognitive
+mechanisms as retrieval outside sentence processing. There is a great deal 
+of evidence suggesting that high-WMC participants tend to do better on tasks that
+involve  retrieval  in comparison with low-WMC ones, particularly under
+conditions of interference: for example, \citet{ConwayEngle1994} found that
+high- and low-WMC individuals differed in retrieval efficiency only when items
+were associated with multiple cues (which caused more interference). In a study by 
+\citet{KaneEngle2000}, participants were shown a list of category exemplars
+followed by a distractor activity. After the distractor task, the participants
+were instructed to recall the category exemplars. \citeauthor{KaneEngle2000}
+found that all participants recalled a similar number of words on the first
+trial but that low-WMC individuals recalled fewer items than high-WMC
+individuals as the task progressed. \citeauthor{KaneEngle2000} concluded that
+low-capacity individuals were  more susceptible to the buildup of proactive
+interference than were high-capacity ones. \citet{ConwayEtAl2001} extended the
+investigation of the cocktail party phenomenon, the situation in which one can
+attend to only part of a noisy environment, but stimuli such as one's own name
+can suddenly capture attention. While previous investigations have shown that
+approximately 33\% of the participants hear their name in an unattended,
+irrelevant message channel, \citeauthor{ConwayEtAl2001} found that 65\% of
+low-WMC participants did detect their name in contrast with 20\% of high-WMC
+ones. This result also suggests that low-WMC are also more susceptible to
+interference. \citet{KaneEtAl2001} reported similar  differences in an
+antisaccade paradigm, which presents a conflict between task goals and visual
+cues. High-WMC participants  made fewer errors, they recovered from these
+errors more rapidly, they initiated antisacades more quickly, and they
+identified targets more quickly than did low-WMC participants.
+
+
+
+Besides ACT-R, two recent theories of WMC posit a role of
+individual differences in differential effects at retrieval: Unsworth and
+colleagues \citep{UnsworthEtAl2009,UnsworthEngle2007} have recently suggested a
+dual-component framework for interpreting individual differences in WMC. In this
+framework,  WMC partially reflects differences in attention control abilities
+together with  retrieval abilities in which information that could not be
+maintained in the focus of attention (due to distraction and/or capacity
+constraints) is retrieved via a cue-dependent search process. In addition,
+\citet{OberauerEtAl2012Modeling} have postulated a computational model, ``serial
+order in a box - complex span'' or SOB-CS (an extension of C-SOB;
+\citealp{Farrell2006,LewandowskyFarrel2008}, which originated as SOB;
+\citealp{FarrellLewandowsky2002}), where capacity is limited only by
+interference between representations.  One of the individual differences that
+the model assumes is a parameter that determines the degree of discriminability
+between retrieval candidates.
+
+In our view, non-local dependency resolution is a case where the individual
+differences in WMC may play a role: an argument that is no longer in the focus
+of attention has to be retrieved from memory, using information from the verb
+that is retrieved online, and after the parser has encoded a variable amount of
+lexical material that can produce interference together with either pure
+time-based decay or interference-based decay.
+
+ 
+  However, we must acknowledge that 
+ recent findings raise the concern that WMC may have limited
+value for explaining individual differences in linguistic contexts. 
+A recent study by \citet{VanDykeEtAl2014} replicated
+\citet{VanDykeMcElree2006} while including  a battery of tests for
+measuring individual differences as well. This recent study showed that while
+high-span participants read more slowly in the conditions with high cognitive
+load and showed higher accuracy in comparison with low-span participants, the
+effect of WMC may be spurious.   When receptive vocabulary was
+included in the analysis, it showed the same effects previously attributed to
+WMC, revealing that the participants with better scores in the vocabulary task
+were more affected by the interference during online reading. Similarly,  a
+study of \citet{TraxlerTooley2007} investigating syntactic ambiguity showed
+that vocabulary size predicted the degree to which readers were disrupted by the
+syntactic misanalysis for several eye-tracking measures; while WMC was only a
+marginal predictor for total reading times. In addition, \citet{LongEtAl2008}
+study of recollection and familiarity of previously read sentences showed that
+only individual differences of readers' background knowledge was predictive of
+better performance but not WMC (but neither neither print exposure or vocabulary
+size). \citet{LongEtAl2008} argued that because retrieval cues were minimal,
+access to the text representation depended more on the reader's background
+knowledge than on the reading skills or WMC of the participants.
+
+Our results do not rule out the possibility that retrieval processes in
+sentence processing are based on different mechanisms which are independent of
+WMC, and that the effect that we found is due to WMC being a proxy for other
+individual differences such as  robustness of lexical representations
+\citep{TraxlerTooley2007,VanDykeEtAl2014}. This is a valid criticism, but
+it affects any experiment that includes individual differences. No matter how
+extensive the battery of tasks, there is always the possibility that a predictor
+ is in fact a proxy for another unmeasured predictor. 
+
+
+
+ In addition, the locality effects $\times$ WMC interaction in the two
+experiments should not be dismissed as a simple speed-accuracy trade-off. It is
+a well known phenomenon that accuracy deteriorates with increasing speed
+(\citealp[see for example,][]{Pachella1974}, and more recently,
+\citealp{Heitz2014}). This general phenomenon, however, does not explain why
+low-WMC participants would decide to sacrifice accuracy for speed even to a rate
+that is higher than when there is a lower cognitive load (i.e., a shorter
+dependency). Furthermore, it also does not explain what mechanisms low-WMC
+participants may have used to identify the high-cognitive load conditions in
+order to speed up.
+
+
+We suggest that the locality effects of the high-WMC readers and the speedup of
+the low-WMC readers can be explained by adding two assumptions to memory-based
+explanations, namely, (i) that failures of the retrieval of the dependent (the
+\emph{wh}-element in this case) are more frequent in low-WMC participants than
+in high-WMC ones; and (ii) that retrieval failures are faster on average than
+complete retrievals. 
+
+The locality effects $\times$ WMC interaction in the two experiments may be
+related to some type of good-enough parsing strategy
+\citep{FerreiraEtAl2002,FerreiraPatson2007}, where low-WMC readers failed to
+achieve a complete and fully specified representation of the sentence more often
+when faced with the long unbounded dependency condition. Without the possibility
+of re-reading, and since the comprehension questions were not targeting
+exclusively whether the dependency was understood, low-WMC readers may have
+failed in many cases to retrieve the dependent and continued reading.
+
+In other words, we speculate that the average time $T$ for the completion of a
+dependency is determined by:
+
+$T = T_{baseline} +  P_{retrieval} \cdot T_{retrieval} + (1 - P_{retrieval} )
+\cdot T_{failure}$
+
+while  the proportion of completed retrievals $P_{retrieval}$  is higher for
+high-WMC readers in comparison with low-WMC readers when the dependent-head
+distance is increased; and $T_{retrieval}$ at a long dependency is larger than
+$T_{retrieval}$ at a short dependency.%(locality effects)
+
+ Notice, however, that without the proportion of completed retrievals
+($P_{retrieval}$) for each case, the model previously presented is
+unidentifiable. The proportion of completed retrievals should be linked to the
+accuracy of the comprehension of the dependencies.
+
+
+
+There is some evidence that high-WMC outperformed low-WMC in general
+comprehension in this experiment; but we could not target the comprehension of
+the dependencies in the experimental stimuli. The true-or-false statements used
+in both Experiment~1 and 2 (as in \citealp{NicenboimEtAl2015}) included many
+aspects of the stimuli to verify that participants paid attention to the
+sentences, but they did not target exclusively whether the dependency was
+understood. Since the dependencies included a wh-argument, comprehension
+questions would ideally need to verify unnatural constructions, namely, whether
+it is true that, for example, ``Maria greeted whom''. However, preliminary data
+from our lab \citep{NicenboimEtAl2015CUNY}, where the stimuli allowed for more
+informative question-response accuracy, suggest that at least for interference
+effects in relative clauses, both low-WMC and high-interference conditions
+seem to provoke more retrieval failures.
+
+In the following section we present simulations based on the ACT-R framework to
+illustrate  in which situations and under which assumptions our hypothesis
+holds.
+
+  Regarding the effect of reading fluency on locality effects, the
+experiments presented some weak evidence favoring the hypothesis that fluent
+readers may overcome locality effects more easily than less fluent ones. The
+evidence is rather weak for the following reasons: Reading fluency predicted
+comprehension accuracy in Experiment~1, where it interacted very weakly with
+locality effects and with much uncertainty. In contrast, reading fluency did not
+predict comprehension accuracy in Experiment~2, while it interacted more
+strongly with locality effects and with less uncertainty. Given the similarity
+between the experiments, it is hard to explain the discrepancies. 
+
+To some degree in Experiment~1 and with more uncertainty in Experiment~2, the
+pattern showing stronger locality effects for high-WMC participants begins at
+the precritical region before the verb. Memory driven locality effects, however,
+are predicted to be triggered by a retrieval process that would start presumably
+no sooner than the verb. One possible explanation proposed by
+\citet{VasishthDrenhaus2011} is that the verb phrase may have already been built
+when the proper noun preceding the verb is processed. This assumption is
+consistent with \posstextcite{Levy2008} expectation-based account, because the
+parser can deduce that the verb will appear immediately afterwards and thus
+anticipate the retrieval process.
+
+
+
+It should be noted that expectations were controlled only under
+the simplifying assumption that given that a clause has a finite length, the
+probability that the next word will be the subcategorizing verb rises as the
+number of words after finding the wh-element increases. In a way, this  is
+similar to the increasing hazard function proposed for visual search by
+\citet{PetersonEtAl2001}. A more formal verification could not be conducted,
+since the sentences used for our two experiments were too complex for a correct
+parsing of a probabilistic top-down parsing \citep{Roark2001,RoarkEtAl2009}
+trained with Spanish \citep{MorenoEtAl2003} and German treebanks
+\citep{BrantsEtAl2002}. Even after unlexicalizing the treebanks, the parser
+failed to identify the structure of the sentences used in our stimuli. However,
+given that the speedup occurred for low-span readers in sentences with long
+dependencies, assuming that increasing the length of the dependencies still
+caused an increase in expectations beyond the control of the baseline would
+require the implausible assumption that low-span readers are better at making 
+predictions than high-span readers.
+
+
+
+\section{Modeling}
+<<exp2, child='NicenboimEtAl2015-When-Model.Rnw'>>=
+@
+
+
+\section{Conclusion}
+We presented two experiments showing that working memory affects locality
+effects.  The results show that working memory affects retrieval times at
+unbounded dependency resolution, but in an unexpected manner: high-capacity
+readers showed the strongest locality effects that decreased with decreasing
+capacity and eventually changed direction, such that low-capacity readers showed
+antilocality effects.
+
+We suggest that the results may not be simply  due to a speed-accuracy trade-off
+and that they can be explained by adding two assumptions to memory-based
+explanations: (i) compared to high-capacity readers, low-capacity readers
+experience retrieval failures more frequently; and (ii) retrieval failures are
+on average faster than complete retrievals. We suggest that the retrieval
+failures end quickly because  of insufficient activation, and this activation
+depends not only on dependent-head distance but also on the capacity of the
+readers.
+
+All in all, both experiments show that translating longer RTs into processing
+difficulty and shorter RTs into facilitation may be too simplistic, especially
+when readers face long and complex sentences (which are not uncommon in
+psycholinguistic studies). Our results suggest that the same increase in
+processing difficulty may lead to slowdowns in high-capacity readers and
+speedups in low-capacity ones.
+
+
+
+<< child='NicenboimEtAl2015-When-figs.Rnw'>>=
+@
+
+\clearpage
+
+\section*{Disclosure/Conflict-of-Interest Statement}
+The authors declare that the research was conducted in the absence of any
+commercial or financial relationships that could be construed as a potential
+conflict of interest.
+
+\section*{Acknowledgment}
+A preliminary version of this paper appeared in the Proceedings of TL/MAPLL
+2014, Tokyo, Japan. Thanks to Richard McElreath for sharing his unpublished
+book, Statistical Rethinking, which influenced the statistical analysis. Thanks
+to Bob Carpenter and Stan's forum for help fitting the statistical models. 
+Thanks to Lena Jäger for
+helpful comments on a draft and Felix Engelmann for help with ACT-R modeling.
+
+
+\paragraph{Funding\textcolon} The work was supported by Minerva Foundation, Potsdam Graduate School, and the University of Potsdam.
+
+\bibliographystyle{frontiersinSCNS&ENG} 
+\bibliography{frontiersbibtex.bib}
+
+
+  
+\end{document}

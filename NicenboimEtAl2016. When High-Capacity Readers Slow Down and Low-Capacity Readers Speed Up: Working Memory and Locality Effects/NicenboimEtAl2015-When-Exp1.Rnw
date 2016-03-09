@@ -1,0 +1,970 @@
+% !TeX root = NicenboimEtAl2015-When.Rnw
+% !TeX program = pdfLaTeX
+
+<<include=FALSE>>=
+load("data/data1sp.Rda")
+source("functions/usefulfunctions0.4.R")
+indivsp <- unique(dsp[c("subj","age","pcu","ran","wmcacc","gen.acc")])
+@
+
+
+\subsection{Method}
+\subsubsection{Participants}
+
+<<include=FALSE>>=
+minage <- format(round(min(indivsp$age,na.rm=T), 0), nsmall=0) 
+maxage <-format(round(max(indivsp$age,na.rm=T), 0), nsmall=0) 
+meanage <- format(round(mean(indivsp$age,na.rm=T), 1), nsmall=1) 
+N <- nrow(indivsp)
+@
+
+\Sexpr{proper(numbers2words(N))} subjects aged between
+\Sexpr{minage}--\Sexpr{maxage} years old (mean \Sexpr{meanage} years)
+participated in the experiment in Argentina.  All participants
+were 
+native speakers of Spanish and were na\"{i}ve to the purpose of the study. One
+additional participant was excluded from the analysis, since s/he reported  that
+s/he suffered from a mental disorder related to memory after the experiment was
+conducted. Data from this experiment were collected in the same run as the 
+self-paced reading experiment in \citet{NicenboimEtAl2015}: the stimuli from one
+experiment served as filler sentences for the other experiment.
+%
+
+\subsubsection{Stimuli}
+The stimuli for this experiment consisted of 48 items in Spanish with four
+conditions following the same logic as in (\ref{ex:distancebaseline}) in a
+two-by-two design: embedded subject length $\times$ dependency, as illustrated
+in (\ref{ex:items-exp-sp}).  The embedded subject length manipulation was
+created by converting the proper noun of the short condition into a PP that is
+attached to another NP: (\ref{sp:short-fgd} vs.\  \ref{sp:long-fgd}, and
+\ref{sp:short-baseline} vs.\ \ref{sp:long-baseline}). The dependency
+manipulation was created by comparing conditions with an unbounded dependency
+versus local dependency (baseline) conditions, so that only the conditions
+with the unbounded dependencies have shorter or longer dependencies, and the
+baseline conditions (\ref{sp:short-baseline}-\ref{sp:long-baseline}) have
+similar structures (shorter or longer subjects) but no unbounded dependencies.
+
+\begin{exe} 
+\ex \label{ex:items-exp-sp}
+
+\begin{xlist}
+\ex \textsc{short - unbounded dependency}
+\gll La hermana menor de Sofía preguntó {\textbf{a quién}} fue que
+\underline{María} \textbf{había saludado} en la puerta del colegio ayer a la
+tarde. \label{sp:short-fgd}\\ The younger sister of Sofia asked \textbf{who.ACC}
+was that \underline{María}
+\textbf{had greeted} at the door {of the} school yesterday at the afternoon\\
+\glt   
+\ex \textsc{long - unbounded dependency}
+\gll   Sofía preguntó {\textbf{a quién}} fue que \underline{la hermana menor de
+María} \textbf{había saludado} en la puerta del colegio ayer a la tarde.
+\label{sp:long-fgd}\\ Sofia asked \textbf{who.ACC} was that \underline{the
+younger sister of María}
+\textbf{had greeted} at the door {of the} school yesterday at the afternoon\\
+\glt
+\ex \textsc{short - baseline}
+\gll La hermana menor de Sofía preguntó si \underline{María} \textbf{había
+saludado} a la prima de Paula en la puerta del colegio ayer a la tarde.
+\label{sp:short-baseline}\\ The younger sister of Sofia asked if
+\underline{Maria}  \textbf{had greeted} to the cousin of Paula at the door {of
+the} school yesterday at the afternoon\\
+\glt  
+\ex \textsc{long - baseline}
+\gll  Sofía preguntó si \underline{la hermana menor de María} \textbf{había
+saludado}  a la prima de Paula  en la puerta del colegio ayer a la tarde.
+\label{sp:long-baseline} \\ Sofia asked if \underline{the younger sister of
+Maria}  \textbf{had greeted} to the cousin of Paula at the door {of the} school
+yesterday at the afternoon\\
+\glt
+
+
+\end{xlist} 
+\end{exe}
+
+The 48 experimental items of the current experiment were presented together with
+108 experimental items for other experiments and 56 filler sentences. The
+sentences presented included (i) 36 items with embedded
+object questions and adverbs in different positions from
+\citet{NicenboimEtAl2015}; (ii) 48 items with embedded object questions
+from an unpublished study; (iii) 24 items with object and subject experiencer
+psychological verbs and different word order (SVO-OVS) from an unpublished
+study; and (iv) 56 filler sentences with a variety of saying verbs and embedded
+sentences.
+
+
+
+\subsubsection{Procedure}
+Subjects were tested individually using a PC. Participants completed
+three tasks at their own pace: tests to assess the individual differences  in
+WMC \citep[operation span task: ][]{TurnerEngle1989,ConwayEtAl2005} and in
+reading fluency \citep[rapid automatized naming: ][]{DenklaRudel1976}, and a
+moving window self-paced reading task \citep{JustEtAl1982}.
+
+
+ \paragraph{Operation Span}
+ Participants took part in an operation span task \citep{TurnerEngle1989}
+ using a software developed by von der Malsburg
+ (\url{https://github.com/tmalsburg/py- span-task}) and used previously in
+ \citet{vonderMalsburgVasishth2012}. Even though variants of the reading (or
+ listening) span task by  \citet{DanemanCarpenter1980} have been used in many
+ psycholinguistic studies, we chose to use the
+ \textit{operation}  instead of the \textit{reading} span task, since the latter
+ is likely to measure verbal ability or reading experience as well as working
+ memory capacity \citep{MacDonaldChristiansen2002,ConwayEtAl2005}.
+  We elaborate on this point below. 
+ 
+
+Even though both reading span and operation span have been defined as measures
+of verbal working memory \citep{ConwayEtAl2005}, we think that using the
+operation span task presents a methodological advantage. The reading span task
+measures participants' abilities to do language-processing tasks, such as
+maintaining the phonological activation for the words in the face of competing
+demands from sentence processing, and thus it is not surprising that the
+reading span may be predictive of sentence processing phenomena
+\citep{MacDonaldChristiansen2002}. In contrast, the 
+operation span task (described below) is further from language related
+tasks. And in fact, \citet{TurnerEngle1989} motivation for the use of the
+operation span was that ``a measure of WM should successfully transcend task
+dependence in its prediction of higher level cognitive functioning. That is,
+the memory span task could be embedded in a concurrent processing task that is
+unrelated to any particular skills measure and still predict success in the
+higher level task'' \citep[p. 129]{TurnerEngle1989}. Furthermore, a study of
+\citet{McVayKane2011} showed some critical differences between reading and
+operation span task. \citeauthor{McVayKane2011} used among other measures of
+individual differences three complex span tasks, namely, operation, reading,
+and spatial span tasks. Even though the three tasks were highly correlated,
+the reading span task correlated with more reading comprehension tasks (and
+more strongly) than the operation span. 
+
+The procedure of the operation span task test was the following: At a first
+ stage, participants had to judge the correctness of 25 simple equations. During
+ this practice, the reaction time of equations 10 to 25 was measured;  the
+ average reaction time plus two standard deviations was used as a time-out at
+ the second stage. Having a time-out for every participant ensures that
+ participants that are fast will not have time left to rehearse the items at the
+ next stage of the test. At the second stage, participants had to verify
+ equations and memorize letters (always consonants) that were shown between the
+ equations. After each equation, a consonant was shown for 800 ms; and after a
+ group from three to seven equation-letter successions, participants were
+ instructed to type the letters that had appeared before in their order of
+ presentation. During both parts of the test, participants had to read the
+ equations and letters aloud in order to prevent vocal rehearsal strategies.
+
+As a numeric score of individual working memory, we computed partial-credit unit
+scores, which indicate the mean proportion of correctly recalled items within
+the sets \citep{ConwayEtAl2005}.
+
+ \paragraph{Rapid automatized naming}
+Participants' reading fluency was operationalized using rapid automatized
+naming speed. Subjects that perform this task faster tend to have better
+reading comprehension scores, faster reading rates and their initial landing
+position when fixating tends to be closer to the center (\citealp[among
+others:][]{HoweEtAl2006,ArnellEtAl2009,KupermanVanDyke2011,AraujoEtAl2014}).
+Rapid automatized naming times were measured using a software developed by the
+first author (\url{https://github.com/bnicenboim/py-ran-task}). The procedure
+of the test was the following: Each subject was instructed to read a series of
+trials with 50 items;  the items were the same set of letters or numbers that
+were used in \citet{DenklaRudel1976}: \{o, a, s, d, p\} and \{2, 6, 9, 4, 7\}.
+The first eight trials were composed of letters and the following eight ones
+of numbers. The items were displayed in five rows of ten columns and were
+listed in random order. Participants were instructed to start reading aloud as
+fast as possible immediately after pressing the spacebar, and to press it
+again immediately after finishing reading aloud the last item.  In case they
+misread, they were instructed to reread only the misread item. The test
+started with two practice trials to familiarize the participants with the
+task.
+
+ \paragraph{Self-paced reading}
+ For the self-paced reading task all sentences were displayed in a single line
+ and were presented in 18 pt Arial font using Linger software
+ (\url{http://tedlab.mit.edu/~dr/Linger/}). A true-or-false comprehension task
+ was presented after 65$\%$ of all trials in the experiment including fillers to
+ ensure that participants had paid attention to the sentences. The statements
+ focused on various aspects of the stimuli, and the proportion of true and false
+ statements was balanced. For the sentences in the previous example
+ (\ref{ex:items-exp-sp}) the statement was: \emph{La hermana menor de Sofía
+ preguntó algo.} ``The younger sister of Sofía asked something'', which was true
+ for the short conditions but false for the long ones. The statements following
+ other experimental sentences focused on different aspects of the stimuli: the
+ participants, the action, the setting of the action, etc. As in
+ \citet{NicenboimEtAl2015}, we chose to use true-or-false statements instead of
+ yes-no questions in order to avoid long and unnatural questions.
+
+
+
+\subsection{Results}
+\subsubsection{Data Analysis}
+The data analysis was conducted in the R programming environment
+\citep{R2015}, using hierarchical models (also known as  mixed effects or
+multilevel models) in Stan \citep{Stan2015} with the R package RStan
+\citep{RStan2015}. We fit Bayesian rather than frequentist models,
+which are generally fit with lme4 (\citealp{lme4}; we provide, however, the
+results of the frequentist models in the Supplementary Material for comparison
+purposes). First, hierarchical models minimize false
+positives when they include the maximal random effects structure justified by
+the design \citep{SchielzethForstmeier2009,BarrEtAl2013}. However, such
+maximal frequentist models did not converge for our data and therefore had to
+be simplified. In contrast, their Bayesian counterpart could be fit in Stan,
+by using appropriate weakly informative priors for the correlation matrices
+(so-called LKJ priors).  Third, Bayesian hierarchical models solve the
+multiple comparisons problem since all relevant research
+questions can be represented as parameters in one coherent hierarchical model
+\citep{GelmanEtAl2012}. This puts more burden on the hierarchical models and shifts
+point estimates and their corresponding intervals toward each other via
+``shrinkage'' or ``partial pooling'' \citep[see ][for more
+details]{GelmanEtAl2012}. Fourth,  Bayesian procedures provide credible
+intervals rather than confidence intervals. A 95\% credible interval
+demarcates the range within which we can be certain with probability 0.95 that
+the true value of a parameter lies (given the data at hand). By contrast, a
+frequentist confidence interval (CI) is a property of the statistical
+procedure and not of the parameter. The CI indicates that when the procedure
+is used repeatedly across a series of hypothetical data sets (i.e., the sample
+space), the procedure will yield intervals which contain the true parameter
+value in 95\% of the cases (\citealp{HoekstraEtAl2014} and see
+\citealp{MoreyEtAl2015} for an extreme example of the difference between
+confidence and credible intervals). Thus, the frequentist CI cannot be used
+for inference because it tells us nothing about the uncertainty regarding the
+parameter's value. By contrast, the Bayesian credible interval expresses
+uncertainty about the parameter.
+
+Another reason for using Bayesian models is that 
+Bayesian procedures allow us to fit virtually any kind of
+distribution in a straightforward way. Residual RTs in self-paced reading are usually not normally
+distributed: They are limited on the left by some amount of time (i.e., the
+shift of the distribution), and they are highly right skewed. RTs can be
+reciprocal or log-transformed, but these transformations still assume that RTs
+are defined by their scale (mean) and shape (standard deviation), and they are
+unshifted (or have a shift of 0 ms). \cite{Rouder2005} raises the concern that
+restricting the shift to be zero is unreasonable for response times. Unshifted
+distributions for \emph{reading} times in SPR may also be unreasonable, since
+they do not take into account that there is a minimal amount of time that takes
+to read a word and press a button on the keyboard, typically around 150-250 ms.
+Evidence from distributional models similar to the shifted lognormal shows that
+shifts are nonzero and vary across participants (see, for example,
+\citealp{Logan1992,RouderEtAl2005}). 
+If distributions are shifted and analyzed as unshifted lognormal, with
+increasing shift, estimates of the mean artificially increase, and estimates
+of the standard deviation artificially decrease; and these artifacts may
+influence conclusions \citep{Rouder2005}.  We decided to fit models with
+shifted lognormal distributions not only to avoid anti-conservative
+conclusions, but also to get more accurate estimates by fitting our data with
+a model that resembles the process that generates the data. Furthermore, when
+we compared the shifted lognormal distribution with unshifted distributions
+such as a reciprocal or a log transformation on the normal distribution, a
+model ranking according to the Watanabe-Akaike information criterion (or
+Widely applicable information criterion or WAIC;
+\citealp{Watanabe2010,VehtariGelman2014}) favored the model with the shifted
+lognormal distribution. This may not be the only way to achieve a realistic
+fit to RTs; however, the shifted lognormal distribution has two key
+characteristics that are desirable of a RT distribution
+\citep{RouderEtAl2008}: (i) it has a shift (which is absent in, for example,
+the ex-Gaussian distribution) and (ii) its error variance increases with mean
+RT \citep{WagenmakersBrown2007}. In addition, lognormal distributions are
+ubiquitous in nature, are well understood \citep{LimpertEAl2001}, and are
+already used in psycholinguistics. We acknowledge that deeper research is
+needed to evaluate the advantages and disadvantages of different distributions
+in RTs in self-paced reading  \citep[similar to what was done for visual
+search by ][]{PalmerEtAl2011}. Thus we fitted a hierarchical model with a
+shifted lognormal distribution, allowing the shift to vary by participant. We
+present the posterior probability of the coefficients being positive given the
+data and its 95\% credible interval. For all the models presented in the
+experiments, the predictors were sum coded (-1 and 1 for baseline and long
+dependency, and -1 and 1 for short and long), and covariates WMC and reading
+fluency were scaled and centered. In order to be able to compare the results
+across experiments (and regions), we report the estimates of the parameters
+$\hat{\delta_k}$ that quantify the effect size of each given coefficient of
+the mixed model $\hat{\beta_k}$, such that
+$\hat{\delta_k}=\hat{\beta_k}/\hat\sigma$, where $\hat\sigma$ is the estimated
+standard error of the model (as recommended by \citealp{RouderEtAl2012}).
+Effect sizes are a dimensionless quantity \citep{WagenmakersEtAl2010} and
+depend less on the methodology (self-paced reading, eye-tracking, EEG), the
+language, the type of participants (students or general population), etc, than
+the estimates.  (We provide the code of the model in the Supplementary
+Material.)
+
+We checked the convergence of the models after fitting them with eight chains
+and 2000 iterations, half of which were the burn-in or warm-up phase. 
+In order to assess convergence, 
+we verified that the
+$\hat{R}$s were close to one,  and we also visually inspected the chains
+\citep{GelmanEtAl2014}.
+
+
+\subsubsection{Results of the individual differences measures}
+
+
+\paragraph{Operation span}
+<<include=FALSE>>=
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = 3)
+
+minpcu <- format(round(min(indivsp$pcu), 2), nsmall=2) 
+maxpcu <-format(round(max(indivsp$pcu), 2), nsmall=2) 
+meanpcu <- format(round(mean(indivsp$pcu), 2), nsmall=2) 
+sepcu <- format(round(sd(indivsp$pcu)/sqrt(N), 2), nsmall=2) 
+
+
+lsindiv_WMC <- list(n=length(indivsp$pcu),x=as.matrix(cbind(indivsp$pcu, indivsp$gen.acc)))
+
+smp_WMC <- stan(file="stanmodels/pearsonR.stan", data=lsindiv_WMC)
+
+print(smp_WMC,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+cor(x=indivsp$pcu, y=indivsp$gen.acc)
+
+r_summ_WMC<-summary(smp_WMC,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary = 3)
+rvalue_WMC<- format(round(r_summ_WMC$summary[1], 2), nsmall=2) 
+CrIlow_WMC<- format(round(r_summ_WMC$summary[4], 2), nsmall=2) 
+CrIhigh_WMC<- format(round(r_summ_WMC$summary[5], 2), nsmall=2) 
+
+@
+Partial-credit unit scores for the operation span test measuring WMC of the \Sexpr{N} participants had an average of \Sexpr{meanpcu} (\textit{SE}=~\Sexpr{sepcu}; range \Sexpr{minpcu}--\Sexpr{maxpcu}).
+
+
+\paragraph{Rapid automatized naming}
+%
+<<include=FALSE>>=
+indivsp$rs <- 1/indivsp$ran
+minrs <-format(round(min(50*indivsp$rs), 2), nsmall=2)   
+maxrs <- format(round(max(50*indivsp$rs), 2), nsmall=2) 
+meanrs <- format(round(mean(50*indivsp$rs), 2), nsmall=2) 
+sers <- format(round(sd(50*indivsp$rs)/sqrt(N) , 2), nsmall=2) 
+
+
+lsindiv_RS <- list(n=length(indivsp$pcu),x=as.matrix(cbind(1/indivsp$ran,
+indivsp$gen.acc)))
+
+smp_RS <- stan(file="stanmodels/pearsonR.stan", data=lsindiv_RS)
+
+print(smp_RS,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+
+
+r_summ_RS<-summary(smp_RS,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary =3) 
+
+rvalue_RS<- format(round(r_summ_RS$summary[1], 2), nsmall=2) 
+
+CrIlow_RS<- format(round(r_summ_RS$summary[4], 2), nsmall=2) 
+CrIhigh_RS<- format(round(r_summ_RS$summary[5], 2), nsmall=2)
+
+@
+
+Average character speed for the rapid automatized naming task for measuring
+reading fluency ranged between \Sexpr{minrs}--\Sexpr{maxrs}
+characters$/$second with an average of \Sexpr{meanrs}
+(\textit{SE}=\Sexpr{sers}) characters/second. The reciprocal of the averaged
+reading time was used as the reading fluency measure; this way a higher value
+represents a more skilled reader.
+
+<<include=FALSE>>=
+lsindiv <- list(n=length(indivsp$pcu),x=as.matrix(cbind(indivsp$pcu, 1/indivsp$rs)))
+
+smp <- stan(file="stanmodels/pearsonR.stan", data=lsindiv)
+
+print(smp,pars=c("r","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+
+r_summ<-summary(smp,pars=c("r"),probs = c(0.025,  0.975) ,digits_summary = 3)
+rvalue<- format(round(r_summ$summary[1], 2), nsmall=2) 
+CrIlow<- format(round(r_summ$summary[4], 2), nsmall=2) 
+CrIhigh<- format(round(r_summ$summary[5], 2), nsmall=2) 
+@
+
+These two measures were not correlated for the participants of the experiment;
+\textit{r} = \Sexpr{rvalue}, \textit{CrI} (Credible Interval) =
+$[\Sexpr{CrIlow},\Sexpr{CrIhigh}]$. However, both were moderately correlated
+with the general accuracy for all the items; WMC: \textit{r} =
+\Sexpr{rvalue_WMC}, \textit{CrI} = $[\Sexpr{CrIlow_WMC},\Sexpr{CrIhigh_WMC}]$;
+reading fluency: \textit{r} =
+\Sexpr{rvalue_RS}, \textit{CrI} = $[\Sexpr{CrIlow_RS},\Sexpr{CrIhigh_RS}]$. It
+should be noted that even though these two measures were not correlated for
+our subjects, who were mostly university students, it does not mean they are
+not correlated in the general population. The lack of correlation may be due
+to the so-called Berkson's paradox \citep{Berkson1946}, which arises when a
+specific part of the population is absent (in this case we can assume that
+people with not enough reading fluency or WMC would not attend college).
+However, the lack of correlation is informative in that the two measures may
+be tapping different underlying capacities or skills.
+
+
+
+\subsubsection{Results of the self-paced reading experiment}
+\paragraph{Comprehension Accuracy}
+<<include=FALSE>>=
+
+critical1 <- dsp[dsp$region %in% "critical1" & !is.na(dsp$question.acc),]
+critical1 <- as.data.frame(critical1)
+
+qavsp <- summarise(group_by(critical1, subj),acc=mean(question.acc))
+accavsp<- round(mean(qavsp$acc)*100,0)
+accsesp<- round(sd(qavsp$acc)*100/sqrt(N),0)
+@
+
+Participants answered correctly on average  \Sexpr{accavsp}\%
+(\textit{SE}=~\Sexpr{accsesp}) comprehension probes  of the trials belonging to
+the experiment.
+
+
+\paragraph{Reading Times}
+ We fitted a single model for our four regions of interest  using Helmert
+contrasts; see example (\ref{ex:regions-exp1}). This type of coding ensures
+the interpretability of the effects of interest (length, dependency type, WMC,
+reading fluency, and their interaction) and allows us to detect a change in the
+pattern of the effects across the regions. We defined four contrasts that compare
+each region with the average of the preceding ones: (i) The first critical
+region (the auxiliary verb ``había'') is first compared with the precritical
+region (always a proper noun), then (ii) the second critical region (a
+participle form of the verb), (iii) the first spillover (a preposition), and
+finally (iv) the second spillover (a determiner) are compared with the average
+of their respective preceeding regions; see Table
+\ref{tab:helmert}. In order to account for the correlations between the regions
+in a single sentence, we included random effects by sentence besides by
+participants and items as is usual. We included random intercepts for
+participants, item and sentences, and by-participants and items random
+slopes for length, dependency and their interaction (with their correlations).
+
+Figure \ref{fig:everyregionsp} shows mean RTs for high- and low-WMC readers at
+each comparable region, while Figure \ref{fig:diffsp} shows only the locality
+effects $\times$ WMC interaction.
+
+
+\begin{exe}
+\ex \label{ex:regions-exp1}
+\glll ... preguntó \{{a quién} fue que; si\} (la hermana menor de) $|$ María $|$ había $|$ saludado $|$ {\{a; en\}} $|$ la $|$ ...\\ 
+... asked \{who.ACC was that; if\} (the younger sister of)  $|$ María $|$ had $|$ greeted $|$ {\{to; in\}} $|$ the $|$  ...\\
+{} {} {} {} {} {} {} {} {} {} $|$ precritical $|$ {critical 1} $|$ {critical 2} $|$ {spillover 1} $|$ {spillover 2} $|$  \\
+\glt   
+\end{exe}
+
+
+
+\begin{table}[h!]
+\textbf{\refstepcounter{table}\label{tab:helmert} Table \arabic{table}.}{ Helmert contrasts used for both experiments.}
+
+\processtable{ }
+{\begin{tabular}{ l r r r r }
+\toprule
+precritical & -1 & -1 & -1 & -1 \\
+critical 1 & 1 & -1 & -1 & -1 \\
+critical 2 & 0 & 2 & -1 & -1 \\
+spillover 1 & 0 & 0 & 3 &  -1 \\
+spillover 2 & 0 & 0 & 0 & 4 \\
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+<<include=FALSE>>=
+
+RUN <- FALSE #It takes a really long long time
+
+
+o <- c(150,5000)
+dsp <- dsp[dsp$rt > o[1] & dsp$rt < o[2] ,]
+dsp_regions <- dsp[dsp$region %in% c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" ),] 
+
+dsp_regions$wmc <- scale(dsp_regions$pcu)
+dsp_regions$rs <- scale(1/dsp_regions$ran)
+dsp_regions$c_trial <- scale(dsp_regions$trial)
+contrasts(dsp_regions$dependency) <- contr.sum(2)
+contrasts(dsp_regions$distance) <- contr.sum(2)
+colnames(contrasts(dsp_regions$distance))<-""
+colnames(contrasts(dsp_regions$dependency))<-""
+
+dsp_regions$region  <- factor(dsp_regions$region )
+contrasts(dsp_regions$region) <- contr.helmert(5)
+dsp_regions$sent <- factor(paste(dsp_regions$trial,dsp_regions$subj))
+
+
+effsize <- .2  #assumed effect size for the normal prior
+
+X <- model.matrix(~ 1+  distance * dependency * (wmc+rs) * region , data=dsp_regions)
+
+Intercept <-  model.matrix(~ 1, data=dsp_regions) #for item
+
+X_u <-  model.matrix(~ 1 + distance * dependency , data=dsp_regions) #for subj +  distance * dependency* region
+X_w <-  model.matrix(~ 1 + distance * dependency , data=dsp_regions) # #for item #it doesn converge with this:  * (wmc+rs)  +  distance * dependency* region,
+X_v <-  model.matrix(~ 1  , data=dsp_regions) #for sent
+
+lsdata_sp <- list(rt=dsp_regions$rt, 
+                subj=as.numeric(factor(dsp_regions$subj)),
+                item=as.numeric(factor(dsp_regions$item)),
+                sentence = as.numeric(factor(dsp_regions$sent)),
+                N_obs=nrow(dsp_regions),
+                N_coef=ncol(X),
+                N_coef_u=ncol(X_u), 
+                N_coef_w=ncol(X_w),
+                N_coef_v=ncol(X_v),
+                x =X,
+                x_u=X_u,
+                x_w=X_w,
+                x_v=X_v,
+                N_subj=length(unique(dsp_regions$subj)),
+                N_item=length(unique(dsp_regions$item)),
+                N_sentence=length(unique(dsp_regions$sent)),
+                effsize = effsize)
+
+if(!file.exists("summaries/summary_spanish_3p_prev.Rda") ){ 
+#If the summary is saved don't try to fit a model or even load a model
+
+    if(RUN & !file.exists("samples/samples_sp_3p_prev.Rda")){
+        
+        samples_sp <- stan(file="stanmodels/shifted_lognormal_3re_param_prev.stan",    
+                        data=lsdata_sp , #init= init_fun,
+                        #control=list(adapt_delta=.95),
+                        iter=niter,chains=chains,
+                        pars=c("alpha","beta","delta","sigma","shift",
+                            "tau_shift","shift_u","tau_u","tau_w","tau_v",
+                            "pred_rt","log_lik","resid","Cor_u","Cor_w","Cor_v","lp__")
+                        )
+
+        save(samples_sp,file="samples/samples_sp_3p_prev.Rda")
+
+    } else {
+        if(!file.exists("samples/samples_sp_3p_prev.Rda")){
+            load("samples/samples_sp_3p_prev.Rda")
+        } else {
+            print("samples/samples_sp_3p_prev.Rda not found")
+        }
+    }
+
+    print(samples_sp,probs = c(0.025,  0.975),pars=c("pred_rt","log_lik","resid"),include=F ,digits_summary = 3)
+
+    summary <- summary(samples_sp,pars=c("alpha","beta","delta","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+    betas <- c(colnames(X),paste("Ð",colnames(X)[-1]) ,"Sigma")
+    summ <- data.frame(summary$summary)
+    summ$'P>0' <- c(NA,colMeans(rstan::extract(samples_sp)$beta>0),
+            colMeans(rstan::extract(samples_sp)$delta>0),NA)
+    rownames(summ) <- betas
+    round(summ,2)
+
+
+    dsp_regions$predRT <- colMeans(rstan::extract(samples_sp)$pred_rt)# 
+    dsp_regions$resid <-  colMeans(rstan::extract(samples_sp)$resid)
+
+    all <- summary(samples_sp,probs = c(0.025,  0.975) ,digits_summary = 3)
+
+
+    pairs(samples_sp,    pars=c("alpha","sigma","shift",
+                            "tau_shift","lp__"))
+
+    traceplot(samples_sp, pars=c("alpha","delta","sigma","shift",
+                            "tau_shift","shift_u","tau_u","tau_w","tau_v","Cor_u","Cor_w","Cor_v","lp__"))
+
+    qqPlot(dsp_regions$resid)
+
+    save(summ,all,X,dsp_regions, file="summaries/summary_spanish_3p_prev.Rda")
+} else {
+    load("summaries/summary_spanish_3p_prev.Rda")
+}
+
+@
+
+<<include=FALSE>>=
+
+#Ð is delta hat
+effect_sizes <- summ[(1+ncol(X)):nrow(summ),]
+effect_sizes_show_sp <- effect_sizes[rownames(effect_sizes) %in%  c("Ð distance","Ð dependency","Ð wmc","Ð rs","Ð distance:dependency","Ð distance:dependency:wmc","Ð distance:dependency:rs"),]
+
+
+effect_sizes_show_sp_r <- cbind(pred=c("Length","Dependency", "WMC","RF",
+"Length:dependency","Length:dependency:WMC","Length:dependency:RF"), 
+round(effect_sizes_show_sp,2))
+
+table_sp <- with(effect_sizes_show_sp_r,paste(paste(pred,mean,X2.5.,X97.5.,effect_sizes_show_sp$'P>0',sep=" & "),collapse=" \\\\ "))
+
+dsp_regions <- dsp[dsp$region %in% c("precritical", "critical1",   "critical2",
+"spillover1",  "spillover2" ),]
+Outs <- length(dsp_regions[dsp_regions$rt < 200  ,]$rt)
+Total <- length(dsp_regions$rt)
+
+outperc <- round(Outs/Total * 100,2)
+
+@
+
+\begin{table}[!ht]
+\textbf{\refstepcounter{table}\label{tab:tablesp} 
+Table \arabic{table}.}{ Main results for Experiment~1 (Spanish). WMC stands
+for working memory capacity and RF for reading fluency. The first column 
+$\hat{\delta}$ shows the estimated effect size of the coefficients; the next 
+two columns show the 2.5th and 97.5th
+percentiles of their posterior distribution, that is, where the effect
+size lies with 95\% probability; and $P(\hat{\delta}>0)$ indicates the
+posterior probability that each coefficient is positive.%
+ 
+}
+
+\processtable{ }
+{\begin{tabular}{ l r r r r }
+\toprule
+Predictor &  $\hat{\delta}$ & \multicolumn{2}{c}{95\% CrI} &  $P(\hat{\delta}>0)$ \\
+\midrule
+\Sexpr{table_sp} \\
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+
+<<include=FALSE>>=
+####nested models:
+
+samples_lmm <- list()
+summ_reg <- list()
+
+if(!file.exists("summaries/summary_spanish_reg.Rda") ){ 
+#If the summary is saved don't try to fit a model or even load a model
+
+    if(RUN & !file.exists("samples/samples_spanish_reg.Rda")){
+
+        ROI <- unique(dsp_regions$region)
+        for(reg in ROI){
+              
+            dsp_reg <- dsp_regions[dsp_regions$region %in% reg,]
+
+            x_full_reg <- model.matrix(~ 1+  distance * dependency * (wmc+rs), data=dsp_reg)
+            x_full_noind_reg <-  model.matrix(~ 1+  distance * dependency, data=dsp_reg) #for item
+
+            lsdata_reg <- list(rt=dsp_reg$rt, 
+                        subj=as.numeric(factor(dsp_reg$subj)),
+                        item=as.numeric(as.character(dsp_reg$item)),
+                        N_obs=nrow(dsp_reg),
+                        N_coef=ncol(x_full_reg),
+                        N_coef_u=ncol(x_full_noind_reg), 
+                        N_coef_w=ncol(x_full_noind_reg),
+                        x =x_full_reg,
+                        x_u=x_full_noind_reg,
+                        x_w=x_full_noind_reg,
+                        N_subj=length(unique(dsp_reg$subj)),
+                        N_item=length(unique(dsp_reg$item)),
+
+                        effsize = effsize
+                )
+
+                lsdata[[paste(reg)]] <- (lsdata_reg)
+
+
+            print(paste(reg))
+            samples_lmm[[paste(reg)]] <- stan("stanmodels/shifted_lognormal_2re_param_prev.stan",    
+                            data=lsdata[[paste(reg)]] , 
+                            iter=niter,
+                            chains=chains,
+                            pars=c("alpha","beta","delta","sigma","shift","tau_shift","shift_u","tau_u","tau_w","pred_rt","log_lik","resid","Cor_u","Cor_w","lp__")
+                            )
+
+        }
+        save(samples_lmm,file="samples/samples_spanish_reg.Rda")
+    } else {
+        load("samples/samples_spanish_reg.Rda")
+    }
+
+    for(reg in ROI){
+        summary <- summary(samples_lmm[[paste(reg)]],pars=c("alpha","beta","delta","sigma"),probs = c(0.025,  0.975) ,digits_summary = 3)
+        betas <- c(colnames(x_full_reg),paste("Ð",colnames(x_full_reg)[-1]) ,"Sigma")
+        summ_reg[[paste(reg)]] <- data.frame(summary$summary)
+        summ_reg[[paste(reg)]]$'P>0' <- c(NA,colMeans(rstan::extract(samples_lmm[[paste(reg)]])$beta>0),
+                colMeans(rstan::extract(samples_lmm[[paste(reg)]])$delta>0),NA)
+        rownames(summ_reg[[paste(reg)]]) <- betas
+    }
+
+
+    save(summ_reg, x_full_reg,file="summaries/summary_spanish_reg.Rda")
+} else{
+    load("summaries/summary_spanish_reg.Rda")
+}
+
+@
+
+
+<<include=FALSE>>=
+
+table_sp <- list()
+all_table_sp <- ""
+ROI <- unique(dsp_regions$region)
+for(reg in ROI){
+    effect_sizes <- summ_reg[[paste(reg)]][(1+ncol(x_full_reg)):nrow(summ_reg[[paste(reg)]]),]
+
+    effect_sizes_show_sp_reg <- round(effect_sizes[rownames(effect_sizes) %in%  c("Ð distance","Ð dependency","Ð wmc","Ð rs","Ð distance:dependency","Ð distance:dependency:wmc","Ð distance:dependency:rs"),],2)
+
+    effect_sizes_show_sp_reg <- cbind(pred=c("length","dependency", "WMC","RF",
+    "length:dependency","length:dependency:WMC","length:dependency:RF"), 
+    effect_sizes_show_sp_reg)
+
+    new_table_sp <- with(effect_sizes_show_sp_reg,paste(paste(pred,mean,X2.5.,X97.5.,effect_sizes_show_sp_reg$'P>0',sep=" & "),collapse=" \\\\ "))
+
+
+
+    all_table_sp <- paste(all_table_sp,"\\\\ \\midrule \n \\hspace{1em}",reg,"\\\\ \n \\midrule \n", new_table_sp)
+}
+
+@
+
+\begin{table}[!ht]
+\textbf{\refstepcounter{table}\label{tab:table_regions_sp} 
+Table \arabic{table}.}{ Main results for each region of Experiment~1 (Spanish). WMC stands
+for working memory capacity and RF for reading fluency. 
+The first column 
+$\hat{\delta}$ shows the estimated effect size of the coefficients; the next 
+two columns show the 2.5th and 97.5th
+percentiles of their posterior distribution, that is, where the effect
+size lies with 95\% probability; and $P(\hat{\delta}>0)$ indicates the
+posterior probability that each coefficient is positive. 
+
+}
+
+\processtable{ }
+
+{\begin{tabular}{ l r r r r }
+\toprule
+Predictor &  $\hat{\delta}$ & \multicolumn{2}{c}{95\% CrI} &  $P(\hat{\delta}>0)$
+\Sexpr{all_table_sp} \\
+\botrule
+\end{tabular}}{}
+\end{table}
+
+
+Observations with RTs under 150 ms and above 5000ms were removed from the data
+ (\Sexpr{outperc}\%) after checking the residuals of the model. Values below
+ 150ms are too fast to be reading times, and they are likely to be
+ erroneous taps on the spacebar. If RTs that are too fast are included, the
+ model cannot estimate the appropriate shifts in the distribution
+ \citep{RouderEtAl2005}.
+
+
+
+\label{sec:RT_sp}
+Table \ref{tab:tablesp}   and Figure
+\ref{fig:catersp} summarize the main results of the model for the effects of
+reading fluency, WMC, locality (embedded subject length $\times$ dependency),
+and its interaction with reading fluency and WMC, including the data from all
+the regions of interest.  
+
+In contrast to Null Hypothesis Significance Testing (NHST), where a sharp
+binary decision is made between ``significant'' and ``non significant''
+effects, a Bayesian analysis allows us to compute the probability that the
+coefficient is positive or negative given the data. The 95\% Bayesian credible
+interval has the interpretation that researchers often ascribe mistakenly to
+frequentist confidence intervals \citep{MoreyEtAl2015}: it gives the range
+over which we can be 95\% certain, given the data, that the true value of the
+parameter lies. This statement cannot even be made in NHST, since the true
+parameter is a point value with no probability distribution. A common way
+\citep{KruschkeEtAl2012} to interpret the 95\% credible interval is to
+consider the evidence to be strong if 0 lies outside the interval. If 0 is
+included within the interval, there might still be weak evidence for an effect
+if the probability of the parameter being less than (or greater than) 0 may
+still be quite large. An example may clarify this: if the probability of the
+parameter being less than 0 is 0.04, i.e., $P(\hat\delta < 0)=0.04$, this
+means that there is a 0.96 probability, given the data, that the parameter is
+negative. Here, it would be odd to say that ``there is no effect'' given that
+the posterior probability of the parameter being negative is 0.96.
+Accordingly, we will interpret the results as follows: if 0 lies outside the
+95\% credible interval, we assume that the evidence is strong that there is an
+effect; if 0 is included within the interval but the probability of the
+parameter being less than or greater than 0 ($P(\hat\delta<0)$ or
+$P(\hat\delta>0)$, depending on the expected sign of the effect) is high, we
+will say that there is weak evidence of an effect; and if the probability
+$P(\hat\delta<0)$ or $P(\hat\delta>0)$ is low, we will conclude that there is
+no evidence of an effect. For a detailed tutorial on fitting and interpreting
+Bayesian linear mixed models, see \citet{SorensenVasishthTutorial}.
+
+The model reveals three main findings: (i) As expected, subjects with higher
+reading fluency scores tended to have shorter RTs
+  (notice that even though zero is included in the credible interval, 
+the effect size is between four and ten times larger than the rest of the effects, 
+and 96\% of its posterior probability is below zero);
+(ii) We did not find the
+hypothesized locality effects, that is, an interaction between embedded subject
+length and dependency type regardless of WMC; and (iii) The model shows evidence for
+an interaction between locality effects and WMC (embedded subject length
+$\times$ dependency type $\times$ WMC): For the conditions with unbounded
+dependencies only, the low-WMC readers showed a slight advantage for the long
+condition, which was reduced as WMC increased until it became an advantage for
+the short condition. 
+  Even though the interaction between locality effects (embedded
+subject length $\times$ dependency type) and reading fluency showed the predicted
+direction (smaller locality effects as reading fluency increases), the model
+shows very weak to no evidence for the effect.  
+We do not report the interactions with the different regions since they show  no
+evidence that the pattern of the effects varies across regions (including the
+precritical region as it can be seen in Figure \ref{fig:everyregionsp} and
+\ref{fig:diffsp}). However, nested comparisons where the models were evaluated
+at the different regions show that the locality
+$\times$ WMC interaction was mainly driven by the precritical, first critical,
+and spillover regions; see Table \ref{tab:table_regions_sp}. 
+
+
+ It is also worth noting that the length of the embedded
+subject had an effect on the RTs at the regions of interest,
+irrespective of the dependency manipulation. This effect would have been
+confounded with locality in the absence of appropriate baselines. This raises
+the concern that some of the previous studies that reported a main effect of
+locality could in principle have been reporting the effect of increasing the
+complexity of the subject that appeared prior to the verb. 
+
+
+
+\subsection{Discussion}
+
+For this experiment, even though we found an effect of embedded subject length,
+we did not find evidence of locality effects (an embedded subject length
+$\times$ dependency type interaction) across the board. Furthermore, even
+though an interaction between WMC and locality effects was expected, the
+interaction was predicted in the opposite direction. We predicted that
+low-capacity participants would show the strongest locality effects, while
+counter-intuitively, in our experiment it was the high-WMC participants that
+showed the strongest locality effects (the largest difference between
+\textit{(long unbounded $-$ long baseline)} and
+\textit{(short unbounded $-$ short baseline)}), while low-WMC showed
+antilocality effects;  as shown in Figures \ref{fig:everyregionsp} and
+\ref{fig:diffsp}.
+
+
+This interaction seems counterintuitive because theories that predict locality
+effects would not predict that high-WMC participants would show stronger
+locality effects. Locality effects are hypothesized to be a behavioral response
+to  either the use of more computational resources \citep{Gibson2000}, or higher
+retrieval costs due to more interference and decay \citep{LewisVasishth2005}
+when the distance between head and argument is increased. However, the speedup
+of low-WMC readers can be accounted for by adding two intuitively plausible
+assumptions to memory-based explanations, namely, that low-capacity readers
+experience retrieval failures more frequently than high-capacity readers, thus
+leading to unresolved dependencies and an incomplete sentence representation
+compatible with good enough processing \citep{FerreiraPatson2007}; and that
+retrieval failures are faster on average than complete retrievals. We provide further
+evidence supporting this claim in the next experiment and the modeling section.
+
+  Furthermore, reading fluency correlated with comprehension
+accuracy (as strongly as WMC) for this experiment, and  participants with
+higher scores in reading fluency tended to read faster the regions of
+interest. However, we found very weak to no evidence favoring the hypothesis
+that fluent readers would overcome more easily locality effects than less
+fluent readers.  
+
+ 
+While the pattern showing stronger locality effects for high-WMC participants
+begins at the precritical region (a proper noun that is either the subject or
+the last part of it) before the verb, memory driven locality effects are
+predicted to appear no sooner than the verb. However, pre-verbal locality
+effects have been detected also in \posstextcite{VasishthDrenhaus2011} study,
+and they also appeared in some degree in the next experiment. This phenomenon
+will be addressed in the general discussion.
+
+
+<<g1,include=FALSE,eval=TRUE>>=
+
+dsp<-dsp[dsp$rt > 150 & dsp$rt < 5000,]
+
+dsp <- dsp[!is.na(dsp$rt),]
+dsp$memgroup <-NULL
+dsp$memgroup <-ifelse(dsp$pcu <= quantile(dsp$pcu,c(1/4))[1],"low-WMC", ifelse(
+ dsp$pcu >= quantile(dsp$pcu,c(3/4))[1],"high-WMC",NA ))
+
+
+dsp_s <- dsp[dsp$region %in% c("precritical","critical1","critical2","spillover1","spillover2","spillover3","spillover4")  , c("distance","dependency","pcu","item","subj","rt","word","memgroup","question.acc","region")]
+
+dsp_s<-dsp_s[!is.na(dsp_s$memgroup),]
+
+#aux functions
+stat_sum_df <- function(fun, geom="crossbar", ...) {
+  stat_summary(fun.data=fun, geom=geom, width=.3,colour="black",linetype="solid", ...)
+}
+ #
+
+p_regions_sp <- ggplot(data=dsp_s,aes(x=region, y=rt,linetype=dependency,color=distance,shape=distance,group=interaction(dependency,distance))) + facet_grid(memgroup~.) + stat_sum_df("mean_cl_normal", geom = "errorbar",position= position_dodge(0.1),size=.3)+ stat_summary(fun.y=mean, geom="point",size=2,position= position_dodge(0.1))+stat_summary(fun.y=mean, geom="line")
+
+
+p_regions_sp<-p_regions_sp + ggtitle("Experiment 1. All comparable regions.") +  ylab("RT (ms)") +theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Embedded subject length" )+ scale_shape(name="Embedded subject length")+ scale_linetype_discrete(name="Dependency type")+ scale_x_discrete( labels=c("precritical\nMaría", "critical 1\nhabía", "critical 2\nsaludado", "spillover 1\nP", "spillover 2\nDet", "spillover 3\nN","spillover 4\nP"))
+p_regions_sp <- p_regions_sp+ scale_y_continuous(breaks = seq(300,600,50),minor_breaks=seq(300,600,25))+    theme(legend.position="bottom")
+
+print(p_regions_sp)
+
+ggsave(plot= p_regions_sp, file="p_regions_sp.eps",dpi=1200,width= 17.6,unit="cm")
+
+<<g2,include=FALSE,eval=TRUE>>=
+
+###
+#caterpillar plots
+effect_sizes_show_sp$pred <- factor(effect_sizes_show_sp_r$pred ,levels =rev(effect_sizes_show_sp_r$pred) )
+
+
+p_cater <- ggplot(effect_sizes_show_sp, aes(x = mean, y = pred,
+                       xmin = X2.5.,
+                       xmax = X97.5.)) +
+    geom_point(size = 3) +
+    geom_segment(aes(x = X2.5., xend = X97.5., yend = pred),
+                 size = 0.5)  +
+    ylab('') + xlab('Effect size') +
+    theme_bw()             + 
+     geom_vline(aes(xintercept= 0), linetype = "dotted") +
+     ggtitle("Experiment 1") +
+    scale_x_continuous(limits=c(-.4,.4), breaks = seq(-.4,.4,.1),
+        minor_breaks=seq(-.4,.4,.025))
+p_cater
+
+
+ggsave(plot=p_cater, file="p_cater_sp.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+<<g3,include=FALSE,eval=TRUE>>=
+load("summaries/summary_spanish_3p_prev.Rda")
+#####
+X_rel <- X[,c("(Intercept)",
+"distance",
+"dependency",
+"wmc",
+"distance:dependency",
+"distance:wmc",
+"dependency:wmc",
+"distance:dependency:wmc")]
+
+betas <- summ[c("(Intercept)",
+"distance",
+"dependency",
+"wmc",
+"distance:dependency",
+"distance:wmc",
+"dependency:wmc",
+"distance:dependency:wmc"),"mean"]
+
+
+
+###
+
+remef <- X_rel %*% betas +
+dsp_regions$resid
+
+
+data_sp_remef <- data.frame(X_rel)
+data_sp_remef$remef <- remef
+data_sp_remef$distance <- ifelse(data_sp_remef$distance==1,"long","short")
+data_sp_remef$dependency <- ifelse(data_sp_remef$dependency==1,"unbounded","baseline")
+
+data_sp_remef$region <- dsp_regions$region
+
+
+data_sp_remef_wmc <- summarise(group_by(data_sp_remef,distance,dependency,wmc,region), DV=mean(remef))
+
+
+remef_sp <- mutate(spread(data_sp_remef_wmc,dependency, DV),effect=unbounded-baseline)
+
+
+p_reg_all <- ggplot(data=remef_sp,aes(x=wmc, y=effect, color=distance, shape=distance)) + geom_point(size=1) + geom_smooth(method=lm,size=1)+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance")+ ggtitle("Experiment 1") +  ylab("Locality effects in the log-transformed scale")+xlab("WMC (centered and scaled PCU)")  +scale_y_continuous(breaks = seq(-2,2,by = .2)) + facet_wrap(~region) + theme(legend.position=c(.85,.25))
+print(p_reg_all)
+ggsave(plot=p_reg_all, file="p_reg_all_logRTs_sp.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+
+<<g4,include=FALSE,eval=TRUE>>=
+
+data_sp_reg_wmc <- summarise(group_by(data_sp_remef_wmc,distance,dependency,wmc), DV=mean(DV))
+remef_sp <- mutate(spread(data_sp_reg_wmc,dependency, DV),effect=unbounded-baseline)
+
+
+p_one_reg <- ggplot(data=remef_sp,aes(x=wmc, y=effect, color=distance, shape=distance)) + geom_point() + geom_smooth(method=lm)+theme_bw()+scale_color_manual(values=c("#5e3c99","#e66101"),name="Distance" )+ scale_shape(name="Distance")+ ggtitle("Experiment 1") +  ylab("Locality effects in the log-transformed scale")+xlab("WMC (centered and scaled PCU)")  +scale_y_continuous(breaks = seq(-2,2,by = .1)) 
+ print(p_one_reg)
+ggsave(plot=p_one_reg, file="p_one_reg_logRTs_sp.eps",dpi=1200,width= 17.6,height=12,unit="cm", device=cairo_ps)
+
+@
+
+
+
+
+
+
